@@ -1,34 +1,78 @@
 <ion-app>
-    <ion-split-pane>
-        <ion-menu>
-            <ion-header>
-                <ion-avatar>
-                    <img [src]="'/assets/imgs/logo.png'">
-                </ion-avatar>
-                <div (click)="toggleAccountMenu()" id="profile_user">
-                    <span id="profile_user_name">Janneck Lange</span>
-                    <span id="profile_user_group">Leiter</span>
-                    <ion-icon id="dropdown_arrow" color="light" [name]="isDropped ? 'arrow-dropup' :'arrow-dropdown'"></ion-icon>
-                </div>
-            </ion-header>
-            <ion-content>
-                <div class="onTop" id="menu_default">
-                    <ion-list>
-                        <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-                            <ion-item  [routerDirection]="'root'" [routerLink]="[p.url]">
-                                <ion-icon slot="start" [name]="p.icon"></ion-icon>
-                                <ion-label>
-                                    {{p.title}}
-                                </ion-label>
-                            </ion-item>
-                        </ion-menu-toggle>
-                    </ion-list>
-                </div>
-                <div id="menu_account">
 
-                </div>
-            </ion-content>
-        </ion-menu>
-        <ion-router-outlet main></ion-router-outlet>
-    </ion-split-pane>
+    <ion-menu>
+        <ion-header class="menu_header">
+            <ion-avatar>
+                <img [src]="'/assets/imgs/logo.png'">
+            </ion-avatar>
+            <div (click)="toggleAccountMenu()" id="profile_user">
+                <span class="bold_text">Janneck Lange</span>
+                <span id="profile_user_group">Leiter</span>
+                <ion-icon id="dropdown_arrow"
+                          [name]="isDropped ? 'arrow-dropup' :'arrow-dropdown'"></ion-icon>
+            </div>
+        </ion-header>
+        <ion-content>
+            <div id="menu_default">
+                <ion-list [hidden]="false" class="menu_list">
+                    <ion-item [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'" (click)="closeMenu()"
+                              class="medium_text" [lines]="'none'" [routerDirection]="'root'" [routerLink]="[p.url]"
+                              *ngFor="let p of appPages">
+                        <div class="ion_item_inner">
+                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                            <ion-label>
+                                {{p.title}}
+                            </ion-label>
+                        </div>
+                    </ion-item>
+                </ion-list>
+
+                <ion-list [hidden]="false" class="menu_list border-top">
+                    <ion-item [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'" (click)="closeMenu()"
+                              class="medium_text" [lines]="'none'" [routerDirection]="'root'" [routerLink]="[p.url]"
+                              *ngFor="let p of leaderPages">
+                        <div class="ion_item_inner">
+                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                            <ion-label>
+                                {{p.title}}
+                            </ion-label>
+                        </div>
+
+                    </ion-item>
+                </ion-list>
+
+                <ion-list [hidden]="false" class="menu_list border-top">
+                    <ion-item class="medium_text" [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'"
+                              (click)="closeMenu()" *ngFor="let p of optionPages" [lines]="'none'"
+                              [routerDirection]="'root'" [routerLink]="[p.url]">
+                        <div class="ion_item_inner">
+                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                            <ion-label>
+                                {{p.title}}
+                            </ion-label>
+                        </div>
+                    </ion-item>
+                </ion-list>
+
+            </div>
+            <div class="displayNone" id="menu_account">
+                <ion-list class="menu_list">
+                    <ion-item class="medium_text" [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'"
+                              (click)="closeMenu()"
+                              [lines]="'none'"
+                              [routerDirection]="'root'"
+                              [routerLink]="[p.url]" *ngFor="let p of accountPages">
+                        <div class="ion_item_inner">
+                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                            <ion-label>
+                                {{p.title}}
+                            </ion-label>
+                        </div>
+                    </ion-item>
+                </ion-list>
+            </div>
+        </ion-content>
+    </ion-menu>
+    <ion-router-outlet main></ion-router-outlet>
+
 </ion-app>

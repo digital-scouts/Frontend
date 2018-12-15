@@ -9,61 +9,78 @@
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
 
-ion-menu > ion-header {
-  width: 100%;
-  //height: 120px;
-
-  background-color: #1e2023;
+//Menu: header with img of the menu
+.menu_header {
+  padding: 10px;
+  background: url("/assets/imgs/p2.JPG") no-repeat center;
+  background-size: cover;
 }
 
-ion-menu > ion-header > ion-avatar{
-  margin: 10px;
-}
-
-#profile_user{
+//Menu: div with text under the ion-avatar in header
+#profile_user {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 10px;
+  color: var(--ion-color-light);
+  margin-top: 10px;
 }
 
-#profile_user_name {
+//Menu: text in header / space for ion-icon drop-down-arrow
+#profile_user_name, #profile_user_group {
+  width: 80%;
+}
+
+//Menu: Menu divs
+#menu_account, #menu_default {
+  width: 100%;
+  height: 100%;
+
+  position: absolute;
+  background-color: var(--ion-color-menu-background);
+}
+
+//Menu: list in menu divs
+.menu_list {
+  width: 100%;
+}
+
+//Menu: Separator in Menu as  top border on element
+.border-top {
+  border-top: 1px solid lightgray;
+}
+
+//Menu:
+.ion_item_inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  flex-wrap: nowrap;
+
+  padding: 3px;
+}
+
+//Menu:
+.ion_item_inner > ion-label {
+  margin-left: 10px;
+}
+
+//Menu: Style if slide is active
+#isActive > div {
+  background-color: var(--ion-color-menu-link-background);
+  color: var(--ion-color-menu-link-font);
+  border-radius: 10px;
+}
+
+.bold_text {
   font-weight: bold;
-  color: white;
-
-  width: 80%;
 }
 
-#profile_user_group {
-  color: white;
-  width: 80%;
+.medium_text {
+  font-size: medium;
 }
 
-#profile_user > ion-icon{
-  align-self: end;
-  justify-self: end;
-  place-self: end;
-}
-
-#menu_account {
-  width: 100%;
-  height: 100%;
-
-  position: absolute;
-
-  background-color: #0bb8cc;
-}
-
-#menu_default {
-  width: 100%;
-  height: 100%;
-
-  position: absolute;
-
-  background-color: #7e57ff;
-
-}
-
-.onTop{
-  z-index: 30;
+.displayNone {
+  display: none;
 }
