@@ -115,4 +115,11 @@ export class AppComponent {
             this.toggleAccountMenu();
         }
     }
+
+    /**
+     * use own close Method
+     */
+    public ionCloseMenu() {
+        this.closeMenu();
+    }
 }

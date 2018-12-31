@@ -1,6 +1,5 @@
 <ion-app>
-
-    <ion-menu>
+    <ion-menu (ionWillClose)="ionCloseMenu()">
         <ion-header class="menu_header">
             <ion-avatar>
                 <img [src]="'/assets/imgs/logo.png'">
