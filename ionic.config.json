@@ -1,6 +1,8 @@
 {
   "name": "digital_scouts",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular",
   "id": "a5b35a77"
 }
