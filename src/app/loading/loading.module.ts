@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-
 import { LoadingPage } from './loading.page';
 
 const routes: Routes = [
@@ -21,6 +20,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [LoadingPage]
+  declarations: [LoadingPage],
+  providers: [Storage]
 })
 export class LoadingPageModule {}

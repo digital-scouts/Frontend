@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {LoadingController} from '@ionic/angular';
 import {Router} from '@angular/router';
-import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {Storage} from '@ionic/storage';
-import {HTTP} from '@ionic-native/http/ngx';
 import {Platform} from '@ionic/angular';
 import {HttpServiceService} from '../http-service.service';
 
@@ -15,12 +13,11 @@ import {HttpServiceService} from '../http-service.service';
 export class LoadingPage implements OnInit {
 
     constructor(
-        private nativeStorage: NativeStorage,
         private storage: Storage,
         private router: Router,
         private loadingController: LoadingController,
         private plt: Platform,
-        private http: HttpServiceService,
+        private http: HttpServiceService
     ) {
         console.log('HEIGHT: ' + this.plt.height());
         storage.set('height', this.plt.height());
@@ -42,11 +39,9 @@ export class LoadingPage implements OnInit {
         if (this.plt.is('cordova')) {
             console.log('DEVICE: cordova');
             this.mobile = true;
-            alert('cordova available');
         }
 
         storage.set('isMobile', this.mobile);
-
         // for statistics 'this.plt.versions'
     }
 
@@ -64,7 +59,7 @@ export class LoadingPage implements OnInit {
 
     private async manageLogin() {
         await this.presentLoading();
-        if (this.isLoggedIn()) {// already logged in
+        if (await this.isLoggedIn()) {// already logged in
             this.updateUserInformation();
             this.goToHome();
         } else {
@@ -95,40 +90,21 @@ export class LoadingPage implements OnInit {
      * Check if logindate is saved and login
      * @returns boolean
      */
-    private isLoggedIn() {
-
-        if (this.mobile) {
-            this.nativeStorage.getItem('isRememberPw').then(async isRememberPw => {
-                    console.log('isRememberPw: ' + isRememberPw);
-                    // password should be saved local
-                    if (isRememberPw) {
-                        let pw: string;
-                        let email: string;
-                        this.nativeStorage.getItem('pw').then(res => {
-                            console.log('pw: ' + res);
-                            pw = res;
-                        });
-                        this.nativeStorage.getItem('email').then(res => {
-                            console.log('pw: ' + res);
-                            email = res;
-                        });
-                        await this.checkFlagToBeAnything(pw);
-                        await this.checkFlagToBeAnything(email);
-                        console.log(email);
-                        console.log(pw);
-                        // todo try to login
-                    } else {
-                        console.log('is not RememberPw ');
-                        // goto login
-                    }
-                },
-                error => console.error(error)
-            );
-        } else {// device is not mobile
-            console.log('Device is not mobile, did not check if logged in');
+    private async isLoggedIn() {
+        if (await this.storage.get('isRememberPw')) {
+            const pw = await this.storage.get('pw');
+            const email = await this.storage.get('email');
+            console.log(email);
+            console.log(pw);
+            if (email && pw) {
+                console.log(await this.http.auth(email, pw));
+            }
+        } else {
+            console.log('is not RememberPw ');
+            return false;
         }
         console.log('User is not logged in');
-        return false;
+        console.log(await HttpServiceService.prototype.auth('lange', 'test'));
     }
 
     /**
@@ -153,21 +129,4 @@ export class LoadingPage implements OnInit {
     private goToLogin() {
         this.router.navigate(['/login']);
     }
-
-    private checkFlagToBeValue(flag, value): any {
-        if (value === flag) {
-            return true;
-        } else {
-            setTimeout(this.checkFlagToBeValue(flag, value), 100);
-        }
-    }
-
-    private checkFlagToBeAnything(flag): any {
-        if (flag != null) {
-            return true;
-        } else {
-            setTimeout(this.checkFlagToBeAnything(flag), 100);
-        }
-    }
-
 }

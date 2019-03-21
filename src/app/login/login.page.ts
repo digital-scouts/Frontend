@@ -1,15 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Storage} from '@ionic/storage';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+    selector: 'app-login',
+    templateUrl: './login.page.html',
+    styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
 
-  constructor() { }
+    constructor(
+        private storage: Storage,
+    ) {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
+    rememberPw() {
+        this.storage.set('isRememberPw', String(true));
+    }
+
+    fPw() {
+        this.storage.set('isRememberPw', String(false));
+    }
 }

@@ -1,17 +1,18 @@
 import {Injectable} from '@angular/core';
+import * as CONFIG from '../config_app.json';
 import {HttpClient} from '@angular/common/http';
-import * as CONFIG from '../../config_app.json';
 
-@Injectable({
-    providedIn: 'root'
-})
+
+
+@Injectable({providedIn: 'root'})
 export class HttpServiceService {
     private backend_url;
 
     constructor(
-        private http: HttpClient
+        private httpClient: HttpClient
     ) {
         this.backend_url = CONFIG.default.url;
+        console.log('service');
     }
 
     // _______________________________________________________________________ AUTH Start
@@ -21,14 +22,17 @@ export class HttpServiceService {
      * @param email
      * @param password
      */
-    auth(email: string, password: string) {
-        return new Promise(resolve => {
-            this.http.post(this.backend_url + '/auth', {'email': email, 'password': password}).subscribe(res => {
-                resolve(res);
+    async auth(email: string, password: string) {
+        console.log(this.httpClient);
+        this.httpClient
+            .post(this.backend_url + '/auth', {'email': email, 'password': password})
+            .subscribe(res => {
+                console.log(res);
+                return 'Hello';
             }, err => {
                 console.log(err);
             });
-        });
+
     }
 
     // _______________________________________________________________________ AUTH End
@@ -43,7 +47,7 @@ export class HttpServiceService {
      */
     newUser(data) {
         return new Promise(resolve => {
-            this.http.post(this.backend_url + '/users', JSON.stringify(data)).subscribe(res => {
+            this.httpClient.post(this.backend_url + '/users', JSON.stringify(data)).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -57,7 +61,7 @@ export class HttpServiceService {
      */
     getUser(id) {
         return new Promise(resolve => {
-            this.http.get(this.backend_url + '/users/' + id).subscribe(res => {
+            this.httpClient.get(this.backend_url + '/users/' + id).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -71,7 +75,7 @@ export class HttpServiceService {
      */
     updateProfile(data) {
         return new Promise(resolve => {
-            this.http.put(this.backend_url + '/users', JSON.stringify(data)).subscribe(res => {
+            this.httpClient.put(this.backend_url + '/users', JSON.stringify(data)).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -85,7 +89,7 @@ export class HttpServiceService {
      */
     updateEmail(newEmail: string) {
         return new Promise(resolve => {
-            this.http.put(this.backend_url + '/users/email', {'new': newEmail}).subscribe(res => {
+            this.httpClient.put(this.backend_url + '/users/email', {'new': newEmail}).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -100,7 +104,7 @@ export class HttpServiceService {
      */
     updatePassword(newPassword: string, oldPassword: string) {
         return new Promise(resolve => {
-            this.http.put(this.backend_url + '/users/password', {'old': oldPassword, 'new': newPassword}).subscribe(res => {
+            this.httpClient.put(this.backend_url + '/users/password', {'old': oldPassword, 'new': newPassword}).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -119,7 +123,7 @@ export class HttpServiceService {
      */
     newChat(members: string[], chatName: string) {
         return new Promise(resolve => {
-            this.http.post(this.backend_url + '/chat', {'member': members, 'chatName': chatName}).subscribe(res => {
+            this.httpClient.post(this.backend_url + '/chat', {'member': members, 'chatName': chatName}).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -132,7 +136,7 @@ export class HttpServiceService {
      */
     getAllChats() {
         return new Promise(resolve => {
-            this.http.get(this.backend_url + '/chat').subscribe(res => {
+            this.httpClient.get(this.backend_url + '/chat').subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -146,7 +150,7 @@ export class HttpServiceService {
      */
     deleteChat(id) {
         return new Promise(resolve => {
-            this.http.delete(this.backend_url + '/chat/' + id).subscribe(res => {
+            this.httpClient.delete(this.backend_url + '/chat/' + id).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -160,7 +164,7 @@ export class HttpServiceService {
      */
     getChat(id) {
         return new Promise(resolve => {
-            this.http.get(this.backend_url + '/chat/' + id).subscribe(res => {
+            this.httpClient.get(this.backend_url + '/chat/' + id).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -174,7 +178,7 @@ export class HttpServiceService {
      */
     getMessage(id) {
         return new Promise(resolve => {
-            this.http.get(this.backend_url + '/chat/message/' + id).subscribe(res => {
+            this.httpClient.get(this.backend_url + '/chat/message/' + id).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -189,7 +193,7 @@ export class HttpServiceService {
      */
     postMessage(data) {
         return new Promise(resolve => {
-            this.http.post(this.backend_url + '/chat/message', JSON.stringify(data)).subscribe(res => {
+            this.httpClient.post(this.backend_url + '/chat/message', JSON.stringify(data)).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
