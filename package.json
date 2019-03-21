@@ -5,6 +5,7 @@
   "homepage": "http://ionicframework.com/",
   "scripts": {
     "ng": "ng",
+    "browser": "ionic cordova run browser",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
@@ -30,6 +31,7 @@
     "@ionic/pro": "2.0.3",
     "@ionic/storage": "^2.2.0",
     "cordova-android": "7.1.4",
+    "cordova-browser": "5.0.4",
     "cordova-ios": "4.5.5",
     "cordova-plugin-advanced-http": "2.0.6",
     "cordova-plugin-device": "^2.0.2",
@@ -91,7 +93,8 @@
     },
     "platforms": [
       "ios",
-      "android"
+      "android",
+      "browser"
     ]
   }
 }
