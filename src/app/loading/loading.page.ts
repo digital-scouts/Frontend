@@ -60,7 +60,6 @@ export class LoadingPage implements OnInit {
     private async manageLogin() {
         await this.presentLoading();
         if (await this.isLoggedIn()) {// already logged in
-            this.updateUserInformation();
             this.goToHome();
         } else {
             this.goToLogin();
@@ -90,29 +89,25 @@ export class LoadingPage implements OnInit {
      * Check if logindate is saved and login
      * @returns boolean
      */
-    private async isLoggedIn() {
-        if (await this.storage.get('isRememberPw')) {
-            const pw = await this.storage.get('pw');
-            const email = await this.storage.get('email');
-            console.log(email);
-            console.log(pw);
-            if (email && pw) {
-                console.log(await this.http.auth(email, pw));
-            }
-        } else {
-            console.log('is not RememberPw ');
-            return false;
-        }
-        console.log('User is not logged in');
-        console.log(await HttpServiceService.prototype.auth('lange', 'test'));
-    }
-
-    /**
-     * @todo
-     * Update the user information´s in the app
-     */
-    private updateUserInformation() {
-        console.log('User information´s are now up to Date');
+    private isLoggedIn() {
+        return new Promise(async resolve => {
+            this.http.test_connection(await this.storage.get('token')).then(async isTokenValid => {
+                const pw: string = await this.storage.get('pw');
+                const email: string = await this.storage.get('email');
+                if (isTokenValid) {
+                    console.log('token is valid');
+                    resolve(true);
+                } else if (!!(pw && email)) {
+                    console.log('is RememberPw ');
+                    console.log('E-Mail: ' + email);
+                    console.log('Password: ' + pw);
+                    this.http.auth(email, pw, true).then(isAuthTrue => resolve(isAuthTrue));
+                } else {
+                    console.log('is not RememberPw ');
+                    resolve(false);
+                }
+            });
+        });
     }
 
     /**

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import * as CONFIG from '../config_app.json';
 import {HttpClient} from '@angular/common/http';
-
+import {Storage} from '@ionic/storage';
 
 
 @Injectable({providedIn: 'root'})
@@ -9,10 +9,35 @@ export class HttpServiceService {
     private backend_url;
 
     constructor(
-        private httpClient: HttpClient
+        private httpClient: HttpClient,
+        private storage: Storage,
     ) {
         this.backend_url = CONFIG.default.url;
-        console.log('service');
+    }
+
+    /**
+     * method to test a connection to server with token
+     * @param token
+     */
+    test_connection(token) {
+        const data = {
+            token: token
+        };
+        return new Promise(resolve => {
+            this.httpClient
+                .post(this.backend_url, data)
+                .subscribe(res => {
+                    // @ts-ignore
+                    if (res.status === 200) {
+                        console.log('Logged In');
+                        resolve(true);
+                    }
+                }, err => {
+                    // todo handle error
+                    console.log(err);
+                    resolve(false);
+                });
+        });
     }
 
     // _______________________________________________________________________ AUTH Start
@@ -21,18 +46,31 @@ export class HttpServiceService {
      * login and get token
      * @param email
      * @param password
+     * @param savePw
      */
-    async auth(email: string, password: string) {
-        console.log(this.httpClient);
-        this.httpClient
-            .post(this.backend_url + '/auth', {'email': email, 'password': password})
-            .subscribe(res => {
-                console.log(res);
-                return 'Hello';
-            }, err => {
-                console.log(err);
-            });
-
+    async auth(email: string, password: string, savePw: boolean) {
+        return new Promise(resolve => {
+            this.httpClient
+                .post(this.backend_url + '/api' + '/auth', {'email': email, 'password': password})
+                .subscribe(res => {
+                    // @ts-ignore
+                    if (res.status === 200) {
+                        console.log('Logged In');
+                        // @ts-ignore
+                        this.storage.set('token', res.token);
+                        if (savePw === true) {
+                            this.storage.set('pw', password);
+                            this.storage.set('email', email);
+                            console.log('E-Mail and Password saved to storage');
+                        }
+                    }
+                    resolve(true);
+                }, err => {
+                    // todo handle error
+                    console.log(err);
+                    resolve(false);
+                });
+        });
     }
 
     // _______________________________________________________________________ AUTH End
@@ -47,7 +85,7 @@ export class HttpServiceService {
      */
     newUser(data) {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/users', JSON.stringify(data)).subscribe(res => {
+            this.httpClient.post(this.backend_url + '/api' + '/users', JSON.stringify(data)).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -61,7 +99,7 @@ export class HttpServiceService {
      */
     getUser(id) {
         return new Promise(resolve => {
-            this.httpClient.get(this.backend_url + '/users/' + id).subscribe(res => {
+            this.httpClient.get(this.backend_url + '/api' + '/users/' + id).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -75,7 +113,7 @@ export class HttpServiceService {
      */
     updateProfile(data) {
         return new Promise(resolve => {
-            this.httpClient.put(this.backend_url + '/users', JSON.stringify(data)).subscribe(res => {
+            this.httpClient.put(this.backend_url + '/api' + '/users', JSON.stringify(data)).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -89,7 +127,7 @@ export class HttpServiceService {
      */
     updateEmail(newEmail: string) {
         return new Promise(resolve => {
-            this.httpClient.put(this.backend_url + '/users/email', {'new': newEmail}).subscribe(res => {
+            this.httpClient.put(this.backend_url + '/api' + '/users/email', {'new': newEmail}).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -104,7 +142,7 @@ export class HttpServiceService {
      */
     updatePassword(newPassword: string, oldPassword: string) {
         return new Promise(resolve => {
-            this.httpClient.put(this.backend_url + '/users/password', {'old': oldPassword, 'new': newPassword}).subscribe(res => {
+            this.httpClient.put(this.backend_url + '/api' + '/users/password', {'old': oldPassword, 'new': newPassword}).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -123,7 +161,7 @@ export class HttpServiceService {
      */
     newChat(members: string[], chatName: string) {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/chat', {'member': members, 'chatName': chatName}).subscribe(res => {
+            this.httpClient.post(this.backend_url + '/api' + '/chat', {'member': members, 'chatName': chatName}).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -136,7 +174,7 @@ export class HttpServiceService {
      */
     getAllChats() {
         return new Promise(resolve => {
-            this.httpClient.get(this.backend_url + '/chat').subscribe(res => {
+            this.httpClient.get(this.backend_url + '/api' + '/chat').subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -150,7 +188,7 @@ export class HttpServiceService {
      */
     deleteChat(id) {
         return new Promise(resolve => {
-            this.httpClient.delete(this.backend_url + '/chat/' + id).subscribe(res => {
+            this.httpClient.delete(this.backend_url + '/api' + '/chat/' + id).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -164,7 +202,7 @@ export class HttpServiceService {
      */
     getChat(id) {
         return new Promise(resolve => {
-            this.httpClient.get(this.backend_url + '/chat/' + id).subscribe(res => {
+            this.httpClient.get(this.backend_url + '/api' + '/chat/' + id).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -178,7 +216,7 @@ export class HttpServiceService {
      */
     getMessage(id) {
         return new Promise(resolve => {
-            this.httpClient.get(this.backend_url + '/chat/message/' + id).subscribe(res => {
+            this.httpClient.get(this.backend_url + '/api' + '/chat/message/' + id).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
@@ -193,7 +231,7 @@ export class HttpServiceService {
      */
     postMessage(data) {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/chat/message', JSON.stringify(data)).subscribe(res => {
+            this.httpClient.post(this.backend_url + '/api' + '/chat/message', JSON.stringify(data)).subscribe(res => {
                 resolve(res);
             }, err => {
                 console.log(err);
