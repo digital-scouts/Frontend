@@ -91,7 +91,7 @@ export class LoadingPage implements OnInit {
      */
     private isLoggedIn() {
         return new Promise(async resolve => {
-            this.http.test_connection(await this.storage.get('token')).then(async isTokenValid => {
+            this.http.getAndSetUserData().then(async isTokenValid => {
                 const pw: string = await this.storage.get('pw');
                 const email: string = await this.storage.get('email');
                 if (isTokenValid) {

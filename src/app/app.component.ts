@@ -4,6 +4,7 @@ import {MenuController, Platform} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {Router} from '@angular/router';
+import {Storage} from '@ionic/storage';
 
 @Component({
     selector: 'app-root',
@@ -21,22 +22,22 @@ export class AppComponent {
             icon: 'information-circle-outline'
         }, {
             title: 'Kalender',
-            url: '/home',
+            url: '/calendar',
             icon: 'calendar'
         }, {
             title: 'Chat',
-            url: '/home',
+            url: '/chat',
             icon: 'chatbubbles'
         }
     ];
     public optionPages = [
         {
             title: 'Einstellungen',
-            url: '/home',
+            url: '/settings',
             icon: 'settings'
         }, {
             title: 'Hilfe und Feedback',
-            url: '/home',
+            url: '/help',
             icon: 'help-circle-outline'
         }
     ];
@@ -69,13 +70,16 @@ export class AppComponent {
 
     // true, when the accountPage is dropped right now
     public isDropped = false;
+    public userName: string;
+    public userRole: string;
 
     constructor(
         private platform: Platform,
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
         private menuCtrl: MenuController,
-        private router: Router
+        private router: Router,
+        private storage: Storage,
     ) {
         this.initializeApp();
     }
@@ -86,8 +90,16 @@ export class AppComponent {
     initializeApp() {
         this.platform.ready().then(() => {
             this.statusBar.styleDefault();
+            this.setUserData();
             this.splashScreen.hide();
         });
+    }
+
+    private async setUserData() {
+        const name1 = await this.storage.get('first_name');
+        const name2 = await this.storage.get('last_name');
+        this.userName = name1 + ' ' + name2;
+        this.userRole = await this.storage.get('role');
     }
 
     /**
