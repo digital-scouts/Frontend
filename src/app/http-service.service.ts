@@ -22,7 +22,7 @@ export class HttpServiceService {
         return new Promise(resolve => {
             this.storage.get('token').then(token => {
                 this.token = token;
-                this.httpClient.post(this.backend_url, {token: token}, {})
+                this.httpClient.post(this.backend_url, {token: token}, {authorization: token})
                     .then(res => {
                         const data: JSON = JSON.parse(res.data);
 
@@ -63,7 +63,7 @@ export class HttpServiceService {
      */
     async auth(email: string, password: string, savePw: boolean) {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/api' + '/auth', {'email': email, 'password': password}, {})
+            this.httpClient.post(this.backend_url + '/api' + '/auth', {'email': email, 'password': password}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
 
@@ -108,7 +108,7 @@ export class HttpServiceService {
      */
     newUser(nameFirst: string, nameLast: string, email: string, password: string, role: string) {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/api' + '/users', {}, {})
+            this.httpClient.post(this.backend_url + '/api' + '/users', {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
 
@@ -125,7 +125,7 @@ export class HttpServiceService {
      */
     getUser(id) {
         return new Promise(resolve => {
-            this.httpClient.get(this.backend_url + '/api' + '/users/' + id, {}, {})
+            this.httpClient.get(this.backend_url + '/api' + '/users/' + id, {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
@@ -142,7 +142,7 @@ export class HttpServiceService {
      */
     updateProfile() {
         return new Promise(resolve => {
-            this.httpClient.put(this.backend_url + '/api' + '/users', {}, {})
+            this.httpClient.put(this.backend_url + '/api' + '/users', {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
@@ -159,7 +159,7 @@ export class HttpServiceService {
      */
     updateEmail(newEmail: string) {
         return new Promise(resolve => {
-            this.httpClient.put(this.backend_url + '/api' + '/users/email', {'new': newEmail}, {})
+            this.httpClient.put(this.backend_url + '/api' + '/users/email', {'new': newEmail}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
@@ -177,7 +177,10 @@ export class HttpServiceService {
      */
     updatePassword(newPassword: string, oldPassword: string) {
         return new Promise(resolve => {
-            this.httpClient.put(this.backend_url + '/api' + '/users/password', {'old': oldPassword, 'new': newPassword}, {})
+            this.httpClient.put(this.backend_url + '/api' + '/users/password', {
+                'old': oldPassword,
+                'new': newPassword
+            }, {authorization: this.token})
                 .then(res => {
                     resolve(res);
                 }, err => {
@@ -197,7 +200,10 @@ export class HttpServiceService {
      */
     newChat(members: string[], chatName: string) {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/api' + '/chat', {'member': members, 'chatName': chatName}, {})
+            this.httpClient.post(this.backend_url + '/api' + '/chat', {
+                'member': members,
+                'chatName': chatName
+            }, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
@@ -212,7 +218,7 @@ export class HttpServiceService {
      */
     getAllChats() {
         return new Promise(resolve => {
-            this.httpClient.get(this.backend_url + '/api' + '/chat', {}, {})
+            this.httpClient.get(this.backend_url + '/api' + '/chat', {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
@@ -228,7 +234,7 @@ export class HttpServiceService {
      */
     deleteChat(id) {
         return new Promise(resolve => {
-            this.httpClient.delete(this.backend_url + '/api' + '/chat/' + id, {}, {})
+            this.httpClient.delete(this.backend_url + '/api' + '/chat/' + id, {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
@@ -244,7 +250,7 @@ export class HttpServiceService {
      */
     getChat(id) {
         return new Promise(resolve => {
-            this.httpClient.get(this.backend_url + '/api' + '/chat/' + id, {}, {})
+            this.httpClient.get(this.backend_url + '/api' + '/chat/' + id, {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
@@ -260,7 +266,7 @@ export class HttpServiceService {
      */
     getMessage(id) {
         return new Promise(resolve => {
-            this.httpClient.get(this.backend_url + '/api' + '/chat/message/' + id, {}, {})
+            this.httpClient.get(this.backend_url + '/api' + '/chat/message/' + id, {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
@@ -278,7 +284,7 @@ export class HttpServiceService {
      */
     postMessage() {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/api' + '/chat/message', {}, {})
+            this.httpClient.post(this.backend_url + '/api' + '/chat/message', {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
@@ -296,7 +302,7 @@ export class HttpServiceService {
      */
     postEvent() {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/api' + '/calendar', {}, {})
+            this.httpClient.post(this.backend_url + '/api' + '/calendar', {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(res);
@@ -309,9 +315,9 @@ export class HttpServiceService {
     /**
      * todo
      */
-    getEvents() {
+    getEvents(): Promise<JSON> {
         return new Promise(async resolve => {
-            this.httpClient.get(this.backend_url + '/api' + '/calendar', {token: this.token}, {})
+            this.httpClient.get(this.backend_url + '/api' + '/calendar', {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
