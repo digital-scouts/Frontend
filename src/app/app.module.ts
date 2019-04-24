@@ -9,10 +9,13 @@ import {IonicStorageModule} from '@ionic/storage';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import { HTTP } from '@ionic-native/http/ngx';
+import { AddEventComponent } from './add-event/add-event.component';
 
 @NgModule({
-    declarations: [AppComponent],
-    entryComponents: [],
+    declarations: [AppComponent, AddEventComponent],
+    entryComponents: [
+        AddEventComponent,
+    ],
     imports: [
         BrowserModule,
         IonicModule.forRoot(),

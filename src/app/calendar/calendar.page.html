@@ -12,6 +12,6 @@
         {{event.date}}
       </div>
     </ion-item>
-    <ion-button (click)="openModal()">+</ion-button>
+    <ion-button [disabled]="hideAddEventBtn" [hidden]="hideAddEventBtn" (click)="openModal()">+</ion-button>
   </ion-list>
 </ion-content>

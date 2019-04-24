@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {Storage} from '@ionic/storage';
 import {Router} from '@angular/router';
 import {HttpServiceService} from '../http-service.service';
+import {ModalController} from '@ionic/angular';
+import {AddEventComponent} from '../add-event/add-event.component';
 
 @Component({
     selector: 'app-calendar',
@@ -13,11 +15,13 @@ export class CalendarPage implements OnInit {
     constructor(
         private storage: Storage,
         private router: Router,
-        private http: HttpServiceService
+        private http: HttpServiceService,
+        private modal: ModalController,
     ) {
     }
 
     public events: Array<{ title: string; date: string; icon: string }> = [];
+    hideAddEventBtn = true;
 
     /**
      * todo timespan
@@ -44,6 +48,10 @@ export class CalendarPage implements OnInit {
     ionViewWillEnter() {
         // goToLogin when not logged in
         this.http.getAndSetUserData().then(res => !res ? this.router.navigate(['/login']) : null);
+        setTimeout(() => {
+            this.hideAddEventBtn = true;
+            console.log('set to false');
+        }, 200);
     }
 
     ngOnInit() {
@@ -60,4 +68,8 @@ export class CalendarPage implements OnInit {
         });
     }
 
+    async openModal() {
+        const myModal = await this.modal.create({component: AddEventComponent});
+        myModal.present();
+    }
 }
