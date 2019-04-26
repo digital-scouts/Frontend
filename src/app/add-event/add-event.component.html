@@ -1,4 +1,35 @@
-<div style="width: 100vw; height: 100vh; background-color: white; padding: 10px;">
-  add-event works!
-  <ion-button (click)="closeModal()">Close Modal</ion-button>
+<div class="modal-content" style="width: 100vw; height: 100vh; background-color: white; padding: 10px;">
+    <div class="modal-header">
+        <h4 class="modal-title">Title</h4>
+    </div>
+    <div class="modal-body">
+        <ion-item>
+            <ion-label position="floating">Titel</ion-label>
+            <ion-input></ion-input>
+        </ion-item>
+        <ion-checkbox checked="true">Öffentliche Veranstaltung</ion-checkbox>
+        <ion-item>
+            <ion-label>Start</ion-label>
+            <ion-datetime display-format="MMMM DD DDD, YYYY HH:mm"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label>Ende</ion-label>
+            <ion-datetime display-format="MMMM DD DDD, YYYY HH:mm"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label position="floating">Description</ion-label>
+            <ion-textarea></ion-textarea>
+        </ion-item>
+        <!-- todo checkbox gruppen-->
+
+
+        <!-- todo add later: origin, complement, address, documents, picture-->
+
+    </div>
+    <div class="modal-footer">
+        <ion-button (click)="closeModal()">Close</ion-button>
+        <ion-button>Save</ion-button>
+    </div>
 </div>
+
+

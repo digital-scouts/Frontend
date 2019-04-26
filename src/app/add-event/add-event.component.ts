@@ -13,6 +13,7 @@ export class AddEventComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
   }
 
   closeModal() {

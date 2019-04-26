@@ -21,7 +21,7 @@ export class CalendarPage implements OnInit {
     }
 
     public events: Array<{ title: string; date: string; icon: string }> = [];
-    hideAddEventBtn = true;
+    hideAddEventBtn = false;
 
     /**
      * todo timespan
@@ -48,10 +48,7 @@ export class CalendarPage implements OnInit {
     ionViewWillEnter() {
         // goToLogin when not logged in
         this.http.getAndSetUserData().then(res => !res ? this.router.navigate(['/login']) : null);
-        setTimeout(() => {
-            this.hideAddEventBtn = true;
-            console.log('set to false');
-        }, 200);
+        // todo check if user is leader or admin and than show hideAddEventBtn
     }
 
     ngOnInit() {
