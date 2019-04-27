@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {HttpServiceService} from '../http-service.service';
 import {ModalController} from '@ionic/angular';
 import {AddEventComponent} from '../add-event/add-event.component';
+import {HelperService} from '../helper.service';
 
 @Component({
     selector: 'app-calendar',
@@ -18,32 +19,34 @@ export class CalendarPage implements OnInit {
         private http: HttpServiceService,
         private modal: ModalController,
     ) {
+        // set filter dates
+        const today: Date = new Date();
+        const d1: Date = new Date();
+        const d2: Date = new Date();
+        const d3: Date = new Date();
+        const d4: Date = new Date(today.getFullYear(), today.getMonth(), 31);
+        d1.setDate(today.getDate() - 365);
+        d2.setDate(today.getDate() + 365);
+        d4.setDate(today.getDate() + 185);
+        this.filterDateMin = d1.toISOString();
+        this.filterDateMax = d2.toISOString();
+        this.filterStartDate = d3.toISOString();
+        this.filterEndDate = d4.toISOString();
+
+        // check permission
+        this.storage.get('role').then(role => {
+            this.hideAddEventBtn = !(role === 'admin' || role === 'leader');
+        });
     }
+
 
     public events: Array<{ title: string; date: string; icon: string }> = [];
-    hideAddEventBtn = false;
+    hideAddEventBtn = true;
+    filterEndDate: string;
+    filterStartDate: string;
 
-    /**
-     * todo timespan
-     * format a date to short timespan String
-     * @param startDate
-     */
-    private static formatDateToString(startDate: Date, endDate: Date): string {
-        startDate.setTime(startDate.getTime() + startDate.getTimezoneOffset() * 60 * 1000);
-        const now: Date = new Date();
-
-        const dd = (startDate.getDate() > 9 ? '' : '0') + startDate.getDate();
-        const mm = ((startDate.getMonth() + 1) > 9 ? '' : '0') + (startDate.getMonth() + 1);
-        let formattedDate = `${dd}.${mm}.`;
-
-        if (now.getFullYear() !== startDate.getFullYear()) {
-            formattedDate += `${startDate.getFullYear()}`;
-        }
-        if (startDate.toLocaleTimeString().split(':')[0] !== '00') {
-            formattedDate += ' ' + startDate.toLocaleTimeString().split(':')[0] + ':' + startDate.toLocaleTimeString().split(':')[1];
-        }
-        return formattedDate;
-    }
+    filterDateMin: string;
+    filterDateMax: string;
 
     ionViewWillEnter() {
         // goToLogin when not logged in
@@ -53,20 +56,41 @@ export class CalendarPage implements OnInit {
 
     ngOnInit() {
         this.http.getEvents().then(events => {
-            // @ts-ignore
-            for (let i = 0; i < events.length; i++) {
-                console.log(events[i].eventName);
-                this.events.push({
-                    title: events[i].eventName,
-                    date: CalendarPage.formatDateToString(new Date(events[i].dateStart), new Date(events[i].dateEnd)),
-                    icon: ''
-                });
-            }
+            this.drawCalendar(events);
         });
     }
 
-    async openModal() {
+    private drawCalendar(events) {
+        this.events = [];
+        for (let i = 0; i < events.length; i++) {
+            this.events.push({
+                title: events[i].eventName,
+                date: HelperService.formatDateToTimespanString(new Date(events[i].dateStart), new Date(events[i].dateEnd)),
+                icon: ''
+            });
+        }
+    }
+
+    async openAddEventModal() {
         const myModal = await this.modal.create({component: AddEventComponent});
         myModal.present();
+    }
+
+    /**
+     * reload the event list with the new filter parameter
+     */
+    applyFilter() {
+        let startDate: Date = new Date(this.filterStartDate);
+        let endDate: Date = new Date(this.filterEndDate);
+
+        startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+        endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
+
+        console.log(startDate);
+        console.log(endDate);
+        this.http.getEvents(startDate.toISOString(), endDate.toISOString()).then(events => {
+            console.log(events);
+            this.drawCalendar(events);
+        });
     }
 }

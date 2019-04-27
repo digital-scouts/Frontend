@@ -5,13 +5,30 @@
 </ion-header>
 
 <ion-content padding>
+  <div>
+    Filter
+    <ion-item>
+      <ion-label>Start</ion-label>
+      <ion-datetime [(ngModel)]="filterStartDate" pickerFormat="MMMM YYYY" display-format="MMMM YYYY"  [min]="filterDateMin" [max]="filterDateMax"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Ende</ion-label>
+      <ion-datetime [(ngModel)]="filterEndDate" pickerFormat="MMMM YYYY" display-format="MMMM YYYY" [min]="filterDateMin" [max]="filterDateMax"></ion-datetime>
+    </ion-item>
+    <ion-button (click)="applyFilter()">Reload</ion-button>
+  </div>
+
+<div>
+  Kalender
   <ion-list>
     <ion-item *ngFor="let event of events">
       {{event.title}}
-      <div class="item-note" slot="end">
+      <div slot="end">
         {{event.date}}
       </div>
     </ion-item>
-    <ion-button [disabled]="hideAddEventBtn" [hidden]="hideAddEventBtn" (click)="openModal()">+</ion-button>
+    <ion-button [disabled]="hideAddEventBtn" [hidden]="hideAddEventBtn" (click)="openAddEventModal()">+</ion-button>
   </ion-list>
+</div>
+
 </ion-content>

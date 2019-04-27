@@ -5,30 +5,32 @@
     <div class="modal-body">
         <ion-item>
             <ion-label position="floating">Titel</ion-label>
-            <ion-input></ion-input>
+            <ion-input [(ngModel)]="eventTitle"></ion-input>
         </ion-item>
-        <ion-checkbox checked="true">Öffentliche Veranstaltung</ion-checkbox>
+        <ion-item>
+            <ion-label position="floating">Öffentliche Veranstaltung</ion-label>
+            <ion-checkbox [(ngModel)]="eventIsPublic" checked="true"></ion-checkbox>
+        </ion-item>
         <ion-item>
             <ion-label>Start</ion-label>
-            <ion-datetime display-format="MMMM DD DDD, YYYY HH:mm"></ion-datetime>
+            <ion-datetime [(ngModel)]="eventStartDate" display-format="MMMM DD DDD, YYYY HH:mm"></ion-datetime>
         </ion-item>
         <ion-item>
             <ion-label>Ende</ion-label>
-            <ion-datetime display-format="MMMM DD DDD, YYYY HH:mm"></ion-datetime>
+            <ion-datetime [(ngModel)]="eventEndDate" display-format="MMMM DD DDD, YYYY HH:mm"></ion-datetime>
         </ion-item>
         <ion-item>
             <ion-label position="floating">Description</ion-label>
-            <ion-textarea></ion-textarea>
+            <ion-textarea [(ngModel)]="eventDescription"></ion-textarea>
         </ion-item>
+
         <!-- todo checkbox gruppen-->
-
-
         <!-- todo add later: origin, complement, address, documents, picture-->
 
     </div>
     <div class="modal-footer">
         <ion-button (click)="closeModal()">Close</ion-button>
-        <ion-button>Save</ion-button>
+        <ion-button (click)="addEvent()">Save</ion-button>
     </div>
 </div>
 
