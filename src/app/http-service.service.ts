@@ -16,6 +16,29 @@ export class HttpServiceService {
     }
 
     /**
+     * set name and role to storage
+     * @param name_first
+     * @param name_last
+     * @param role
+     */
+    private async setUserData(name_first: string, name_last: string, role: string) {
+        await this.storage.set('first_name', name_first);
+        await this.storage.set('last_name', name_last);
+        await this.storage.set('role', role);
+        console.log('set data: name: ' + name_first + ' ' + name_last + ' and role: ' + role);
+    }
+
+    /**
+     * save token to storage
+     * @param {string} token
+     * @return {Promise<void>}
+     */
+    private async setToken(token: string) {
+        this.token = token;
+        await this.storage.set('token', token);
+    }
+
+    /**
      * can be used to test a token and to update user data
      */
     getAndSetUserData() {
@@ -42,19 +65,6 @@ export class HttpServiceService {
                 }
             });
         });
-    }
-
-    /**
-     *
-     * @param name_first
-     * @param name_last
-     * @param role
-     */
-    private async setUserData(name_first: string, name_last: string, role: string) {
-        await this.storage.set('first_name', name_first);
-        await this.storage.set('last_name', name_last);
-        await this.storage.set('role', role);
-        console.log('set data: name: ' + name_first + ' ' + name_last + ' and role: ' + role);
     }
 
     // _______________________________________________________________________ AUTH Start
@@ -91,19 +101,11 @@ export class HttpServiceService {
         });
     }
 
-    private async setToken(token: string) {
-        this.token = token;
-        await this.storage.set('token', token);
-    }
-
     // _______________________________________________________________________ AUTH End
-
-
     // _______________________________________________________________________ USER Start
 
     /**
      * create a new user
-     * consult docs for more information about user data
      * @param nameFirst
      * @param nameLast
      * @param email
@@ -202,7 +204,6 @@ export class HttpServiceService {
     }
 
     // _______________________________________________________________________ USER End
-
     // _______________________________________________________________________ CHAT Start
 
     /**

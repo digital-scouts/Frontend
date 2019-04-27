@@ -35,13 +35,13 @@ export class CalendarPage implements OnInit {
 
         // check permission
         this.storage.get('role').then(role => {
-            this.hideAddEventBtn = !(role === 'admin' || role === 'leader');
+            this.hasPermissionToAddEvents = (role === 'admin' || role === 'leader');
         });
     }
 
 
     public events: Array<{ title: string; date: string; icon: string }> = [];
-    hideAddEventBtn = true;
+    hasPermissionToAddEvents = false;
     filterEndDate: string;
     filterStartDate: string;
 
@@ -51,7 +51,6 @@ export class CalendarPage implements OnInit {
     ionViewWillEnter() {
         // goToLogin when not logged in
         this.http.getAndSetUserData().then(res => !res ? this.router.navigate(['/login']) : null);
-        // todo check if user is leader or admin and than show hideAddEventBtn
     }
 
     ngOnInit() {
@@ -72,8 +71,12 @@ export class CalendarPage implements OnInit {
     }
 
     async openAddEventModal() {
-        const myModal = await this.modal.create({component: AddEventComponent});
-        myModal.present();
+        if (this.hasPermissionToAddEvents) {
+            const myModal = await this.modal.create({component: AddEventComponent});
+            myModal.present();
+        } else {
+            alert('missing Permission');
+        }
     }
 
     /**

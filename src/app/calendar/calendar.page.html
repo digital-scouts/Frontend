@@ -27,8 +27,9 @@
         {{event.date}}
       </div>
     </ion-item>
-    <ion-button [disabled]="hideAddEventBtn" [hidden]="hideAddEventBtn" (click)="openAddEventModal()">+</ion-button>
   </ion-list>
 </div>
+
+  <ion-button [hidden]="!hasPermissionToAddEvents" (click)="openAddEventModal()">+</ion-button>
 
 </ion-content>
