@@ -1,20 +1,49 @@
 <ion-content>
-  <div class="background_blue">
+    <div class="background_blue">
 
+        Einloggen
+        <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input [(ngModel)]="username_input" type="text"></ion-input>
+        </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Nutzername</ion-label>
-      <ion-input [(ngModel)]="username_input" type="text"></ion-input>
-    </ion-item>
+        <ion-item>
+            <ion-label position="floating">Password</ion-label>
+            <ion-input [(ngModel)]="password_input" clearInput type="password"></ion-input>
+        </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Password</ion-label>
-      <ion-input [(ngModel)]="password_input" clearInput type="password"></ion-input>
-    </ion-item>
+        <ion-label>Save PW</ion-label>
+        <ion-checkbox color="primary" [(ngModel)]="savePw"></ion-checkbox>
+        <ion-button (click)="login_click()">Login</ion-button>
+        <br>
+        Konto erstellen
+        <ion-item>
+            <ion-label position="floating">Vorname</ion-label>
+            <ion-input [(ngModel)]="nameFirst_reg" type="text"></ion-input>
+        </ion-item>
 
-    <ion-label>Save PW</ion-label>
-    <ion-checkbox color="primary" [(ngModel)]="savePw"></ion-checkbox>
-    <ion-button (click)="login_click()" >Login</ion-button>
-  </div>
+        <ion-item>
+            <ion-label position="floating">Nachname</ion-label>
+            <ion-input [(ngModel)]="nameLast_reg" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input [(ngModel)]="email_reg" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="floating">Gruppe (admin, leader, woe, jufi, pfadi,rover)</ion-label>
+            <ion-input [(ngModel)]="group_reg" type="text"></ion-input>
+        </ion-item>
+        Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one
+        special character (@$!%*?&.-_). (Wähle kein echtes Passwort (Password wird nicht verschlüsselt))
+        <ion-item>
+            <ion-label position="floating">Password
+            </ion-label>
+            <ion-input [(ngModel)]="password_reg" clearInput type="password"></ion-input>
+        </ion-item>
+        <ion-button (click)="register_click()">Login</ion-button>
+    </div>
 
 </ion-content>

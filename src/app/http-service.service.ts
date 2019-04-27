@@ -6,7 +6,7 @@ import {HTTP} from '@ionic-native/http/ngx';
 @Injectable({providedIn: 'root'})
 export class HttpServiceService {
     private backend_url;
-    private token;
+    private token: string;
 
     constructor(
         private storage: Storage,
@@ -21,21 +21,25 @@ export class HttpServiceService {
     getAndSetUserData() {
         return new Promise(resolve => {
             this.storage.get('token').then(token => {
-                this.token = token;
-                this.httpClient.post(this.backend_url, {token: token}, {authorization: token})
-                    .then(res => {
-                        const data: JSON = JSON.parse(res.data);
+                if (token) {
+                    this.token = token;
+                    this.httpClient.post(this.backend_url, {}, {authorization: token})
+                        .then(res => {
+                            const data: JSON = JSON.parse(res.data);
 
-                        // @ts-ignore
-                        if (res.status === 200) {
                             // @ts-ignore
-                            this.setUserData(data.userNameFirst, data.userNameLast, data.role).then(() => resolve(true));
-                        }
-                    }, err => {
-                        // todo handle error
-                        console.log(err);
-                        resolve(false);
-                    });
+                            if (res.status === 200) {
+                                // @ts-ignore
+                                this.setUserData(data.userNameFirst, data.userNameLast, data.role).then(() => resolve(true));
+                            }
+                        }, err => {
+                            // todo handle error
+                            console.log(err);
+                            resolve(false);
+                        });
+                } else {
+                    resolve(false);
+                }
             });
         });
     }
@@ -63,7 +67,7 @@ export class HttpServiceService {
      */
     async auth(email: string, password: string, savePw: boolean) {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/api' + '/auth', {'email': email, 'password': password}, {authorization: this.token})
+            this.httpClient.post(this.backend_url + '/api' + '/auth', {'email': email, 'password': password}, {})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
 
@@ -108,13 +112,21 @@ export class HttpServiceService {
      */
     newUser(nameFirst: string, nameLast: string, email: string, password: string, role: string) {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/api' + '/users', {}, {authorization: this.token})
+            this.httpClient.post(this.backend_url + '/api' + '/users', {
+                'name_first': nameFirst,
+                'name_last': nameLast,
+                'email': email,
+                'password': password,
+                'role': role
+            }, {})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
 
                     resolve(data);
                 }, err => {
+                    err.error = JSON.parse(err.error);
                     console.log(err);
+                    alert(err.error.message + ': ' + err.error.detail);
                 });
         });
     }
@@ -300,9 +312,15 @@ export class HttpServiceService {
     /**
      * todo
      */
-    postEvent() {
+    postEvent(eventTitle: string, eventIsPublic: boolean, eventStartDate: Date, eventEndDate: Date, eventDescription: string) {
         return new Promise(resolve => {
-            this.httpClient.post(this.backend_url + '/api' + '/calendar', {}, {authorization: this.token})
+            this.httpClient.post(this.backend_url + '/api' + '/calendar', {
+                public: eventIsPublic,
+                eventName: eventTitle,
+                startDate: eventStartDate,
+                endDate: eventEndDate,
+                description: eventDescription
+            }, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(res);
@@ -313,11 +331,23 @@ export class HttpServiceService {
     }
 
     /**
-     * todo
+     *
+     * @param {Date} filterDateStart
+     * @param {Date} filterDateEnd
+     * @return {Promise<JSON>}
      */
-    getEvents(): Promise<JSON> {
+    getEvents(filterDateStart: string = null, filterDateEnd: string = null): Promise<JSON> {
+        const filter = {
+            'dateStart': (filterDateStart !== null) ? new Date(filterDateStart).toISOString() : 'null',
+            'dateEnd': (filterDateEnd !== null) ? new Date(filterDateEnd).toISOString() : 'null',
+            'filterComplement': 'null',
+            'filterOrigin': 'null',
+            'filterGroup': 'null',
+            'filterType': 'null',
+        };
+        console.log(filter);
         return new Promise(async resolve => {
-            this.httpClient.get(this.backend_url + '/api' + '/calendar', {}, {authorization: this.token})
+            this.httpClient.get(this.backend_url + '/api' + '/calendar', filter, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
