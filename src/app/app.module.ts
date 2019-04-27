@@ -10,6 +10,7 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import { HTTP } from '@ionic-native/http/ngx';
 import { AddEventComponent } from './add-event/add-event.component';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
     declarations: [AppComponent, AddEventComponent],
@@ -18,6 +19,7 @@ import { AddEventComponent } from './add-event/add-event.component';
     ],
     imports: [
         BrowserModule,
+        FormsModule,
         IonicModule.forRoot(),
         IonicStorageModule.forRoot(),
         AppRoutingModule,
