@@ -1,7 +1,7 @@
 {
   "name": "digital_scouts",
   "version": "0.0.1",
-  "author": "Ionic Framework",
+  "author": "Janneck Lange",
   "homepage": "http://ionicframework.com/",
   "scripts": {
     "ng": "ng",
