@@ -1,15 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {ModalController} from '@ionic/angular';
+import {ModalEditEventComponent} from '../modal-event-edit/modal-edit-event.component';
+
 
 @Component({
-  selector: 'app-modal-event-details',
-  templateUrl: './modal-event-details.component.html',
-  styleUrls: ['./modal-event-details.component.scss']
+    selector: 'app-modal-event-details',
+    templateUrl: './modal-event-details.component.html',
+    styleUrls: ['./modal-event-details.component.scss']
 })
 export class ModalEventDetailsComponent implements OnInit {
 
-  constructor() { }
+    @Input() event: {
+        title: string,
+        description: string,
+        displayDate: string,
+        dateStart: Date,
+        dateEnd: Date,
+        groups: string[], // id`s
+        competent: string[], // id´s
+        public: boolean,
+        id: string, // id
+        creator: string, // id
+    };
 
-  ngOnInit() {
-  }
+    constructor(
+        private modal: ModalController,
+    ) {
+    }
 
+    ngOnInit() {
+
+    }
+
+    /**
+     *
+     * @param edit
+     */
+    closeModal(edit: boolean = false) {
+        this.modal.dismiss({
+            'edit': edit
+        });
+    }
 }

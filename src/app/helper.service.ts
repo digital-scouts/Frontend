@@ -11,7 +11,7 @@ export class HelperService {
 
     /**
      * todo timespan
-     * format a date to short timespan String
+     * format a displayDate to short timespan String
      * @param startDate
      */
     public static formatDateToTimespanString(startDate: Date, endDate: Date): string {

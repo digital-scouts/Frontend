@@ -5,6 +5,7 @@ import {HttpServiceService} from '../http-service.service';
 import {ModalController} from '@ionic/angular';
 import {HelperService} from '../helper.service';
 import {ModalEditEventComponent} from '../modal-event-edit/modal-edit-event.component';
+import {ModalEventDetailsComponent} from '../modal-event-details/modal-event-details.component';
 
 @Component({
     selector: 'app-calendar',
@@ -39,8 +40,19 @@ export class CalendarPage implements OnInit {
         });
     }
 
-
-    public events: Array<{ title: string; date: string; icon: string, id: string }> = [];
+    // warning when this will be updated, than update also the modal-event-details.component and modal-event-edit.component
+    public events: Array<{
+        title: string,
+        description: string,
+        displayDate: string,
+        dateStart: Date,
+        dateEnd: Date,
+        groups: string[], // id`s
+        competent: string[], // id´s
+        public: boolean,
+        id: string, // id
+        creator: string, // id
+    }> = [];
     hasPermissionToAddEvents = false;
     filterEndDate: string;
     filterStartDate: string;
@@ -64,24 +76,35 @@ export class CalendarPage implements OnInit {
         for (let i = 0; i < events.length; i++) {
             this.events.push({
                 title: events[i].eventName,
-                date: HelperService.formatDateToTimespanString(new Date(events[i].dateStart), new Date(events[i].dateEnd)),
-                icon: '',
-                id: events[i]._id
+                description: events[i].description,
+                displayDate: HelperService.formatDateToTimespanString(new Date(events[i].dateStart), new Date(events[i].dateEnd)),
+                dateStart: new Date(events[i].dateStart),
+                dateEnd: new Date(events[i].dateEnd),
+                groups: events[i].groups,
+                competent: events[i].competent,
+                public: events[i].public,
+                id: events[i]._id,
+                creator: events[i].creator
             });
         }
     }
 
     /**
-     *
+     *open a modal to edit or create a event
      * @param id
      */
     async openAddEventModal(id: string) {
         if (this.hasPermissionToAddEvents) {
-            const myModal = await this.modal.create({
-                component: ModalEditEventComponent,
-                componentProps: {'id': id}
-            });
-            myModal.present();
+            for (let i = 0; id == null || i < this.events.length; i++) {
+                if (id == null || this.events[i].id === id) {
+                    const myModal = await this.modal.create({
+                        component: ModalEditEventComponent,
+                        componentProps: {'event': null}
+                    });
+                    myModal.present();
+                    return;
+                }
+            }
         } else {
             alert('missing Permission');
         }
@@ -105,8 +128,22 @@ export class CalendarPage implements OnInit {
         });
     }
 
-    editEvent_click(id: string) {
-        console.log('edit event clicked for id: ' + id);
-        this.openAddEventModal(id);
+    async showEvent_click(id: string) {
+        console.log('detail event clicked for id: ' + id);
+        for (let i = 0; i < this.events.length; i++) {
+            if (this.events[i].id === id) {
+                const myModal = await this.modal.create({
+                    component: ModalEventDetailsComponent,
+                    componentProps: {'event': this.events[i]}
+                });
+
+                myModal.present();
+                const {data} = await myModal.onDidDismiss();
+                if (data.edit) {
+                    this.openAddEventModal(id);
+                }
+                return;
+            }
+        }
     }
 }

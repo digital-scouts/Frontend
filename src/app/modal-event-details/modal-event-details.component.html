@@ -1,3 +1,22 @@
-<p>
-  modal-event-details works!
-</p>
+<div class="modal-content" style="width: 100vw; height: 100vh; background-color: white; padding: 10px;">
+    <div class="modal-header">
+        <h4 class="modal-title">Event Details</h4>
+    </div>
+    <div class="modal-body">
+        Title: {{event.title}}
+        <br>
+        Beschreibung: {{event.description}}
+        <br>
+        StartDate: {{event.dateStart}}
+        EndDate: {{event.dateEnd}}
+        <br>
+
+    </div>
+    <div class="modal-footer">
+        <ion-button (click)="closeModal()">Close</ion-button>
+        <ion-button (click)="closeModal(true)">Edit</ion-button>
+
+    </div>
+</div>
+
+

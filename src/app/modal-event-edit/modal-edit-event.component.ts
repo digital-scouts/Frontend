@@ -9,11 +9,21 @@ import {HttpServiceService} from '../http-service.service';
 })
 export class ModalEditEventComponent implements OnInit {
 
-    // id of event to edit, if id null than create a new Event
-    @Input() id: string;
+    @Input() event: {
+        title: string,
+        description: string,
+        displayDate: string,
+        dateStart: Date,
+        dateEnd: Date,
+        groups: string[], // id`s
+        competent: string[], // id´s
+        public: boolean,
+        id: string, // id
+        creator: string, // id
+    };
 
     eventTitle: string;
-    eventIsPublic: boolean;
+    eventIsPublic = true;
     eventStartDate: Date;
     eventEndDate: Date;
     eventDescription: string;
@@ -22,9 +32,18 @@ export class ModalEditEventComponent implements OnInit {
         private modal: ModalController,
         private http: HttpServiceService
     ) {
+        console.log('constructor: ' + this.event);
     }
 
-    ngOnInit() {
+    ionViewDidEnter() {
+        console.log('ionViewDidEnter: ' + this.event);
+        if (this.event !== null) {
+            this.eventTitle = this.event.title;
+            this.eventDescription = this.event.description;
+            this.eventEndDate = this.event.dateEnd;
+            this.eventStartDate = this.event.dateStart;
+            this.eventIsPublic = this.event.public;
+        }
 
     }
 
@@ -33,10 +52,22 @@ export class ModalEditEventComponent implements OnInit {
     }
 
     addEvent() {
-        this.http.postEvent(this.eventTitle, this.eventIsPublic, this.eventStartDate, this.eventEndDate, this.eventDescription)
-            .then(res => {
-                console.log(res);
-            });
+        if (this.event === null) {
+            this.http.postEvent(this.eventTitle, this.eventIsPublic, this.eventStartDate, this.eventEndDate, this.eventDescription)
+                .then(res => {
+                    console.log(res);
+                });
+        } else {
+            this.http.putEvent(this.event.id, this.eventTitle, this.eventIsPublic, this.eventStartDate,
+                this.eventEndDate, this.eventDescription)
+                .then(res => {
+                    console.log(res);
+                });
+        }
+
+    }
+
+    ngOnInit(): void {
     }
 
 }

@@ -331,6 +331,25 @@ export class HttpServiceService {
         });
     }
 
+    putEvent(id: string, eventTitle: string, eventIsPublic: boolean, eventStartDate: Date, eventEndDate: Date, eventDescription: string) {
+        return new Promise(resolve => {
+            this.httpClient.put(this.backend_url + '/api' + '/calendar', {
+                id: id,
+                public: eventIsPublic,
+                eventName: eventTitle,
+                startDate: eventStartDate,
+                endDate: eventEndDate,
+                description: eventDescription
+            }, {authorization: this.token})
+                .then(res => {
+                    res.data = JSON.parse(res.data);
+                    resolve(res);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
     /**
      *
      * @param {Date} filterDateStart
@@ -368,6 +387,22 @@ export class HttpServiceService {
     getGroups(): Promise<JSON> {
         return new Promise(async resolve => {
             this.httpClient.get(this.backend_url + '/api' + '/group', {}, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    /**
+     * todo
+     * @param id
+     */
+    getGroup(id): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.get(this.backend_url + '/api' + '/group/' + id, {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);

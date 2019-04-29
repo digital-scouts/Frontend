@@ -21,10 +21,10 @@
 <div>
   Kalender
   <ion-list>
-    <ion-item *ngFor="let event of events" (click)="editEvent_click(event.id)">
+    <ion-item *ngFor="let event of events" (click)="showEvent_click(event.id)">
       {{event.title}}
       <div slot="end">
-        {{event.date}}
+        {{event.displayDate}}
       </div>
     </ion-item>
   </ion-list>
