@@ -1,9 +1,19 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>settings</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>settings</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-
+    <div>
+        <h4>Gruppen</h4>
+        <ion-list>
+            <ion-item *ngFor="let group of groups" (click)="editGroup_click(group.id)">
+                {{group.name}}
+                <div slot="end">
+                    {{group.logo}}
+                </div>
+            </ion-item>
+        </ion-list>
+    </div>
 </ion-content>

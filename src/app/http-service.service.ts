@@ -360,4 +360,85 @@ export class HttpServiceService {
 
 
     // _______________________________________________________________________ CALENDAR End
+    // _______________________________________________________________________ GROUP End
+
+    /**
+     *
+     */
+    getGroups(): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.get(this.backend_url + '/api' + '/group', {}, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    /**
+     *
+     * @param name
+     * @param leader
+     * @param logo
+     */
+    postGroup(name: string, leader: string, logo: string): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.post(this.backend_url + '/api' + '/group', {
+                name: name,
+                leader: leader,
+                logo: logo
+            }, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    /**
+     *
+     */
+    getLessons(): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.get(this.backend_url + '/api' + '/group/lesson', {}, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    /**
+     *
+     * @param group
+     * @param startDate
+     * @param end
+     * @param duration
+     * @param frequency
+     */
+    postLesson(group: string, startDate: Date, end: Date, duration: number, frequency: number): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.post(this.backend_url + '/api' + '/group/lesson', {
+                group: group,
+                startDate: startDate,
+                end: end,
+                duration: duration,
+                frequency: frequency
+            }, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    // _______________________________________________________________________ GROUP End
 }
