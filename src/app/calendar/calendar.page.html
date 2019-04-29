@@ -21,7 +21,7 @@
 <div>
   Kalender
   <ion-list>
-    <ion-item *ngFor="let event of events">
+    <ion-item *ngFor="let event of events" (click)="editEvent_click(event.id)">
       {{event.title}}
       <div slot="end">
         {{event.date}}
@@ -30,6 +30,6 @@
   </ion-list>
 </div>
 
-  <ion-button [hidden]="!hasPermissionToAddEvents" (click)="openAddEventModal()">+</ion-button>
+  <ion-button [hidden]="!hasPermissionToAddEvents" (click)="openAddEventModal(null)">+</ion-button>
 
 </ion-content>

@@ -1,13 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ModalController} from '@ionic/angular';
 import {HttpServiceService} from '../http-service.service';
 
 @Component({
-    selector: 'app-add-event',
-    templateUrl: './add-event.component.html',
-    styleUrls: ['./add-event.component.scss']
+    selector: 'app-modal-edit-event',
+    templateUrl: './modal-edit-event.component.html',
+    styleUrls: ['./modal-edit-event.component.scss']
 })
-export class AddEventComponent implements OnInit {
+export class ModalEditEventComponent implements OnInit {
+
+    // id of event to edit, if id null than create a new Event
+    @Input() id: string;
+
     eventTitle: string;
     eventIsPublic: boolean;
     eventStartDate: Date;
@@ -31,7 +35,8 @@ export class AddEventComponent implements OnInit {
     addEvent() {
         this.http.postEvent(this.eventTitle, this.eventIsPublic, this.eventStartDate, this.eventEndDate, this.eventDescription)
             .then(res => {
-            console.log(res);
-        });
+                console.log(res);
+            });
     }
+
 }

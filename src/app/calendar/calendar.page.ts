@@ -3,8 +3,8 @@ import {Storage} from '@ionic/storage';
 import {Router} from '@angular/router';
 import {HttpServiceService} from '../http-service.service';
 import {ModalController} from '@ionic/angular';
-import {AddEventComponent} from '../add-event/add-event.component';
 import {HelperService} from '../helper.service';
+import {ModalEditEventComponent} from '../modal-event-edit/modal-edit-event.component';
 
 @Component({
     selector: 'app-calendar',
@@ -40,7 +40,7 @@ export class CalendarPage implements OnInit {
     }
 
 
-    public events: Array<{ title: string; date: string; icon: string }> = [];
+    public events: Array<{ title: string; date: string; icon: string, id: string }> = [];
     hasPermissionToAddEvents = false;
     filterEndDate: string;
     filterStartDate: string;
@@ -65,14 +65,22 @@ export class CalendarPage implements OnInit {
             this.events.push({
                 title: events[i].eventName,
                 date: HelperService.formatDateToTimespanString(new Date(events[i].dateStart), new Date(events[i].dateEnd)),
-                icon: ''
+                icon: '',
+                id: events[i]._id
             });
         }
     }
 
-    async openAddEventModal() {
+    /**
+     *
+     * @param id
+     */
+    async openAddEventModal(id: string) {
         if (this.hasPermissionToAddEvents) {
-            const myModal = await this.modal.create({component: AddEventComponent});
+            const myModal = await this.modal.create({
+                component: ModalEditEventComponent,
+                componentProps: {'id': id}
+            });
             myModal.present();
         } else {
             alert('missing Permission');
@@ -95,5 +103,10 @@ export class CalendarPage implements OnInit {
             console.log(events);
             this.drawCalendar(events);
         });
+    }
+
+    editEvent_click(id: string) {
+        console.log('edit event clicked for id: ' + id);
+        this.openAddEventModal(id);
     }
 }

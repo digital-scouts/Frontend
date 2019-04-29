@@ -8,14 +8,16 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {IonicStorageModule} from '@ionic/storage';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
-import { HTTP } from '@ionic-native/http/ngx';
-import { AddEventComponent } from './add-event/add-event.component';
+import {HTTP} from '@ionic-native/http/ngx';
 import {FormsModule} from '@angular/forms';
+import {ModalEditGroupComponent} from './modal-group-edit/modal-edit-group.component';
+import {ModalEditEventComponent} from './modal-event-edit/modal-edit-event.component';
+import {ModalEventDetailsComponent} from './modal-event-details/modal-event-details.component';
 
 @NgModule({
-    declarations: [AppComponent, AddEventComponent],
+    declarations: [AppComponent, ModalEditGroupComponent, ModalEditEventComponent, ModalEventDetailsComponent],
     entryComponents: [
-        AddEventComponent,
+        ModalEditGroupComponent, ModalEditEventComponent, ModalEventDetailsComponent
     ],
     imports: [
         BrowserModule,
