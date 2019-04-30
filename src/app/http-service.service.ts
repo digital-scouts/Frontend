@@ -91,7 +91,7 @@ export class HttpServiceService {
                         }
 
                         // @ts-ignore
-                        this.setToken(data.token).then(() => resolve(true));
+                        this.setToken(data.token).then(() => resolve(true), () => resolve(false));
                     }
                 }, err => {
                     // todo handle error
