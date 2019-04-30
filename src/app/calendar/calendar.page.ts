@@ -20,7 +20,7 @@ export class CalendarPage implements OnInit {
         private http: HttpServiceService,
         private modal: ModalController,
     ) {
-        // set filter dates
+        // set default filter dates
         const today: Date = new Date();
         const d1: Date = new Date();
         const d2: Date = new Date();
@@ -66,9 +66,7 @@ export class CalendarPage implements OnInit {
     }
 
     ngOnInit() {
-        this.http.getEvents().then(events => {
-            this.drawCalendar(events);
-        });
+        this.applyFilter();
     }
 
     private drawCalendar(events) {
@@ -99,9 +97,13 @@ export class CalendarPage implements OnInit {
                 if (id == null || this.events[i].id === id) {
                     const myModal = await this.modal.create({
                         component: ModalEditEventComponent,
-                        componentProps: {'event': null}
+                        componentProps: {'event': (id === null) ? null : this.events[i]}
                     });
                     myModal.present();
+
+                    // wait for modal and load data again
+                    await myModal.onDidDismiss();
+                    this.applyFilter();
                     return;
                 }
             }
@@ -120,8 +122,6 @@ export class CalendarPage implements OnInit {
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
 
-        console.log(startDate);
-        console.log(endDate);
         this.http.getEvents(startDate.toISOString(), endDate.toISOString()).then(events => {
             console.log(events);
             this.drawCalendar(events);

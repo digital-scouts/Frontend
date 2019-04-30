@@ -378,6 +378,20 @@ export class HttpServiceService {
     }
 
 
+    deleteEvent(id: string): Promise<JSON> {
+
+        return new Promise(async resolve => {
+            this.httpClient.delete(this.backend_url + '/api' + '/calendar/' + id, {}, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+
     // _______________________________________________________________________ CALENDAR End
     // _______________________________________________________________________ GROUP End
 

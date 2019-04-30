@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ModalController} from '@ionic/angular';
+import {ModalController, ToastController} from '@ionic/angular';
 import {HttpServiceService} from '../http-service.service';
 
 @Component({
@@ -22,52 +22,82 @@ export class ModalEditEventComponent implements OnInit {
         creator: string, // id
     };
 
+    eventStartDate: string;
+    eventEndDate: string;
     eventTitle: string;
-    eventIsPublic = true;
-    eventStartDate: Date;
-    eventEndDate: Date;
     eventDescription: string;
+    eventPublic = false;
 
     constructor(
         private modal: ModalController,
-        private http: HttpServiceService
+        private http: HttpServiceService,
+        public toastController: ToastController
     ) {
-        console.log('constructor: ' + this.event);
     }
 
-    ionViewDidEnter() {
-        console.log('ionViewDidEnter: ' + this.event);
-        if (this.event !== null) {
-            this.eventTitle = this.event.title;
+    ngOnInit(): void {
+        if (this.event != null) {
+            this.eventStartDate = this.event.dateStart.toISOString();
+            this.eventEndDate = this.event.dateEnd.toISOString();
+            this.eventPublic = this.event.public;
             this.eventDescription = this.event.description;
-            this.eventEndDate = this.event.dateEnd;
-            this.eventStartDate = this.event.dateStart;
-            this.eventIsPublic = this.event.public;
+            this.eventTitle = this.event.title;
         }
-
     }
 
     closeModal() {
         this.modal.dismiss();
     }
 
+    async showEventSuccessToast() {
+        const toast = await this.toastController.create({
+            message: 'Your settings have been saved.',
+            duration: 2000
+        });
+        toast.present();
+    }
+
+    async showEventErrorToast() {
+        const toast = await this.toastController.create({
+            message: 'Something went wrong.',
+            duration: 2000
+        });
+        toast.present();
+    }
+
     addEvent() {
-        if (this.event === null) {
-            this.http.postEvent(this.eventTitle, this.eventIsPublic, this.eventStartDate, this.eventEndDate, this.eventDescription)
+        if (this.event == null) {
+            this.http.postEvent(this.eventTitle, this.eventPublic, new Date(this.eventStartDate), new Date(this.eventEndDate), this.eventDescription)
                 .then(res => {
                     console.log(res);
+                    this.showEventSuccessToast();
+                    this.closeModal();
+                }, (err) => {
+                    console.log(err);
+                    this.showEventErrorToast();
                 });
         } else {
-            this.http.putEvent(this.event.id, this.eventTitle, this.eventIsPublic, this.eventStartDate,
-                this.eventEndDate, this.eventDescription)
+            this.http.putEvent(this.event.id, this.eventTitle, this.eventPublic, new Date(this.eventStartDate), new Date(this.eventEndDate), this.eventDescription)
                 .then(res => {
                     console.log(res);
+                    this.showEventSuccessToast();
+                    this.closeModal();
+                }, (err) => {
+                    console.log(err);
+                    this.showEventErrorToast();
                 });
         }
 
     }
 
-    ngOnInit(): void {
+    deleteEvent() {
+        this.http.deleteEvent(this.event.id).then((res) => {
+            console.log(res);
+            this.showEventSuccessToast();
+            this.closeModal();
+        }, (err) => {
+            console.log(err);
+            this.showEventErrorToast();
+        });
     }
-
 }

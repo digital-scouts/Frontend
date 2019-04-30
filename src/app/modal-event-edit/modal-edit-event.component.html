@@ -5,23 +5,23 @@
   <div class="modal-body">
     <ion-item>
       <ion-label position="floating">Titel</ion-label>
-      <ion-input [(ngModel)]="eventTitle" [value]="eventTitle"></ion-input>
+      <ion-input [(ngModel)]="eventTitle"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="floating">Öffentliche Veranstaltung</ion-label>
-      <ion-checkbox [(ngModel)]="eventIsPublic" [checked]="eventIsPublic"></ion-checkbox>
+      <ion-label >Öffentliche Veranstaltung</ion-label>
+      <ion-checkbox [(ngModel)]="eventPublic"></ion-checkbox>
     </ion-item>
     <ion-item>
       <ion-label>Start</ion-label>
-      <ion-datetime [(ngModel)]="eventStartDate" [value]="eventStartDate" display-format="MMMM DD DDD, YYYY HH:mm"></ion-datetime>
+      <ion-datetime [(ngModel)]="eventStartDate"  display-format="MMMM DD DDD, YYYY HH:mm" minuteValues="0,10,15,20,30,40,45,50"></ion-datetime>
     </ion-item>
     <ion-item>
       <ion-label>Ende</ion-label>
-      <ion-datetime [(ngModel)]="eventEndDate" [value]="eventEndDate" display-format="MMMM DD DDD, YYYY HH:mm"></ion-datetime>
+      <ion-datetime [(ngModel)]="eventEndDate" display-format="MMMM DD DDD, YYYY HH:mm" minuteValues="0,10,15,20,30,40,45,50"></ion-datetime>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Description</ion-label>
-      <ion-textarea [(ngModel)]="eventDescription" [value]="eventDescription"></ion-textarea>
+      <ion-textarea [(ngModel)]="eventDescription"></ion-textarea>
     </ion-item>
 
     <!-- todo checkbox gruppen-->
@@ -31,6 +31,7 @@
   <div class="modal-footer">
     <ion-button (click)="closeModal()">Close</ion-button>
     <ion-button (click)="addEvent()">Save</ion-button>
+    <ion-button (click)="deleteEvent()" color="danger">Löschen</ion-button>
   </div>
 </div>
 
