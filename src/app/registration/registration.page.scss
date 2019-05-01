@@ -1,0 +1,46 @@
+.input > ion-item{
+  --ion-background-color:none;
+
+  height: 100%;
+  width: calc(100% - 75px);
+}
+
+.input > span{
+  position: absolute;
+
+  width: calc(100% - 75px);
+  height: calc(100% - 6px);
+  margin: 3px;
+  border-radius: 25px;
+
+  background-color: lightsalmon;
+}
+
+.input {
+  position: absolute;
+  display: flex;
+
+  background-color: darkorange;
+  box-shadow: 0 0 5px black ;
+  border-radius: 25px;
+
+  width: 90%;
+  max-width: 300px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+div.inactive {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.buttons {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%,0);
+  bottom: 10%;
+}
+
+

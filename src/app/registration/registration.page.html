@@ -1,9 +1,69 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>registration</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content >
+    <div class="form">
+        <div class="input name1 ">
+            <span></span>
+            <ion-item>
+                <ion-input placeholder="Vorname" [(ngModel)]="nameFirst_reg" type="text" autofocus autocapitalize></ion-input>
+            </ion-item>
+            <ion-button class="icon">
+                <ion-icon  name="arrow-round-forward"></ion-icon>
+            </ion-button>
+        </div>
+        <div class="input name2 inactive">
+            <ion-item>
+                <ion-input [(ngModel)]="nameLast_reg" type="text" autocapitalize></ion-input>
+            </ion-item>
+            <ion-button class="icon">
+                <ion-icon  name="arrow-round-forward"></ion-icon>
+            </ion-button>
+        </div>
+        <div class="input email inactive">
+            <ion-item>
+                <ion-input [(ngModel)]="email_reg" type="email"></ion-input>
+            </ion-item>
+            <ion-button class="icon">
+                <ion-icon  name="arrow-round-forward"></ion-icon>
+            </ion-button>
+        </div>
 
-<ion-content padding>
+        <div class="input group inactive">
+            <ion-radio-group>
+                <ion-item *ngFor="let group of groups">
+                    <ion-label>{{group}}</ion-label>
+                    <ion-radio></ion-radio>
+                </ion-item>
+            </ion-radio-group>
+            <ion-button class="icon">
+                <ion-icon  name="arrow-round-forward"></ion-icon>
+            </ion-button>
+        </div>
+
+        <div class="input password1 inactive">
+            <ion-item>
+                <!--                Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one-->
+                <!--                special character (@$!%*?&.-_). (Wähle kein echtes Passwort (Password wird nicht verschlüsselt))-->
+                <ion-input [(ngModel)]="password_reg" clearInput type="password"></ion-input>
+            </ion-item>
+            <ion-button class="icon">
+                <ion-icon  name="arrow-round-forward"></ion-icon>
+            </ion-button>
+        </div>
+
+        <div class="input password2 inactive">
+            <ion-item>
+                <ion-input [(ngModel)]="password_reg" clearInput type="password"></ion-input>
+            </ion-item>
+            <ion-button class="icon">
+                <ion-icon  name="arrow-round-forward"></ion-icon>
+            </ion-button>
+        </div>
+
+
+    </div>
+
+    <div class="buttons">
+        <ion-button>Anmelden</ion-button>
+        <ion-button>Hilfe</ion-button>
+    </div>
 
 </ion-content>

@@ -14,12 +14,6 @@ export class LoginPage implements OnInit {
     password_input: string;
     savePw: boolean;
 
-    password_reg: string;
-    group_reg: string;
-    email_reg: string;
-    nameLast_reg: string;
-    nameFirst_reg: string;
-
     constructor(
         private router: Router,
         private storage: Storage,
@@ -39,14 +33,9 @@ export class LoginPage implements OnInit {
         this.http.auth(this.username_input, this.password_input, this.savePw).then(res => {
             if (res) {
                 this.router.navigate(['/home']);
-            } else {
             }
         });
     }
 
-    register_click() {
-        this.http.newUser(this.nameFirst_reg, this.nameLast_reg, this.email_reg, this.password_reg, this.group_reg).then(data => {
-            alert('erfolgreich angemeldet, deine anmeldung muss nun von einem admin bestätigt werden');
-        });
-    }
+
 }

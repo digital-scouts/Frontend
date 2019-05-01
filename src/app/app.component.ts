@@ -200,6 +200,6 @@ export class AppComponent {
      * navigate to LoginPage
      */
     private goToLogin() {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/registration']);
     }
 }
