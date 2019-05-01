@@ -1,15 +1,17 @@
 <ion-content>
-    <div class="form">
+    <div class="background">
+        <p class="title">{{(isLogin) ? 'Einloggen' : 'Registrieren'}}</p>
         <div class="input" id="name1">
             <ion-item>
-                <ion-input placeholder="Vorname" [(ngModel)]="nameFirst_reg" type="text" autofocus
+                <ion-input placeholder="Vorname" [(ngModel)]="nameFirst_reg" type="text" [autofocus]="outFillIdx == 0"
                            autocapitalize></ion-input>
             </ion-item>
             <span (click)="next_click('name1')"></span>
         </div>
         <div class="input inactive" id="name2">
             <ion-item>
-                <ion-input placeholder="Nachname" [(ngModel)]="nameLast_reg" type="text" autocapitalize></ion-input>
+                <ion-input placeholder="Nachname" [(ngModel)]="nameLast_reg" type="text" [autofocus]="outFillIdx == 1"
+                           autocapitalize></ion-input>
             </ion-item>
             <span (click)="next_click('name2')"></span>
         </div>
@@ -40,7 +42,8 @@
 
         <div class="input inactive" id="password2">
             <ion-item>
-                <ion-input placeholder="Password wiederholen" [(ngModel)]="password2_reg" clearInput
+                <ion-input placeholder="{{(!isLogin)?'Password wiederholen':'Password'}}" [(ngModel)]="password2_reg"
+                           clearInput
                            type="password"></ion-input>
             </ion-item>
             <span (click)="next_click('password2')"></span>
@@ -48,8 +51,8 @@
     </div>
     <ion-icon (click)="prev_click()" id="storage" class="hidden" name="mail-open"></ion-icon>
     <div class="buttons">
-        <ion-button (click)="goTo_Login()">Anmelden</ion-button>
-        <ion-button (click)="goTo_Help()">Hilfe</ion-button>
+        <ion-button expand="full" (click)="goTo_log_reg()">{{(!isLogin) ? 'Anmelden' : 'Registrieren'}}</ion-button>
+        <ion-button expand="full" (click)="goTo_Help()">Hilfe</ion-button>
     </div>
 
 </ion-content>

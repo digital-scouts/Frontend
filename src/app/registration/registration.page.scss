@@ -6,19 +6,36 @@
   font-style: normal;
 }
 
+.background {
+  background-color: #0bb8cc;
+  height: 100vh;
+  width: 100vw;
+}
+
+.title {
+  position: absolute;
+
+  color: white;
+  font-family: 'Zero Threes', serif;
+  font-size: 1.3em;
+
+  width: calc(90% - 20px);
+  max-width: 280px;
+  left: 50%;
+  top: calc(50% - 70px);
+  transform: translate(-50%, -50%);
+}
+
 .input > ion-item {
   --ion-background-color: none;
-
   height: 100%;
   width: 100%;
 }
 
-.input > ion-input {
-  width: calc(100% - 55px);
-}
-
-.input > ion-input > input::placeholder {
-  color: red;
+.input > ion-item > ion-input {
+  --placeholder-color: white;
+  --placeholder-opacity: 1;
+  --color: white;
 }
 
 //arrow onclick
@@ -38,7 +55,7 @@
   position: absolute;
   display: flex;
 
-  background-color: darkorange;
+  background-color: var(--ion-color-orange-dark);
   box-shadow: 0 0 5px black;
   border-radius: 25px;
 
@@ -59,7 +76,7 @@
   margin: 3px;
   border-radius: 25px;
   pointer-events: none;
-  background-color: lightsalmon;
+  background-color: var(--ion-color-orange);
 }
 
 //arrow
@@ -68,6 +85,12 @@
   font-size: 2.7em;
   padding-right: 10px;
   font-family: "Ionicons", serif;
+  color: var(--ion-color-orange);
+}
+
+.input:last-child::after {
+  content: "\f2f6";
+  font-size: 2.5em;
 }
 
 .inactive {
@@ -82,6 +105,7 @@
   left: 50%;
   font-size: 2em;
   transform: translate(-50%, calc(-50% + 150px));
+  color: var(--ion-color-orange-dark);
 }
 
 .stored {
@@ -158,9 +182,20 @@
 
 .buttons {
   position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
   bottom: 10%;
+}
+
+.buttons > ion-button {
+  width: 35%;
+  max-width: 200px;
+  min-width: 100px;
+  --background: var(--ion-color-orange-dark);
+  color: var(--ion-color-orange-light);
+  margin: 10px;
 }
 
 

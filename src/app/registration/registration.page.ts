@@ -30,14 +30,33 @@ export class RegistrationPage implements OnInit {
     // todo load from backend
     groups = ['Wölfling', 'Jungpfadfinder', 'Pfadfinder', 'Rover', 'leader', 'Mutter/Vater'];
     private outFillIdx = 0;
+    private isLogin = false;
 
     ngOnInit() {
     }
 
+    /**
+     * handle register
+     * todo show react on btn click (loading)
+     * todo handle wrong login
+     */
     register() {
         this.http.newUser(this.nameFirst_reg, this.nameLast_reg, this.email_reg, HelperService.encodePW(this.password1_reg), this.group_reg).then(data => {
             alert('erfolgreich angemeldet, deine anmeldung muss nun von einem admin bestätigt werden');
             if (data) {
+                this.router.navigate(['/home']);
+            }
+        });
+    }
+
+    /**
+     * handle login
+     * todo show react on btn click (loading)
+     * todo handle wrong login
+     */
+    async login() {
+        this.http.auth(this.email_reg, HelperService.encodePW(this.password1_reg), true).then(res => {
+            if (res) {
                 this.router.navigate(['/home']);
             }
         });
@@ -81,8 +100,13 @@ export class RegistrationPage implements OnInit {
                     this.notValid('email', 'Bitte gib eine gültige E-Mail-Adresse ein. Frage deine Eltern, wenn du keine hast.');
                     break;
                 }
+                if (this.isLogin) {
+                    new_el = document.getElementById('password2');
+                } else {
+                    new_el = document.getElementById('group');
+                }
                 old_el = document.getElementById('email');
-                new_el = document.getElementById('group');
+
                 break;
             case 'group':
                 if (!this.groups.includes(this.group_reg)) {
@@ -101,23 +125,46 @@ export class RegistrationPage implements OnInit {
                 new_el = document.getElementById('password2');
                 break;
             case 'password2':
-                if (this.password1_reg !== this.password2_reg) {
-                    this.notValid('password2', 'Die Passwörter stimmen nicht überein.');
-                    break;
+                if (this.isLogin) {
+                    this.login();
+                } else {
+                    if (this.password1_reg !== this.password2_reg) {
+                        this.notValid('password2', 'Die Passwörter stimmen nicht überein.');
+                        break;
+                    }
+                    this.register();
+
                 }
-                this.register();
+                break;
+            case 'startLogin':
+                unsetAll(['name1', 'name2', 'group', 'password1', 'password2']);
+                new_el = document.getElementById('email');
+                this.outFillIdx = 0;
+                break;
+            case 'startRegister':
+                unsetAll(['email', 'password1']);
+                new_el = document.getElementById('name1');
+                this.outFillIdx = 0;
                 break;
         }
-        if (old_el != null && new_el != null) {
+        if (old_el != null) {
             old_el.classList.add('inactive');
             old_el.classList.remove('notValid');
             old_el.classList.add('stored');
             old_el.classList.remove('unstored');
-            new_el.classList.remove('inactive');
             this.outFillIdx++;
             document.getElementById('storage').classList.remove('hidden');
         }
+        if (new_el != null) {
+            new_el.classList.remove('inactive');
+        }
 
+        function unsetAll(all) {
+            for (let i = 0; i < all.length; i++) {
+                document.getElementById(all[i]).classList.add('inactive');
+            }
+            document.getElementById('storage').classList.add('hidden');
+        }
     }
 
     /**
@@ -125,20 +172,34 @@ export class RegistrationPage implements OnInit {
      */
     prev_click() {
         if (this.outFillIdx > 0) {
-            const elements = document.getElementsByClassName('input');
-            elements[this.outFillIdx].classList.add('inactive');
-            this.outFillIdx--;
-            elements[this.outFillIdx].classList.add('unstored');
-            elements[this.outFillIdx].classList.remove('stored');
-            elements[this.outFillIdx].classList.remove('inactive');
-            if (this.outFillIdx === 0) {
-                document.getElementById('storage').classList.add('hidden');
+            if (this.isLogin) {
+                document.getElementById('password1').classList.add('inactive');
+                document.getElementById('email').classList.add('unstored');
+                document.getElementById('email').classList.remove('stored');
+                document.getElementById('email').classList.remove('inactive');
+                this.outFillIdx--;
+            } else {
+                const elements = document.getElementsByClassName('input');
+                elements[this.outFillIdx].classList.add('inactive');
+                this.outFillIdx--;
+                elements[this.outFillIdx].classList.add('unstored');
+                elements[this.outFillIdx].classList.remove('stored');
+                elements[this.outFillIdx].classList.remove('inactive');
             }
+        }
+        if (this.outFillIdx === 0) {
+            document.getElementById('storage').classList.add('hidden');
         }
     }
 
-    goTo_Login() {
-        this.router.navigate(['/login']);
+    goTo_log_reg() {
+        if (this.isLogin) {
+            this.isLogin = !this.isLogin;
+            this.next_click('startRegister');
+        } else {
+            this.isLogin = !this.isLogin;
+            this.next_click('startLogin');
+        }
     }
 
     async goTo_Help() {
