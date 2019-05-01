@@ -31,6 +31,14 @@ export class HelperService {
         return formattedDate;
     }
 
+    /**
+     * todo
+     * @param {string} pw
+     * @return {string}
+     */
+    static encodePW(pw: string): string {
+        return pw;
+    }
 }
 
 

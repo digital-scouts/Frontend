@@ -1,69 +1,55 @@
-<ion-content >
+<ion-content>
     <div class="form">
-        <div class="input name1 ">
-            <span></span>
+        <div class="input" id="name1">
             <ion-item>
-                <ion-input placeholder="Vorname" [(ngModel)]="nameFirst_reg" type="text" autofocus autocapitalize></ion-input>
+                <ion-input placeholder="Vorname" [(ngModel)]="nameFirst_reg" type="text" autofocus
+                           autocapitalize></ion-input>
             </ion-item>
-            <ion-button class="icon">
-                <ion-icon  name="arrow-round-forward"></ion-icon>
-            </ion-button>
+            <span (click)="next_click('name1')"></span>
         </div>
-        <div class="input name2 inactive">
+        <div class="input inactive" id="name2">
             <ion-item>
-                <ion-input [(ngModel)]="nameLast_reg" type="text" autocapitalize></ion-input>
+                <ion-input placeholder="Nachname" [(ngModel)]="nameLast_reg" type="text" autocapitalize></ion-input>
             </ion-item>
-            <ion-button class="icon">
-                <ion-icon  name="arrow-round-forward"></ion-icon>
-            </ion-button>
+            <span (click)="next_click('name2')"></span>
         </div>
-        <div class="input email inactive">
+        <div class="input inactive" id="email">
             <ion-item>
-                <ion-input [(ngModel)]="email_reg" type="email"></ion-input>
+                <ion-input placeholder="E-Mail" [(ngModel)]="email_reg" type="email"></ion-input>
             </ion-item>
-            <ion-button class="icon">
-                <ion-icon  name="arrow-round-forward"></ion-icon>
-            </ion-button>
+            <span (click)="next_click('email')"></span>
         </div>
 
-        <div class="input group inactive">
-            <ion-radio-group>
-                <ion-item *ngFor="let group of groups">
-                    <ion-label>{{group}}</ion-label>
-                    <ion-radio></ion-radio>
-                </ion-item>
-            </ion-radio-group>
-            <ion-button class="icon">
-                <ion-icon  name="arrow-round-forward"></ion-icon>
-            </ion-button>
+        <div class="input inactive" id="group">
+            <ion-item>
+                <ion-select placeholder="Gruppe" [(ngModel)]="group_reg">
+                    <ion-select-option value="{{group}}" *ngFor="let group of groups">{{group}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <span (click)="next_click('group')"></span>
         </div>
 
-        <div class="input password1 inactive">
+        <div class="input inactive" id="password1">
             <ion-item>
                 <!--                Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one-->
                 <!--                special character (@$!%*?&.-_). (Wähle kein echtes Passwort (Password wird nicht verschlüsselt))-->
-                <ion-input [(ngModel)]="password_reg" clearInput type="password"></ion-input>
+                <ion-input placeholder="Password" [(ngModel)]="password1_reg" clearInput type="password"></ion-input>
             </ion-item>
-            <ion-button class="icon">
-                <ion-icon  name="arrow-round-forward"></ion-icon>
-            </ion-button>
+            <span (click)="next_click('password1')"></span>
         </div>
 
-        <div class="input password2 inactive">
+        <div class="input inactive" id="password2">
             <ion-item>
-                <ion-input [(ngModel)]="password_reg" clearInput type="password"></ion-input>
+                <ion-input placeholder="Password wiederholen" [(ngModel)]="password2_reg" clearInput
+                           type="password"></ion-input>
             </ion-item>
-            <ion-button class="icon">
-                <ion-icon  name="arrow-round-forward"></ion-icon>
-            </ion-button>
+            <span (click)="next_click('password2')"></span>
         </div>
-
-
     </div>
-
+    <ion-icon (click)="prev_click()" id="storage" class="hidden" name="mail-open"></ion-icon>
     <div class="buttons">
-        <ion-button>Anmelden</ion-button>
-        <ion-button>Hilfe</ion-button>
+        <ion-button (click)="goTo_Login()">Anmelden</ion-button>
+        <ion-button (click)="goTo_Help()">Hilfe</ion-button>
     </div>
 
 </ion-content>

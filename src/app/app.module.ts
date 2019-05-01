@@ -15,7 +15,12 @@ import {ModalEditEventComponent} from './modal-event-edit/modal-edit-event.compo
 import {ModalEventDetailsComponent} from './modal-event-details/modal-event-details.component';
 
 @NgModule({
-    declarations: [AppComponent, ModalEditGroupComponent, ModalEditEventComponent, ModalEventDetailsComponent],
+    declarations: [
+        AppComponent,
+        ModalEditGroupComponent,
+        ModalEditEventComponent,
+        ModalEventDetailsComponent
+    ],
     entryComponents: [
         ModalEditGroupComponent, ModalEditEventComponent, ModalEventDetailsComponent
     ],
