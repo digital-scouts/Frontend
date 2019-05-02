@@ -55,7 +55,7 @@ export class RegistrationPage implements OnInit {
      * todo handle wrong login
      */
     async login() {
-        this.http.auth(this.email_reg, HelperService.encodePW(this.password1_reg), true).then(res => {
+        this.http.auth(this.email_reg, HelperService.encodePW(this.password2_reg), true).then(res => {
             if (res) {
                 this.router.navigate(['/home']);
             }

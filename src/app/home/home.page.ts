@@ -21,8 +21,4 @@ export class HomePage {
         // goToLogin when not logged in
         this.http.getAndSetUserData().then(res => !res ? this.router.navigate(['/registration']) : null);
     }
-
-    fPw_click() {
-        this.storage.clear();
-    }
 }
