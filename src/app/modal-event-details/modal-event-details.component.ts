@@ -13,7 +13,7 @@ export class ModalEventDetailsComponent implements OnInit {
     @Input() event: {
         title: string,
         description: string,
-        displayDate: string,
+        date: { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedDate: string, weekDay: string },
         dateStart: Date,
         dateEnd: Date,
         groups: string[], // id`s

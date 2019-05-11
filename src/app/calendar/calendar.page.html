@@ -1,33 +1,36 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>calendar</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>calendar</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <div>
-    Filter
-    <ion-item>
-      <ion-label>Start</ion-label>
-      <ion-datetime [(ngModel)]="filterStartDate" pickerFormat="MMMM YYYY" display-format="MMMM YYYY"  [min]="filterDateMin" [max]="filterDateMax"></ion-datetime>
-    </ion-item>
-    <ion-item>
-      <ion-label>Ende</ion-label>
-      <ion-datetime [(ngModel)]="filterEndDate" pickerFormat="MMMM YYYY" display-format="MMMM YYYY" [min]="filterDateMin" [max]="filterDateMax"></ion-datetime>
-    </ion-item>
-    <ion-button (click)="applyFilter()">Reload</ion-button>
-  </div>
+    <div>
+        Filter
+        <ion-item>
+            <ion-label>Start</ion-label>
+            <ion-datetime [(ngModel)]="filterStartDate" pickerFormat="MMMM YYYY" display-format="MMMM YYYY"
+                          [min]="filterDateMin" [max]="filterDateMax"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label>Ende</ion-label>
+            <ion-datetime [(ngModel)]="filterEndDate" pickerFormat="MMMM YYYY" display-format="MMMM YYYY"
+                          [min]="filterDateMin" [max]="filterDateMax"></ion-datetime>
+        </ion-item>
+        <ion-button (click)="applyFilter()">Reload</ion-button>
+    </div>
 
-<div>
-  Kalender
-  <ion-list *ngFor="let dates of events" class="eventDateList">
-    <p>{{dates[0].dateStart.getDay()}}</p>
-    <ion-item *ngFor="let event of dates" (click)="showEvent_click(event.id)" class="eventItem">
-      {{event.title}}
-    </ion-item>
-  </ion-list>
-</div>
+    <div>
+        Kalender
+        <ion-list *ngFor="let dates of events" class="eventDateList">
+            <p>{{dates[0].dateStart.getDate()}}<br>{{dates[0].date.weekDay}}</p>
+            <ion-item *ngFor="let event of dates" (click)="showEvent_click(event.id)" class="eventItem">
+                {{event.title}} <br>
+                {{event.date.startTime}}:{{event.date.endTime}}
+            </ion-item>
+        </ion-list>
+    </div>
 
-  <ion-button [hidden]="!hasPermissionToAddEvents" (click)="openAddEventModal(null)">+</ion-button>
+    <ion-button [hidden]="!hasPermissionToAddEvents" (click)="openAddEventModal(null)">+</ion-button>
 
 </ion-content>

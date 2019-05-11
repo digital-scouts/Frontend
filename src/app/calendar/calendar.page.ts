@@ -44,7 +44,7 @@ export class CalendarPage implements OnInit {
     public events: Array<Array<{
         title: string,
         description: string,
-        displayDate: string,
+        date: { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedDate: string, weekDay:string },
         dateStart: Date,
         dateEnd: Date,
         groups: string[], // id`s
@@ -80,7 +80,7 @@ export class CalendarPage implements OnInit {
                 this.events[x].push({
                     title: events[key][i].eventName,
                     description: events[key][i].description,
-                    displayDate: HelperService.formatDateToTimespanString(new Date(events[key][i].dateStart), new Date(events[key][i].dateEnd)),
+                    date: HelperService.formatDateToTimespanString(new Date(events[key][i].dateStart), new Date(events[key][i].dateEnd)),
                     dateStart: new Date(events[key][i].dateStart),
                     dateEnd: new Date(events[key][i].dateEnd),
                     groups: events[key][i].groups,
