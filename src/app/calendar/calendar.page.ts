@@ -41,7 +41,7 @@ export class CalendarPage implements OnInit {
     }
 
     // warning when this will be updated, than update also the modal-event-details.component and modal-event-edit.component
-    public events: Array<{
+    public events: Array<Array<{
         title: string,
         description: string,
         displayDate: string,
@@ -52,7 +52,7 @@ export class CalendarPage implements OnInit {
         public: boolean,
         id: string, // id
         creator: string, // id
-    }> = [];
+    }>> = [];
     hasPermissionToAddEvents = false;
     filterEndDate: string;
     filterStartDate: string;
@@ -71,20 +71,27 @@ export class CalendarPage implements OnInit {
 
     private drawCalendar(events) {
         this.events = [];
-        for (let i = 0; i < events.length; i++) {
-            this.events.push({
-                title: events[i].eventName,
-                description: events[i].description,
-                displayDate: HelperService.formatDateToTimespanString(new Date(events[i].dateStart), new Date(events[i].dateEnd)),
-                dateStart: new Date(events[i].dateStart),
-                dateEnd: new Date(events[i].dateEnd),
-                groups: events[i].groups,
-                competent: events[i].competent,
-                public: events[i].public,
-                id: events[i]._id,
-                creator: events[i].creator
-            });
+
+        // tslint:disable-next-line:forin
+        for (const x in Object.keys(events)) {
+            const key = Object.keys(events)[x];
+            this.events.push([]);
+            for (let i = 0; i < events[key].length; i++) {
+                this.events[x].push({
+                    title: events[key][i].eventName,
+                    description: events[key][i].description,
+                    displayDate: HelperService.formatDateToTimespanString(new Date(events[key][i].dateStart), new Date(events[key][i].dateEnd)),
+                    dateStart: new Date(events[key][i].dateStart),
+                    dateEnd: new Date(events[key][i].dateEnd),
+                    groups: events[key][i].groups,
+                    competent: events[key][i].competent,
+                    public: events[key][i].public,
+                    id: events[key][i]._id,
+                    creator: events[key][i].creator
+                });
+            }
         }
+        console.log(this.events);
     }
 
     /**
@@ -94,17 +101,19 @@ export class CalendarPage implements OnInit {
     async openAddEventModal(id: string) {
         if (this.hasPermissionToAddEvents) {
             for (let i = 0; id == null || i < this.events.length; i++) {
-                if (id == null || this.events[i].id === id) {
-                    const myModal = await this.modal.create({
-                        component: ModalEditEventComponent,
-                        componentProps: {'event': (id === null) ? null : this.events[i]}
-                    });
-                    myModal.present();
+                for (let j = 0; id == null || j < this.events[i].length; j++) {
+                    if (id == null || this.events[i][j].id === id) {
+                        const myModal = await this.modal.create({
+                            component: ModalEditEventComponent,
+                            componentProps: {'event': (id === null) ? null : this.events[i][j]}
+                        });
+                        myModal.present();
 
-                    // wait for modal and load data again
-                    await myModal.onDidDismiss();
-                    this.applyFilter();
-                    return;
+                        // wait for modal and load data again
+                        await myModal.onDidDismiss();
+                        this.applyFilter();
+                        return;
+                    }
                 }
             }
         } else {
@@ -123,7 +132,6 @@ export class CalendarPage implements OnInit {
         endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
 
         this.http.getEvents(startDate.toISOString(), endDate.toISOString()).then(events => {
-            console.log(events);
             this.drawCalendar(events);
         });
     }
@@ -131,18 +139,20 @@ export class CalendarPage implements OnInit {
     async showEvent_click(id: string) {
         console.log('detail event clicked for id: ' + id);
         for (let i = 0; i < this.events.length; i++) {
-            if (this.events[i].id === id) {
-                const myModal = await this.modal.create({
-                    component: ModalEventDetailsComponent,
-                    componentProps: {'event': this.events[i]}
-                });
+            for (let j = 0; j < this.events[i].length; j++) {
+                if (this.events[i][j].id === id) {
+                    const myModal = await this.modal.create({
+                        component: ModalEventDetailsComponent,
+                        componentProps: {'event': this.events[i][j]}
+                    });
 
-                myModal.present();
-                const {data} = await myModal.onDidDismiss();
-                if (data.edit) {
-                    this.openAddEventModal(id);
+                    myModal.present();
+                    const {data} = await myModal.onDidDismiss();
+                    if (data.edit) {
+                        this.openAddEventModal(id);
+                    }
+                    return;
                 }
-                return;
             }
         }
     }

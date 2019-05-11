@@ -20,12 +20,10 @@
 
 <div>
   Kalender
-  <ion-list>
-    <ion-item *ngFor="let event of events" (click)="showEvent_click(event.id)">
+  <ion-list *ngFor="let dates of events" class="eventDateList">
+    <p>{{dates[0].dateStart.getDay()}}</p>
+    <ion-item *ngFor="let event of dates" (click)="showEvent_click(event.id)" class="eventItem">
       {{event.title}}
-      <div slot="end">
-        {{event.displayDate}}
-      </div>
     </ion-item>
   </ion-list>
 </div>
