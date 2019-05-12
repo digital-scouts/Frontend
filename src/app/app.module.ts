@@ -13,16 +13,22 @@ import {FormsModule} from '@angular/forms';
 import {ModalEditGroupComponent} from './modal-group-edit/modal-edit-group.component';
 import {ModalEditEventComponent} from './modal-event-edit/modal-edit-event.component';
 import {ModalEventDetailsComponent} from './modal-event-details/modal-event-details.component';
+import {PopoverEventsFilterComponent} from './popover-events-filter/popover-events-filter.component';
+import {PopoverController} from 'ionic-angular/components/popover/popover-controller';
 
 @NgModule({
     declarations: [
         AppComponent,
         ModalEditGroupComponent,
         ModalEditEventComponent,
-        ModalEventDetailsComponent
+        ModalEventDetailsComponent,
+        PopoverEventsFilterComponent
     ],
     entryComponents: [
-        ModalEditGroupComponent, ModalEditEventComponent, ModalEventDetailsComponent
+        ModalEditGroupComponent,
+        ModalEditEventComponent,
+        ModalEventDetailsComponent,
+        PopoverEventsFilterComponent
     ],
     imports: [
         BrowserModule,
@@ -35,6 +41,7 @@ import {ModalEventDetailsComponent} from './modal-event-details/modal-event-deta
         HTTP,
         StatusBar,
         SplashScreen,
+        PopoverController,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent]

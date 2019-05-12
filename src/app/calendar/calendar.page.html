@@ -1,12 +1,7 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>calendar</ion-title>
-    </ion-toolbar>
-</ion-header>
-
 <ion-content padding>
     <div>
         Filter
+        <ion-button (click)="presentPopover($event)">Filter</ion-button>
         <ion-item>
             <ion-label>Start</ion-label>
             <ion-datetime [(ngModel)]="filterStartDate" pickerFormat="MMMM YYYY" display-format="MMMM YYYY"
@@ -23,14 +18,27 @@
     <div>
         Kalender
         <ion-list *ngFor="let dates of events" class="eventDateList">
-            <p>{{dates[0].dateStart.getDate()}}<br>{{dates[0].date.weekDay}}</p>
+            <p>{{dates[0].date.weekDay}}<br>{{dates[0].dateStart.getDate()}}</p>
             <ion-item *ngFor="let event of dates" (click)="showEvent_click(event.id)" class="eventItem">
                 {{event.title}} <br>
-                {{event.date.startTime}}:{{event.date.endTime}}
+                {{event.date.startTime}} - {{event.date.endTime}}
             </ion-item>
         </ion-list>
     </div>
 
-    <ion-button [hidden]="!hasPermissionToAddEvents" (click)="openAddEventModal(null)">+</ion-button>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button [hidden]="!hasPermissionToAddEvents">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="top">
+            <ion-fab-button (click)="openAddEventModal(null)">
+                <ion-icon name="calendar"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button>
+                <ion-icon name="create"></ion-icon>
+            </ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
+
 
 </ion-content>

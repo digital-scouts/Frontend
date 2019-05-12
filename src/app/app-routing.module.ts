@@ -9,7 +9,8 @@ const routes: Routes = [
     {path: 'calendar', loadChildren: './calendar/calendar.module#CalendarPageModule'},
     {path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule'},
     {path: 'help', loadChildren: './help/help.module#HelpPageModule'},
-    {path: 'chat', loadChildren: './chat/chat.module#ChatPageModule'}
+    {path: 'chat', loadChildren: './chat/chat.module#ChatPageModule'},
+
 
 ];
 

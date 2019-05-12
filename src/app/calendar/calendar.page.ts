@@ -6,6 +6,8 @@ import {ModalController} from '@ionic/angular';
 import {HelperService} from '../helper.service';
 import {ModalEditEventComponent} from '../modal-event-edit/modal-edit-event.component';
 import {ModalEventDetailsComponent} from '../modal-event-details/modal-event-details.component';
+import {PopoverEventsFilterComponent} from '../popover-events-filter/popover-events-filter.component';
+import {PopoverController} from '@ionic/angular';
 
 @Component({
     selector: 'app-calendar',
@@ -15,6 +17,7 @@ import {ModalEventDetailsComponent} from '../modal-event-details/modal-event-det
 export class CalendarPage implements OnInit {
 
     constructor(
+        private popoverCtrl: PopoverController,
         private storage: Storage,
         private router: Router,
         private http: HttpServiceService,
@@ -44,7 +47,7 @@ export class CalendarPage implements OnInit {
     public events: Array<Array<{
         title: string,
         description: string,
-        date: { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedDate: string, weekDay:string },
+        date: { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedDate: string, weekDay: string },
         dateStart: Date,
         dateEnd: Date,
         groups: string[], // id`s
@@ -137,6 +140,7 @@ export class CalendarPage implements OnInit {
     }
 
     async showEvent_click(id: string) {
+        event.stopPropagation();
         console.log('detail event clicked for id: ' + id);
         for (let i = 0; i < this.events.length; i++) {
             for (let j = 0; j < this.events[i].length; j++) {
@@ -155,5 +159,13 @@ export class CalendarPage implements OnInit {
                 }
             }
         }
+    }
+
+    async presentPopover(event) {
+        const popover = await this.popoverCtrl.create({
+            component: PopoverEventsFilterComponent,
+            event
+        });
+        return await popover.present();
     }
 }

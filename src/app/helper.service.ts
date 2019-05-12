@@ -19,8 +19,8 @@ export class HelperService {
         const date = {
             isSameDay: (startDate.getDate() === endDate.getDate()),
             isFullDay: (startDate.getUTCHours() === 0 && endDate.getUTCHours() === 0),
-            startTime: startDate.toLocaleTimeString(),
-            endTime: endDate.toLocaleTimeString(),
+            startTime: startDate.toLocaleTimeString().split(':')[0] + ':' + startDate.toLocaleTimeString().split(':')[1] ,
+            endTime: endDate.toLocaleTimeString().split(':')[0] + ':' + endDate.toLocaleTimeString().split(':')[1] ,
             formattedDate: null,
             weekDay: null,
         };
