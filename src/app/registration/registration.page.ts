@@ -173,7 +173,7 @@ export class RegistrationPage implements OnInit {
     prev_click() {
         if (this.outFillIdx > 0) {
             if (this.isLogin) {
-                document.getElementById('password1').classList.add('inactive');
+                document.getElementById('password2').classList.add('inactive');
                 document.getElementById('email').classList.add('unstored');
                 document.getElementById('email').classList.remove('stored');
                 document.getElementById('email').classList.remove('inactive');

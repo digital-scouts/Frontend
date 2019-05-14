@@ -96,8 +96,18 @@
 .inactive {
   opacity: 0;
   pointer-events: none;
-
+  animation: inactive 0.5s ease-in;
 }
+@-webkit-keyframes inactive {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 
 #storage {
   position: absolute;
