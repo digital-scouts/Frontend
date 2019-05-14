@@ -12,12 +12,12 @@
   --ion-background-color: none;
 }
 
-.eventItem > div{
+.eventItem > div {
   width: 100%;
   height: 100%;
 }
 
-.eventItem::before{
+.eventItem::before {
   content: '';
   position: absolute;
 
@@ -26,3 +26,8 @@
   width: 100%;
   height: 100%;
 }
+
+.dpsg_lilie[class=woe] {
+  fill: orange;
+}
+
