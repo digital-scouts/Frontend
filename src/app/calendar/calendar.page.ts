@@ -72,7 +72,7 @@ export class CalendarPage implements OnInit {
         this.applyFilter();
     }
 
-    private drawCalendar(events) {
+    private async drawCalendar(events) {
         this.events = [];
 
         // tslint:disable-next-line:forin
@@ -86,7 +86,7 @@ export class CalendarPage implements OnInit {
                     date: HelperService.formatDateToTimespanString(new Date(events[key][i].dateStart), new Date(events[key][i].dateEnd)),
                     dateStart: new Date(events[key][i].dateStart),
                     dateEnd: new Date(events[key][i].dateEnd),
-                    groups: events[key][i].groups,
+                    groups: HelperService.getColorArrayFromGroupArray(events[key][i].groups),
                     competent: events[key][i].competent,
                     public: events[key][i].public,
                     id: events[key][i]._id,

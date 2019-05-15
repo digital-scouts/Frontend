@@ -1,26 +1,23 @@
 import {Injectable} from '@angular/core';
+import {HttpServiceService} from './http-service.service';
+import {Pro} from '@ionic/pro';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HelperService {
-
-    constructor() {
-    }
-
-
     /**
      * todo timespan
      * format a displayDate to short timespan String
      * @param startDate
      * @param endDate
      */
-    public static formatDateToTimespanString(startDate: Date, endDate: Date): { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedDate: string, weekDay: string} {
+    public static formatDateToTimespanString(startDate: Date, endDate: Date): { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedDate: string, weekDay: string } {
         const date = {
             isSameDay: (startDate.getDate() === endDate.getDate()),
             isFullDay: (startDate.getUTCHours() === 0 && endDate.getUTCHours() === 0),
-            startTime: startDate.toLocaleTimeString().split(':')[0] + ':' + startDate.toLocaleTimeString().split(':')[1] ,
-            endTime: endDate.toLocaleTimeString().split(':')[0] + ':' + endDate.toLocaleTimeString().split(':')[1] ,
+            startTime: startDate.toLocaleTimeString().split(':')[0] + ':' + startDate.toLocaleTimeString().split(':')[1],
+            endTime: endDate.toLocaleTimeString().split(':')[0] + ':' + endDate.toLocaleTimeString().split(':')[1],
             formattedDate: null,
             weekDay: null,
         };
@@ -75,6 +72,18 @@ export class HelperService {
      */
     static encodePW(pw: string): string {
         return pw;
+    }
+
+    /**
+     *
+     * @param json
+     */
+    public static getColorArrayFromGroupArray(json): string[] {
+        const returnString = [];
+        json.forEach(group => {
+            returnString.push(group['color']);
+        });
+        return returnString;
     }
 }
 

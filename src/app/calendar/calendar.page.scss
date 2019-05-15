@@ -13,7 +13,6 @@
 }
 
 .eventItem > div {
-  width: 100%;
   height: 100%;
 }
 
@@ -27,7 +26,37 @@
   height: 100%;
 }
 
-.dpsg_lilie[class=woe] {
+.event-text {
+  height: 100%;
+  width: 100%;
+}
+
+.event-lily {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: auto;
+}
+
+.lily {
+  width: 25px;
+  height: 25px;
+  margin: 2px;
+}
+
+.lily[class*="orange"] > svg > path {
   fill: orange;
+}
+
+.lily[class*="blue"] > svg > path {
+  fill: blue;
+}
+
+.lily[class*="green"] > svg > path {
+  fill: green;
+}
+
+.lily[class*="red"] > svg > path {
+  fill: red;
 }
 
