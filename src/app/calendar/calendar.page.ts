@@ -37,30 +37,22 @@ export class CalendarPage implements OnInit {
         this.filterStartDate = d3.toISOString();
         this.filterEndDate = d4.toISOString();
 
-
         this.storage.get('role').then(role => {
             // check permission
             this.hasPermissionToAddEvents = (role === 'admin' || role === 'leader');
-
-            // preselect filter groups
-            switch (role) {
-                case 'woe':
-                    this.filterSelectedGroups[0] = true;
-                    break;
-                case 'jufi':
-                    this.filterSelectedGroups[1] = true;
-                    break;
-                case 'pfadi':
-                    this.filterSelectedGroups[2] = true;
-                    break;
-                case 'rover':
-                    this.filterSelectedGroups[3] = true;
-                    break;
-                case 'leader':
-                case 'admin':
-                    this.filterSelectedGroups = [true, true, true, true, true];
-                    break;
-            }
+            this.http.getGroups().then(groups => {
+                // tslint:disable-next-line:forin
+                // @ts-ignore
+                for (let i = 0; i < groups.length; i++) {
+                    this.allGroups.push({
+                        id: groups[i]['_id'],
+                        color: groups[i]['color'],
+                        name: groups[i]['name'],
+                        isChildGroup: groups[i]['childGroup'],
+                        selected: (groups[i]['defaultForRole'] === role || (role === 'admin' || role === 'leader'))
+                    });
+                }
+            });
         });
     }
 
@@ -77,6 +69,16 @@ export class CalendarPage implements OnInit {
         id: string, // id
         creator: string, // id
     }>> = [];
+
+    // warning when this will be updated, than update also the popover-events-filter.component
+    allGroups: Array<{
+        id: string,
+        color: string,
+        name: string,
+        isChildGroup: boolean,
+        selected: boolean
+    }> = [];
+
     hasPermissionToAddEvents = false;
 
     filterEndDate: string;
@@ -85,7 +87,6 @@ export class CalendarPage implements OnInit {
     filterDateMin: string;
     filterDateMax: string;
 
-    filterSelectedGroups = [false, false, false, false, false];
 
     ionViewWillEnter() {
         // goToLogin when not logged in
@@ -155,14 +156,11 @@ export class CalendarPage implements OnInit {
         let startDate: Date = new Date(this.filterStartDate);
         let endDate: Date = new Date(this.filterEndDate);
         const groupIds: string[] = [];
-        this.http.getGroups().then(groups=> )
-        this.filterSelectedGroups.forEach(selector => {
-            if (selector) {
-
-                groupIds.push('');
+        for (let i = 0; i < this.allGroups.length; i++) {
+            if (this.allGroups[i].selected) {
+                groupIds.push(this.allGroups[i].id);
             }
-        });
-
+        }
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
 
@@ -173,7 +171,6 @@ export class CalendarPage implements OnInit {
 
     async showEvent_click(id: string) {
         event.stopPropagation();
-        console.log('detail event clicked for id: ' + id);
         for (let i = 0; i < this.events.length; i++) {
             for (let j = 0; j < this.events[i].length; j++) {
                 if (this.events[i][j].id === id) {
@@ -202,7 +199,7 @@ export class CalendarPage implements OnInit {
                 filterDateMax: this.filterDateMax,
                 filterStartDate: this.filterStartDate,
                 filterEndDate: this.filterEndDate,
-                filterSelectedGroups: this.filterSelectedGroups
+                filterSelectedGroups: this.allGroups
             }
         });
 
@@ -212,6 +209,8 @@ export class CalendarPage implements OnInit {
                     console.log(result['data']);
                     this.filterStartDate = result['data']['filterStartDate'];
                     this.filterEndDate = result['data']['filterEndDate'];
+                    this.allGroups = result['data']['groups'];
+                    // this.filterTypes = result['data']['types'];
                     this.applyFilter();
                 }
             });

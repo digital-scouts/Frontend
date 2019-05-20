@@ -1,30 +1,5 @@
-.filter-group {
+#filter-group {
   width: 100%;
   display: flex;
   justify-content: space-evenly;
-}
-
-.filter-group ion-checkbox:nth-of-type(1) {
-  --background: var(--ion-color-woe);
-  --background-checked: var(--ion-color-woe);
-}
-
-.filter-group ion-checkbox:nth-of-type(2) {
-  --background: var(--ion-color-jufi);
-  --background-checked: var(--ion-color-jufi);
-}
-
-.filter-group ion-checkbox:nth-of-type(3) {
-  --background: var(--ion-color-pfadi);
-  --background-checked: var(--ion-color-pfadi);
-}
-
-.filter-group ion-checkbox:nth-of-type(4) {
-  --background: var(--ion-color-rover);
-  --background-checked: var(--ion-color-rover);
-}
-
-.filter-group ion-checkbox:nth-of-type(5) {
-  --background: var(--ion-color-leader);
-  --background-checked: var(--ion-color-leader);
 }

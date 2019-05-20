@@ -10,26 +10,9 @@
                       [min]="filterDateMin" [max]="filterDateMax"></ion-datetime>
     </ion-item>
 
-    <div class="filter-group">
-        <ion-label>Gruppe</ion-label>
-        <ion-checkbox [(ngModel)]="groups[0]"></ion-checkbox>
-        <ion-checkbox [(ngModel)]="groups[1]"></ion-checkbox>
-        <ion-checkbox [(ngModel)]="groups[2]"></ion-checkbox>
-        <ion-checkbox [(ngModel)]="groups[3]"></ion-checkbox>
-        <ion-checkbox [(ngModel)]="groups[4]"></ion-checkbox>
+    <div id="filter-group">
+        <ion-label id="insertFilterGroupCheckBoxAfterHere">Gruppe</ion-label>
+        <ion-checkbox *ngFor="let group of allGroups" [(ngModel)]="group.selected"></ion-checkbox>
     </div>
-    <div>
-        <ion-checkbox></ion-checkbox>
-        <ion-label>Gruppenstunden</ion-label>
-    </div>
-    <div>
-        <ion-checkbox></ion-checkbox>
-        <ion-label>Veranstaltungen</ion-label>
-    </div>
-    <div>
-        <ion-checkbox></ion-checkbox>
-        <ion-label>Eigene Aufgaben</ion-label>
-    </div>
-
     <ion-button (click)="dismiss()">Filtern</ion-button>
 </div>

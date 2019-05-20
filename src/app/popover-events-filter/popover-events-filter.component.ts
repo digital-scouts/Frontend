@@ -12,24 +12,33 @@ export class PopoverEventsFilterComponent {
     filterDateMax;
     filterStartDate;
     filterEndDate;
-    filterSelectedGroups = [true, false, false, true, false];
+    // warning when this will be updated, than update also the calendar.page
+    allGroups: Array<{
+        id: string,
+        color: string,
+        name: string,
+        isChildGroup: boolean,
+        selected: boolean
+    }> = [];
     filterSelectedTypes;
+    testcolor = '#bf5757';
 
     constructor(private popoverCtrl: PopoverController, public navParams: NavParams) {
         this.filterDateMin = this.navParams.get('filterDateMin');
         this.filterDateMax = this.navParams.get('filterDateMax');
         this.filterStartDate = this.navParams.get('filterStartDate');
         this.filterEndDate = this.navParams.get('filterEndDate');
-        this.filterSelectedGroups = this.navParams.get('filterSelectedGroups');
+        this.allGroups = this.navParams.get('filterSelectedGroups');
         this.filterSelectedTypes = this.navParams.get('filterSelectedTypes');
-        console.log('popover MSG: ' + this.filterDateMax);
     }
+
+    // todo erstelle checkboxen für gruppen
 
     dismiss() {
         this.popoverCtrl.dismiss({
             filterStartDate: this.filterStartDate,
             filterEndDate: this.filterEndDate,
-            groups: this.filterSelectedGroups,
+            groups: this.allGroups,
             types: this.filterSelectedTypes
         });
     }
