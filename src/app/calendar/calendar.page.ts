@@ -37,9 +37,30 @@ export class CalendarPage implements OnInit {
         this.filterStartDate = d3.toISOString();
         this.filterEndDate = d4.toISOString();
 
-        // check permission
+
         this.storage.get('role').then(role => {
+            // check permission
             this.hasPermissionToAddEvents = (role === 'admin' || role === 'leader');
+
+            // preselect filter groups
+            switch (role) {
+                case 'woe':
+                    this.filterSelectedGroups[0] = true;
+                    break;
+                case 'jufi':
+                    this.filterSelectedGroups[1] = true;
+                    break;
+                case 'pfadi':
+                    this.filterSelectedGroups[2] = true;
+                    break;
+                case 'rover':
+                    this.filterSelectedGroups[3] = true;
+                    break;
+                case 'leader':
+                case 'admin':
+                    this.filterSelectedGroups = [true, true, true, true, true];
+                    break;
+            }
         });
     }
 
@@ -57,11 +78,14 @@ export class CalendarPage implements OnInit {
         creator: string, // id
     }>> = [];
     hasPermissionToAddEvents = false;
+
     filterEndDate: string;
     filterStartDate: string;
 
     filterDateMin: string;
     filterDateMax: string;
+
+    filterSelectedGroups = [false, false, false, false, false];
 
     ionViewWillEnter() {
         // goToLogin when not logged in
@@ -130,11 +154,19 @@ export class CalendarPage implements OnInit {
     applyFilter() {
         let startDate: Date = new Date(this.filterStartDate);
         let endDate: Date = new Date(this.filterEndDate);
+        const groupIds: string[] = [];
+        this.http.getGroups().then(groups=> )
+        this.filterSelectedGroups.forEach(selector => {
+            if (selector) {
+
+                groupIds.push('');
+            }
+        });
 
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
 
-        this.http.getEvents(startDate.toISOString(), endDate.toISOString()).then(events => {
+        this.http.getEvents(startDate.toISOString(), endDate.toISOString(), groupIds).then(events => {
             this.drawCalendar(events);
         });
     }
@@ -164,8 +196,26 @@ export class CalendarPage implements OnInit {
     async presentPopover(event) {
         const popover = await this.popoverCtrl.create({
             component: PopoverEventsFilterComponent,
-            event
+            event: event,
+            componentProps: {
+                filterDateMin: this.filterDateMin,
+                filterDateMax: this.filterDateMax,
+                filterStartDate: this.filterStartDate,
+                filterEndDate: this.filterEndDate,
+                filterSelectedGroups: this.filterSelectedGroups
+            }
         });
+
+        popover.onDidDismiss()
+            .then((result) => {
+                if (result['data'] !== undefined) {
+                    console.log(result['data']);
+                    this.filterStartDate = result['data']['filterStartDate'];
+                    this.filterEndDate = result['data']['filterEndDate'];
+                    this.applyFilter();
+                }
+            });
+
         return await popover.present();
     }
 }

@@ -1,19 +1,6 @@
 <ion-content padding>
-    <div>
-        Filter
-        <ion-button (click)="presentPopover($event)">Filter</ion-button>
-        <ion-item>
-            <ion-label>Start</ion-label>
-            <ion-datetime [(ngModel)]="filterStartDate" pickerFormat="MMMM YYYY" display-format="MMMM YYYY"
-                          [min]="filterDateMin" [max]="filterDateMax"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label>Ende</ion-label>
-            <ion-datetime [(ngModel)]="filterEndDate" pickerFormat="MMMM YYYY" display-format="MMMM YYYY"
-                          [min]="filterDateMin" [max]="filterDateMax"></ion-datetime>
-        </ion-item>
-        <ion-button (click)="applyFilter()">Reload</ion-button>
-    </div>
+
+    <ion-button (click)="presentPopover($event)">Filter</ion-button>
 
     <div>
         Kalender

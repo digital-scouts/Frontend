@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {PopoverController} from '@ionic/angular';
+import {NavParams, PopoverController} from '@ionic/angular';
 
 @Component({
     selector: 'app-popover-events-filter',
@@ -8,7 +8,30 @@ import {PopoverController} from '@ionic/angular';
 })
 export class PopoverEventsFilterComponent {
 
-    constructor(private popoverCtrl: PopoverController) {
+    filterDateMin;
+    filterDateMax;
+    filterStartDate;
+    filterEndDate;
+    filterSelectedGroups = [true, false, false, true, false];
+    filterSelectedTypes;
+
+    constructor(private popoverCtrl: PopoverController, public navParams: NavParams) {
+        this.filterDateMin = this.navParams.get('filterDateMin');
+        this.filterDateMax = this.navParams.get('filterDateMax');
+        this.filterStartDate = this.navParams.get('filterStartDate');
+        this.filterEndDate = this.navParams.get('filterEndDate');
+        this.filterSelectedGroups = this.navParams.get('filterSelectedGroups');
+        this.filterSelectedTypes = this.navParams.get('filterSelectedTypes');
+        console.log('popover MSG: ' + this.filterDateMax);
+    }
+
+    dismiss() {
+        this.popoverCtrl.dismiss({
+            filterStartDate: this.filterStartDate,
+            filterEndDate: this.filterEndDate,
+            groups: this.filterSelectedGroups,
+            types: this.filterSelectedTypes
+        });
     }
 
 }

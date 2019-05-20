@@ -354,16 +354,17 @@ export class HttpServiceService {
      *
      * @param {Date} filterDateStart
      * @param {Date} filterDateEnd
+     * @param group
      * @return {Promise<JSON>}
      */
-    getEvents(filterDateStart: string = null, filterDateEnd: string = null): Promise<JSON> {
+    getEvents(filterDateStart: string = null, filterDateEnd: string = null, group: string[] = null): Promise<JSON> {
         const filter = {
             'dateStart': (filterDateStart !== null) ? new Date(filterDateStart).toISOString() : 'null',
             'dateEnd': (filterDateEnd !== null) ? new Date(filterDateEnd).toISOString() : 'null',
-            'filterComplement': 'null',
-            'filterOrigin': 'null',
-            'filterGroup': 'null',
-            'filterType': 'null',
+            'complement': 'null',
+            'origin': 'null',
+            'group': group,
+            'type': 'null',
         };
         console.log(filter);
         return new Promise(async resolve => {
