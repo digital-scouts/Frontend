@@ -81,6 +81,8 @@ export class CalendarPage implements OnInit {
         selected: boolean
     }> = [];
 
+    filterSelectedTypes = {event: true, lesson: true, task: true};
+
     hasPermissionToAddEvents = false;
 
     filterEndDate: string;
@@ -94,39 +96,91 @@ export class CalendarPage implements OnInit {
     }
 
     /**
-     * update this.events array
+     * add events, lessons and tasks to this.events array
+     * todo add lessons to events object
      * @param events
+     * @param lessons
+     * @param tasks
      */
-    private async drawCalendar(events) {
+    private async drawCalendar(events, lessons, tasks) {
         this.events = [];
 
-        // tslint:disable-next-line:forin
-        for (const x in Object.keys(events)) {
-            const key = Object.keys(events)[x];
-            this.events.push([]);
-            for (let i = 0; i < events[key].length; i++) {
-                this.events[x].push({
-                    title: events[key][i].eventName,
-                    description: events[key][i].description,
-                    date: HelperService.formatDateToTimespanString(new Date(events[key][i].dateStart), new Date(events[key][i].dateEnd)),
-                    dateStart: new Date(events[key][i].dateStart),
-                    dateEnd: new Date(events[key][i].dateEnd),
-                    groups: HelperService.getColorArrayFromGroupArray(events[key][i].groups),
-                    competent: events[key][i].competent,
-                    public: events[key][i].public,
-                    id: events[key][i]._id,
-                    creator: events[key][i].creator
-                });
+        if (events) {
+            // tslint:disable-next-line:forin
+            for (const x in Object.keys(events)) {
+                const key = Object.keys(events)[x];
+                this.events.push([]);
+                for (let i = 0; i < events[key].length; i++) {
+                    this.events[x].push({
+                        title: events[key][i].eventName,
+                        description: events[key][i].description,
+                        date: HelperService.formatDateToTimespanString(new Date(events[key][i].dateStart), new Date(events[key][i].dateEnd)),
+                        dateStart: new Date(events[key][i].dateStart),
+                        dateEnd: new Date(events[key][i].dateEnd),
+                        groups: HelperService.getColorArrayFromGroupArray(events[key][i].groups),
+                        competent: events[key][i].competent,
+                        public: events[key][i].public,
+                        id: events[key][i]._id,
+                        creator: events[key][i].creator
+                    });
+                }
             }
         }
-        console.log(this.events);
+
+        if (lessons) {
+            // tslint:disable-next-line:forin
+            for (const x in Object.keys(lessons)) {
+                const key = Object.keys(lessons)[x];
+                if (!this.events[key]) {
+                    this.events.push([]);
+                }
+                for (let i = 0; i < lessons[key].length; i++) {
+                    this.events[x].push({
+                        title: 'Gruppenstunde',
+                        description: '',
+                        date: HelperService.formatDateToTimespanString(new Date(), new Date()), // todo
+                        dateStart: new Date(), // todo
+                        dateEnd: new Date(), // todo
+                        groups: lessons[key][i],
+                        competent: lessons[key][i].leader,
+                        public: true,
+                        id: lessons[key][i]._id,
+                        creator: lessons[key][i].creator
+                    });
+                }
+            }
+        }
+
+        // if (tasks) {
+        //     // tslint:disable-next-line:forin
+        //     for (const x in Object.keys(lessons)) {
+        //         const key = Object.keys(lessons)[x];
+        //         if (!this.events[key]) {
+        //             this.events.push([]);
+        //         }
+        //         for (let i = 0; i < lessons[key].length; i++) {
+        //             this.events[x].push({
+        //                 title: 'Gruppenstunde',
+        //                 description: '',
+        //                 date: HelperService.formatDateToTimespanString(new Date(), new Date()), // todo
+        //                 dateStart: new Date(), // todo
+        //                 dateEnd: new Date(), // todo
+        //                 groups: lessons[key][i],
+        //                 competent: lessons[key][i].leader,
+        //                 public: true,
+        //                 id: lessons[key][i]._id,
+        //                 creator: lessons[key][i].creator
+        //             });
+        //         }
+        //     }
+        // }
+
     }
 
     /**
      * reload the event list with the new filter parameter
-     * todo load group lessons
      */
-    applyFilter() {
+    async applyFilter() {
         let startDate: Date = new Date(this.filterStartDate);
         let endDate: Date = new Date(this.filterEndDate);
         const groupIds: string[] = [];
@@ -138,9 +192,22 @@ export class CalendarPage implements OnInit {
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
 
-        this.http.getEvents(startDate.toISOString(), endDate.toISOString(), groupIds).then(events => {
-            this.drawCalendar(events);
-        });
+        let lessons = null;
+        let events = null;
+        const task = null;
+
+        const callStack = [];
+        if (this.filterSelectedTypes.lesson) {
+            callStack.push(this.http.getLessons().then(l => lessons = l));
+        }
+        if (this.filterSelectedTypes.event) {
+            callStack.push(this.http.getEvents(startDate.toISOString(), endDate.toISOString(), groupIds).then(e => events = e));
+        }
+        if (this.filterSelectedTypes.task) {
+            // callStack.push(this.http.getTask().then(t => task = t));
+        }
+        await Promise.all(callStack);
+        this.drawCalendar(events, lessons, task);
     }
 
     /**
@@ -208,7 +275,8 @@ export class CalendarPage implements OnInit {
                 filterDateMax: this.filterDateMax,
                 filterStartDate: this.filterStartDate,
                 filterEndDate: this.filterEndDate,
-                filterSelectedGroups: this.allGroups
+                filterSelectedGroups: this.allGroups,
+                filterSelectedTypes: this.filterSelectedTypes
             }
         });
 
@@ -219,7 +287,7 @@ export class CalendarPage implements OnInit {
                     this.filterStartDate = result['data']['filterStartDate'];
                     this.filterEndDate = result['data']['filterEndDate'];
                     this.allGroups = result['data']['groups'];
-                    // this.filterTypes = result['data']['types'];
+                    this.filterSelectedTypes = result['data']['types'];
                     this.applyFilter();
                 }
             });

@@ -11,8 +11,18 @@
     </ion-item>
 
     <div id="filter-group">
-        <ion-label id="insertFilterGroupCheckBoxAfterHere">Gruppe</ion-label>
+        <ion-label>Gruppe</ion-label>
         <ion-checkbox *ngFor="let group of allGroups" [(ngModel)]="group.selected"></ion-checkbox>
+    </div>
+    <div id="filter-event">
+        <ion-checkbox [(ngModel)]="filterSelectedTypes['event']"></ion-checkbox>
+        <ion-label>Veranstaltungen</ion-label>
+        <br>
+        <ion-checkbox [(ngModel)]="filterSelectedTypes['lesson']"></ion-checkbox>
+        <ion-label>Gruppenstunden</ion-label>
+        <br>
+        <ion-checkbox [(ngModel)]="filterSelectedTypes['task']"></ion-checkbox>
+        <ion-label>Eigene Aufgaben</ion-label>
     </div>
     <ion-button (click)="dismiss()">Filtern</ion-button>
 </div>

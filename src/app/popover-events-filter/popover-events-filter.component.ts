@@ -12,6 +12,7 @@ export class PopoverEventsFilterComponent {
     filterDateMax;
     filterStartDate;
     filterEndDate;
+
     // warning when this will be updated, than update also the calendar.page
     allGroups: Array<{
         id: string,
@@ -20,8 +21,8 @@ export class PopoverEventsFilterComponent {
         isChildGroup: boolean,
         selected: boolean
     }> = [];
-    filterSelectedTypes;
-    testcolor = '#bf5757';
+
+    filterSelectedTypes: { event: boolean, lesson: boolean, task: boolean };
 
     constructor(private popoverCtrl: PopoverController, public navParams: NavParams) {
         this.filterDateMin = this.navParams.get('filterDateMin');
