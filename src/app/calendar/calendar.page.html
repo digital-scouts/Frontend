@@ -10,7 +10,7 @@
                       class="eventItem {{event.groups}}">
                 <div class="event-text">
                     {{event.title}} <br>
-                    {{event.date.startTime}} - {{event.date.endTime}}
+                    {{event.date.formattedTimeSpan}}
                 </div>
                 <div class="event-lily">
                      <span *ngFor="let group of event.groups" class="lily {{group}}">

@@ -1,24 +1,23 @@
 import {Injectable} from '@angular/core';
-import {HttpServiceService} from './http-service.service';
-import {Pro} from '@ionic/pro';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HelperService {
     /**
-     * todo timespan
      * format a displayDate to short timespan String
      * @param startDate
      * @param endDate
      */
-    public static formatDateToTimespanString(startDate: Date, endDate: Date): { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedDate: string, weekDay: string } {
+    public static formatDateToTimespanString(startDate: Date, endDate: Date): { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedStartDate: string, formattedEndDate: string, formattedTimeSpan: string, weekDay: string } {
         const date = {
             isSameDay: (startDate.getDate() === endDate.getDate()),
             isFullDay: (startDate.getUTCHours() === 0 && endDate.getUTCHours() === 0),
             startTime: startDate.toLocaleTimeString().split(':')[0] + ':' + startDate.toLocaleTimeString().split(':')[1],
             endTime: endDate.toLocaleTimeString().split(':')[0] + ':' + endDate.toLocaleTimeString().split(':')[1],
-            formattedDate: null,
+            formattedStartDate: HelperService.formatDateTime(startDate, true),
+            formattedEndDate: HelperService.formatDateTime(endDate, true),
+            formattedTimeSpan: null,
             weekDay: null,
         };
 
@@ -49,20 +48,28 @@ export class HelperService {
                 break;
         }
 
+        date.formattedTimeSpan = date.startTime + ' bis ' + date.endTime;
+        return date;
+    }
+
+    /**
+     * format date to string with date and time
+     * @param date
+     * @param withTime
+     */
+    private static formatDateTime(date: Date, withTime: boolean): string {
         const now: Date = new Date();
-        const dd = (startDate.getDate() > 9 ? '' : '0') + startDate.getDate();
-        const mm = ((startDate.getMonth() + 1) > 9 ? '' : '0') + (startDate.getMonth() + 1);
+        const dd = (date.getDate() > 9 ? '' : '0') + date.getDate();
+        const mm = ((date.getMonth() + 1) > 9 ? '' : '0') + (date.getMonth() + 1);
         let formattedDate = `${dd}.${mm}.`;
 
-        if (now.getFullYear() !== startDate.getFullYear()) {
-            formattedDate += `${startDate.getFullYear()}`;
+        if (now.getFullYear() !== date.getFullYear()) {
+            formattedDate += `${date.getFullYear()}`;
         }
-        if (startDate.toLocaleTimeString().split(':')[0] !== '00') {
-            formattedDate += ' ' + startDate.toLocaleTimeString().split(':')[0] + ':' + startDate.toLocaleTimeString().split(':')[1];
+        if (withTime && date.toLocaleTimeString().split(':')[0] !== '00') {
+            formattedDate += ' ' + date.toLocaleTimeString().split(':')[0] + ':' + date.toLocaleTimeString().split(':')[1];
         }
-        date.formattedDate = formattedDate;
-
-        return date;
+        return formattedDate;
     }
 
     /**

@@ -40,6 +40,8 @@ export class CalendarPage implements OnInit {
         this.storage.get('role').then(role => {
             // check permission
             this.hasPermissionToAddEvents = (role === 'admin' || role === 'leader');
+
+            // preset filter group checkbox
             this.http.getGroups().then(groups => {
                 // tslint:disable-next-line:forin
                 // @ts-ignore
@@ -60,10 +62,10 @@ export class CalendarPage implements OnInit {
     public events: Array<Array<{
         title: string,
         description: string,
-        date: { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedDate: string, weekDay: string },
+        date: { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedStartDate: string, formattedEndDate: string, formattedTimeSpan: string, weekDay: string },
         dateStart: Date,
         dateEnd: Date,
-        groups: string[], // id`s
+        groups: string[], // colors
         competent: string[], // id´s
         public: boolean,
         id: string, // id
@@ -87,16 +89,14 @@ export class CalendarPage implements OnInit {
     filterDateMin: string;
     filterDateMax: string;
 
-
-    ionViewWillEnter() {
-        // goToLogin when not logged in
-        this.http.getAndSetUserData().then(res => !res ? this.router.navigate(['/login']) : null);
-    }
-
     ngOnInit() {
         this.applyFilter();
     }
 
+    /**
+     * update this.events array
+     * @param events
+     */
     private async drawCalendar(events) {
         this.events = [];
 
@@ -123,7 +123,28 @@ export class CalendarPage implements OnInit {
     }
 
     /**
-     *open a modal to edit or create a event
+     * reload the event list with the new filter parameter
+     * todo load group lessons
+     */
+    applyFilter() {
+        let startDate: Date = new Date(this.filterStartDate);
+        let endDate: Date = new Date(this.filterEndDate);
+        const groupIds: string[] = [];
+        for (let i = 0; i < this.allGroups.length; i++) {
+            if (this.allGroups[i].selected) {
+                groupIds.push(this.allGroups[i].id);
+            }
+        }
+        startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+        endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
+
+        this.http.getEvents(startDate.toISOString(), endDate.toISOString(), groupIds).then(events => {
+            this.drawCalendar(events);
+        });
+    }
+
+    /**
+     * open a modal to edit or create a event
      * @param id
      */
     async openAddEventModal(id: string) {
@@ -150,25 +171,9 @@ export class CalendarPage implements OnInit {
     }
 
     /**
-     * reload the event list with the new filter parameter
+     * onclick event to show a specific event in modal
+     * @param id
      */
-    applyFilter() {
-        let startDate: Date = new Date(this.filterStartDate);
-        let endDate: Date = new Date(this.filterEndDate);
-        const groupIds: string[] = [];
-        for (let i = 0; i < this.allGroups.length; i++) {
-            if (this.allGroups[i].selected) {
-                groupIds.push(this.allGroups[i].id);
-            }
-        }
-        startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
-        endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
-
-        this.http.getEvents(startDate.toISOString(), endDate.toISOString(), groupIds).then(events => {
-            this.drawCalendar(events);
-        });
-    }
-
     async showEvent_click(id: string) {
         event.stopPropagation();
         for (let i = 0; i < this.events.length; i++) {
@@ -190,6 +195,10 @@ export class CalendarPage implements OnInit {
         }
     }
 
+    /**
+     * present the popover filter and filter the events on dismiss
+     * @param event
+     */
     async presentPopover(event) {
         const popover = await this.popoverCtrl.create({
             component: PopoverEventsFilterComponent,

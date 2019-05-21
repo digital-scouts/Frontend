@@ -1,3 +1,4 @@
+//hint event list (ion-list)
 .eventDateList > p {
   width: 10%;
   float: left;
@@ -6,6 +7,7 @@
   --ion-background-color: none;
 }
 
+//hint event item (ion-item)
 .eventItem {
   width: 90%;
   float: right;
@@ -28,11 +30,41 @@
   height: 100%;
 }
 
+//hint background color for single group events (hide lily)
+.eventItem[class*=" orange "] > .event-lily,
+.eventItem[class*=" blue "] > .event-lily,
+.eventItem[class*=" green "] > .event-lily,
+.eventItem[class*=" red "] > .event-lily,
+.eventItem[class*=" gold "] > .event-lily {
+  display: none;
+}
+
+.eventItem[class*=" orange "]::before {
+  background-color: var(--ion-color-woe);
+}
+
+.eventItem[class*=" blue "]::before {
+  background-color: var(--ion-color-jufi);
+}
+
+.eventItem[class*=" green "] ::before {
+  background-color: var(--ion-color-pfadi);
+}
+
+.eventItem[class*=" red "]::before {
+  background-color: var(--ion-color-rover);
+}
+
+.eventItem[class*=" gold "]::before {
+  background-color: var(--ion-color-leader);
+}
+
 .event-text {
   height: 100%;
   width: 100%;
 }
 
+//hint group colored lilies for events
 .event-lily {
   display: flex;
   justify-content: flex-end;
@@ -47,18 +79,24 @@
 }
 
 .lily[class*="orange"] > svg > path {
-  fill: orange;
+  fill: var(--ion-color-woe);
 }
 
 .lily[class*="blue"] > svg > path {
-  fill: blue;
+  fill: var(--ion-color-jufi);
 }
 
 .lily[class*="green"] > svg > path {
-  fill: green;
+  fill: var(--ion-color-pfadi);
 }
 
 .lily[class*="red"] > svg > path {
-  fill: red;
+  fill: var(--ion-color-rover);
 }
+
+.lily[class*="gold"] > svg > path {
+  fill: var(--ion-color-leader);
+}
+
+
 
