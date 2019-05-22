@@ -82,8 +82,8 @@ export class HelperService {
     }
 
     /**
-     *
-     * @param json
+     * @returns string of colors for groups
+     * @param json: json array of groups from backend
      */
     public static getColorArrayFromGroupArray(json): string[] {
         const returnString = [];
@@ -91,6 +91,33 @@ export class HelperService {
             returnString.push(group['color']);
         });
         return returnString;
+    }
+
+    /**
+     * calculate the number of weeks between two dates
+     * https://stackoverflow.com/questions/11343939/how-to-add-weeks-to-date-using-javascript
+     * @param dateFrom
+     * @param dateTo
+     */
+    public static weeksBetween(dateFrom: Date, dateTo: Date) {
+        const weeks = Math.floor((dateTo.getTime() - dateFrom.getTime()) / (7 * 24 * 60 * 60 * 1000));
+        console.log('calculate weeksBetween for: ' + dateFrom + ' -> ' + dateTo + ' : ' + weeks);
+        console.log(weeks);
+        return weeks;
+    }
+
+    /**
+     * calculate the number of month between two dates
+     * https://stackoverflow.com/questions/2536379/difference-in-months-between-two-dates-in-javascript
+     * @param dateFrom
+     * @param dateTo
+     */
+    public static monthBetween(dateFrom, dateTo) {
+        const months = dateTo.getMonth() - dateFrom.getMonth() +
+            (12 * (dateTo.getFullYear() - dateFrom.getFullYear()));
+
+        console.log('calculate monthBetween for: ' + dateFrom + ' -> ' + dateTo + ' : ' + months);
+        return months;
     }
 }
 
