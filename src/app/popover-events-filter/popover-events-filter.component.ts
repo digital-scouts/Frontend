@@ -33,8 +33,6 @@ export class PopoverEventsFilterComponent {
         this.filterSelectedTypes = this.navParams.get('filterSelectedTypes');
     }
 
-    // todo erstelle checkboxen für gruppen
-
     dismiss() {
         this.popoverCtrl.dismiss({
             filterStartDate: this.filterStartDate,
