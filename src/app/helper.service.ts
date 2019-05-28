@@ -100,6 +100,9 @@ export class HelperService {
      * @param dateTo
      */
     public static weeksBetween(dateFrom: Date, dateTo: Date) {
+        dateFrom = new Date(dateFrom);
+        dateTo = new Date(dateTo);
+
         const weeks = Math.floor((dateTo.getTime() - dateFrom.getTime()) / (7 * 24 * 60 * 60 * 1000));
         console.log('calculate weeksBetween for: ' + dateFrom + ' -> ' + dateTo + ' : ' + weeks);
         console.log(weeks);
@@ -113,11 +116,26 @@ export class HelperService {
      * @param dateTo
      */
     public static monthBetween(dateFrom, dateTo) {
+        dateFrom = new Date(dateFrom);
+        dateTo = new Date(dateTo);
+
         const months = dateTo.getMonth() - dateFrom.getMonth() +
             (12 * (dateTo.getFullYear() - dateFrom.getFullYear()));
 
         console.log('calculate monthBetween for: ' + dateFrom + ' -> ' + dateTo + ' : ' + months);
         return months;
+    }
+
+    /**
+     * https://stackoverflow.com/questions/563406/add-days-to-javascript-date?page=1&tab=votes#tab-top
+     * @param date
+     * @param days
+     */
+    public static addDays(date, days) {
+        const result = new Date(date);
+        result.setDate(result.getDate() + days);
+       // console.log(`add ${days} days to ${date} is ${result}`);
+        return result;
     }
 }
 

@@ -3,7 +3,7 @@
     <ion-button (click)="presentPopover($event)">Filter</ion-button>
 
     <ion-list *ngFor="let dates of events" class="eventDateList">
-        <p>{{dates[0].date.weekDay}}<br>{{dates[0].dateStart.getDate()}}</p>
+        <!--<p>{{dates[0].date.weekDay}}<br>{{dates[0].dateStart.getDate()}}</p>-->
         <ion-item *ngFor="let event of dates" (click)="showEvent_click(event.id)" class="eventItem {{event.groups}}">
             <div class="event-text">
                 {{event.title}} <br>

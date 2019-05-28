@@ -111,6 +111,7 @@ export class CalendarPage implements OnInit {
                 const key = Object.keys(events)[x];
                 this.events.push([]);
                 for (let i = 0; i < events[key].length; i++) {
+                    // hint push to same index as events array
                     this.events[x].push({
                         title: events[key][i].eventName,
                         description: events[key][i].description,
@@ -127,9 +128,9 @@ export class CalendarPage implements OnInit {
             }
         }
 
+        console.log('lessons: ');
         console.log(lessons);
         if (lessons) {
-
             const allLessons: Array<{
                 group: string,
                 duration: number,
@@ -139,8 +140,11 @@ export class CalendarPage implements OnInit {
             // create all lessons
             for (const lesson in lessons) {
                 if (lessons.hasOwnProperty(lesson)) {
-                    const lessonStart: Date = (lessons[lesson]['startDate'] < this.filterStartDate) ? this.filterStartDate : lessons[lesson]['startDate'];
-                    const lessonEnd: Date = (lessons[lesson]['end']) ? (lessons[lesson]['end'] < this.filterEndDate) ? this.filterEndDate : lessons[lesson]['end'] : this.filterEndDate;
+                    // get end and start by groupLesson end/start or filter end/start
+                    // fixme filter start date is not the correct weekday
+                    const lessonStart: Date = new Date((lessons[lesson]['startDate'] < this.filterStartDate) ? this.filterStartDate : lessons[lesson]['startDate']);
+                    const lessonEnd: Date = new Date((lessons[lesson]['end']) ? (lessons[lesson]['end'] < this.filterEndDate) ? this.filterEndDate : lessons[lesson]['end'] : this.filterEndDate);
+                    console.log(`add lesson ${lesson} from: ${lessonStart} to ${lessonEnd}`);
                     switch (lessons[lesson]['frequency']) {
                         default:
                         case 0:
@@ -149,26 +153,25 @@ export class CalendarPage implements OnInit {
                                 duration: lessons[lesson]['duration'],
                                 startDate: lessonStart
                             });
-                            console.log('lesson pushed to allLessons');
-                            console.log(allLessons);
                             break;
                         case 7:
                         case 14:
-                            for (let i = 0; i < HelperService.weeksBetween(lessonStart, lessonEnd); i++) {
+                            const weeksBetween = HelperService.weeksBetween(lessonStart, lessonEnd);
+                            for (let i = 0; i < weeksBetween; i++) {
                                 if (i % 2 === 0 && lessons[lesson]['frequency'] === 14) {
                                     continue;
                                 }
-                                lessonStart.setDate(lessonStart.getDate() + i * 7);
+                                // todo skip holidays
+                                // console.log('days since start' + (i * 7));
                                 allLessons.push({
                                     group: lessons[lesson]['group'],
                                     duration: lessons[lesson]['duration'],
-                                    startDate: lessonStart
+                                    startDate: HelperService.addDays(lessonStart, i * 7)
                                 });
-                                console.log('lesson pushed to allLessons');
-                                console.log(allLessons);
                             }
                             break;
                         case 30:
+                            // fixme frequency is wrong
                             for (let i = 0; i < HelperService.monthBetween(lessonStart, lessonEnd); i++) {
                                 lessonStart.setMonth(lessonStart.getDate() + i);
                                 allLessons.push({
@@ -176,13 +179,12 @@ export class CalendarPage implements OnInit {
                                     duration: lessons[lesson]['duration'],
                                     startDate: lessonStart
                                 });
-                                console.log('lesson pushed to allLessons');
-                                console.log(allLessons);
                             }
                             break;
                     }
                 }
             }
+            console.log(allLessons);
 
             // push all lessons as events to this.events
             allLessons.forEach(lesson => {
@@ -194,8 +196,12 @@ export class CalendarPage implements OnInit {
                     + lesson.startDate.toLocaleDateString().split('.')[0];
 
                 if (!this.events[key]) {
-                    this.events.push([]);
+                    // hint array has no date-index
                 }
+
+                console.log(`push lesson to ${key}`);
+                console.log(this.events);
+                // fixme key did not exist in array find index with the same date or add a new
                 this.events[key].push({
                     title: 'Gruppenstunde',
                     description: '',
@@ -208,7 +214,10 @@ export class CalendarPage implements OnInit {
                     id: null,
                     creator: null
                 });
+
             });
+            console.log('added all lessons to event');
+            console.log(this.events);
 
         }
 
