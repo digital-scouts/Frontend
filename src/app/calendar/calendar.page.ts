@@ -141,8 +141,11 @@ export class CalendarPage implements OnInit {
             for (const lesson in lessons) {
                 if (lessons.hasOwnProperty(lesson)) {
                     // get end and start by groupLesson end/start or filter end/start
-                    // fixme filter start date is not the correct weekday
-                    const lessonStart: Date = new Date((lessons[lesson]['startDate'] < this.filterStartDate) ? this.filterStartDate : lessons[lesson]['startDate']);
+                    const tmpStartDate = new Date((lessons[lesson]['startDate'] < this.filterStartDate) ? this.filterStartDate : lessons[lesson]['startDate']);
+                    // adjust the time (important when filter date is selected)
+                    tmpStartDate.setTime(new Date(lessons[lesson]['startDate']).getTime());
+                    // adjust the weekday with helper (important when filter date is selected)
+                    const lessonStart: Date = HelperService.getNextDayOfWeek(tmpStartDate, new Date(lessons[lesson]['startDate']).getDay());
                     const lessonEnd: Date = new Date((lessons[lesson]['end']) ? (lessons[lesson]['end'] < this.filterEndDate) ? this.filterEndDate : lessons[lesson]['end'] : this.filterEndDate);
                     console.log(`add lesson ${lesson} from: ${lessonStart} to ${lessonEnd}`);
                     switch (lessons[lesson]['frequency']) {
@@ -162,7 +165,6 @@ export class CalendarPage implements OnInit {
                                     continue;
                                 }
                                 // todo skip holidays
-                                // console.log('days since start' + (i * 7));
                                 allLessons.push({
                                     group: lessons[lesson]['group'],
                                     duration: lessons[lesson]['duration'],
@@ -184,38 +186,40 @@ export class CalendarPage implements OnInit {
                     }
                 }
             }
-            console.log(allLessons);
-
             // push all lessons as events to this.events
-            allLessons.forEach(lesson => {
-                const endDate = lesson.startDate;
-                endDate.setHours(lesson.duration);
-
-                const key = lesson.startDate.toLocaleDateString().split('.')[2] + '-'
-                    + lesson.startDate.toLocaleDateString().split('.')[1] + '-'
-                    + lesson.startDate.toLocaleDateString().split('.')[0];
-
-                if (!this.events[key]) {
-                    // hint array has no date-index
+            for (let i = 0; i < allLessons.length; i++) {
+                const endDate = allLessons[i].startDate;
+                endDate.setHours(allLessons[i].duration);
+                // console.log(lesson);
+                // find index with same date as lesson
+                let index = -1;
+                for (let j = 0; j < this.events.length; j++) {
+                    if (this.events[j][0].date) {// fixme key did not exist in array find index with the same date or add a new
+                        index = j;
+                        break;
+                    }
                 }
 
-                console.log(`push lesson to ${key}`);
-                console.log(this.events);
-                // fixme key did not exist in array find index with the same date or add a new
-                this.events[key].push({
+                // create new index when date not exist
+                if (index === -1) {
+                    this.events.push([]);
+                    index = this.events.length - 1;
+                }
+
+                this.events[index].push({
                     title: 'Gruppenstunde',
                     description: '',
-                    date: HelperService.formatDateToTimespanString(lesson.startDate, endDate), // todo
-                    dateStart: lesson.startDate, // todo
-                    dateEnd: endDate, // todo
-                    groups: [lesson.group],
+                    date: HelperService.formatDateToTimespanString(allLessons[i].startDate, endDate),
+                    dateStart: allLessons[i].startDate,
+                    dateEnd: endDate,
+                    groups: [allLessons[i].group],
                     competent: null,
                     public: true,
                     id: null,
                     creator: null
                 });
 
-            });
+            }
             console.log('added all lessons to event');
             console.log(this.events);
 

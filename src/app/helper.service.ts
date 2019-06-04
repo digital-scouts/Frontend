@@ -134,8 +134,20 @@ export class HelperService {
     public static addDays(date, days) {
         const result = new Date(date);
         result.setDate(result.getDate() + days);
-       // console.log(`add ${days} days to ${date} is ${result}`);
+        //console.log(`add ${days} days to ${date} is ${result}`);
         return result;
+    }
+
+    /**
+     * https://codereview.stackexchange.com/questions/33527/find-next-occurring-friday-or-any-dayofweek
+     * @param date
+     * @param dayOfWeek
+     */
+    public static getNextDayOfWeek(date, dayOfWeek) {
+        const resultDate = new Date(date.getTime());
+        resultDate.setDate(date.getDate() + (7 + dayOfWeek - date.getDay()) % 7);
+        console.log(`adjust date to weekday ${date.getDay()} Date: ${date} Result: ${resultDate}`);
+        return resultDate;
     }
 }
 
