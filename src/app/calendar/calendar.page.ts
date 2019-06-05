@@ -193,6 +193,8 @@ export class CalendarPage implements OnInit {
 
             // push all lessons as events to this.events
             for (let i = 0; i < allLessons.length; i++) {
+                // fixme groupcolor is black
+                // fixme dates will not be shown
 
                 const endDate = moment(new Date(allLessons[i].startDate)).add(allLessons[i].duration, 'h').toDate();
 
