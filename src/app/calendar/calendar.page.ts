@@ -8,6 +8,7 @@ import {ModalEditEventComponent} from '../modal-event-edit/modal-edit-event.comp
 import {ModalEventDetailsComponent} from '../modal-event-details/modal-event-details.component';
 import {PopoverEventsFilterComponent} from '../popover-events-filter/popover-events-filter.component';
 import {PopoverController} from '@ionic/angular';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-calendar',
@@ -141,13 +142,15 @@ export class CalendarPage implements OnInit {
             for (const lesson in lessons) {
                 if (lessons.hasOwnProperty(lesson)) {
                     // get end and start by groupLesson end/start or filter end/start
-                    const tmpStartDate = new Date((lessons[lesson]['startDate'] < this.filterStartDate) ? this.filterStartDate : lessons[lesson]['startDate']);
+                    const tmpStartDate = new Date(((lessons[lesson]['startDate'] < this.filterStartDate) ? this.filterStartDate : lessons[lesson]['startDate']));
+                    tmpStartDate.setTime(tmpStartDate.getTime() + tmpStartDate.getTimezoneOffset() * 60 * 1000);
                     // adjust the time (important when filter date is selected)
-                    tmpStartDate.setTime(new Date(lessons[lesson]['startDate']).getTime());
+                    moment(tmpStartDate).hour(new Date(lessons[lesson]['startDate']).getHours()).minute(new Date(lessons[lesson]['startDate']).getMinutes());
+                    // tmpStartDate.setTime(new Date(lessons[lesson]['startDate']).getTime());
                     // adjust the weekday with helper (important when filter date is selected)
                     const lessonStart: Date = HelperService.getNextDayOfWeek(tmpStartDate, new Date(lessons[lesson]['startDate']).getDay());
                     const lessonEnd: Date = new Date((lessons[lesson]['end']) ? (lessons[lesson]['end'] < this.filterEndDate) ? this.filterEndDate : lessons[lesson]['end'] : this.filterEndDate);
-                    console.log(`add lesson ${lesson} from: ${lessonStart} to ${lessonEnd}`);
+                    // console.log(`add lesson ${lesson} from: ${lessonStart} to ${lessonEnd}`);
                     switch (lessons[lesson]['frequency']) {
                         default:
                         case 0:
@@ -164,6 +167,7 @@ export class CalendarPage implements OnInit {
                                 if (i % 2 === 0 && lessons[lesson]['frequency'] === 14) {
                                     continue;
                                 }
+
                                 // todo skip holidays
                                 allLessons.push({
                                     group: lessons[lesson]['group'],
@@ -186,10 +190,12 @@ export class CalendarPage implements OnInit {
                     }
                 }
             }
+
             // push all lessons as events to this.events
             for (let i = 0; i < allLessons.length; i++) {
-                const endDate = allLessons[i].startDate;
-                endDate.setHours(allLessons[i].duration);
+
+                const endDate = moment(new Date(allLessons[i].startDate)).add(allLessons[i].duration, 'h').toDate();
+
                 // console.log(lesson);
                 // find index with same date as lesson
                 let index = -1;
@@ -199,13 +205,11 @@ export class CalendarPage implements OnInit {
                         break;
                     }
                 }
-
                 // create new index when date not exist
                 if (index === -1) {
                     this.events.push([]);
                     index = this.events.length - 1;
                 }
-
                 this.events[index].push({
                     title: 'Gruppenstunde',
                     description: '',
@@ -218,11 +222,7 @@ export class CalendarPage implements OnInit {
                     id: null,
                     creator: null
                 });
-
             }
-            console.log('added all lessons to event');
-            console.log(this.events);
-
         }
 
         // todo

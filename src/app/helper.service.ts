@@ -131,10 +131,10 @@ export class HelperService {
      * @param date
      * @param days
      */
-    public static addDays(date, days) {
+    public static addDays(date, days): Date {
         const result = new Date(date);
         result.setDate(result.getDate() + days);
-        //console.log(`add ${days} days to ${date} is ${result}`);
+        // console.log(`add ${days} days to ${date} is ${result}`);
         return result;
     }
 
