@@ -10,6 +10,8 @@ import {PopoverEventsFilterComponent} from '../popover-events-filter/popover-eve
 import {PopoverController} from '@ionic/angular';
 import * as moment from 'moment';
 
+moment.locale('de');
+
 @Component({
     selector: 'app-calendar',
     templateUrl: './calendar.page.html',
@@ -105,20 +107,26 @@ export class CalendarPage implements OnInit {
      */
     private async drawCalendar(events, lessons, tasks) {
         this.events = [];
-
+        console.log('events: ');
+        console.log(events);
         if (events) {
             // tslint:disable-next-line:forin
             for (const x in Object.keys(events)) {
                 const key = Object.keys(events)[x];
                 this.events.push([]);
                 for (let i = 0; i < events[key].length; i++) {
+                    const rawStartDate = new Date(events[key][i].dateStart);
+                    rawStartDate.setTime(rawStartDate.getTime() + rawStartDate.getTimezoneOffset() * 60 * 1000);
+                    const rawEndDate = new Date(events[key][i].dateEnd);
+                    rawEndDate.setTime(rawEndDate.getTime() + rawEndDate.getTimezoneOffset() * 60 * 1000);
+
                     // hint push to same index as events array
                     this.events[x].push({
                         title: events[key][i].eventName,
                         description: events[key][i].description,
-                        date: HelperService.formatDateToTimespanString(new Date(events[key][i].dateStart), new Date(events[key][i].dateEnd)),
-                        dateStart: new Date(events[key][i].dateStart),
-                        dateEnd: new Date(events[key][i].dateEnd),
+                        date: HelperService.formatDateToTimespanString(rawStartDate, rawEndDate),
+                        dateStart: rawStartDate,
+                        dateEnd: rawEndDate,
                         groups: HelperService.getColorArrayFromGroupArray(events[key][i].groups),
                         competent: events[key][i].competent,
                         public: events[key][i].public,
@@ -141,14 +149,21 @@ export class CalendarPage implements OnInit {
             // create all lessons
             for (const lesson in lessons) {
                 if (lessons.hasOwnProperty(lesson)) {
+
+                    const rawLessonDate = new Date(lessons[lesson]['startDate']);
+                    rawLessonDate.setTime(rawLessonDate.getTime() + rawLessonDate.getTimezoneOffset() * 60 * 1000);
+                    const rawFilterDate = new Date(this.filterStartDate);
+
                     // get end and start by groupLesson end/start or filter end/start
-                    const tmpStartDate = new Date(((lessons[lesson]['startDate'] < this.filterStartDate) ? this.filterStartDate : lessons[lesson]['startDate']));
-                    tmpStartDate.setTime(tmpStartDate.getTime() + tmpStartDate.getTimezoneOffset() * 60 * 1000);
+                    const tmpStartDate = ((rawLessonDate < rawFilterDate) ? rawFilterDate : rawLessonDate);
+
                     // adjust the time (important when filter date is selected)
-                    moment(tmpStartDate).hour(new Date(lessons[lesson]['startDate']).getHours()).minute(new Date(lessons[lesson]['startDate']).getMinutes());
+                    tmpStartDate.setHours(rawLessonDate.getHours());
+                    tmpStartDate.setMinutes(rawLessonDate.getMinutes());
+
                     // tmpStartDate.setTime(new Date(lessons[lesson]['startDate']).getTime());
                     // adjust the weekday with helper (important when filter date is selected)
-                    const lessonStart: Date = HelperService.getNextDayOfWeek(tmpStartDate, new Date(lessons[lesson]['startDate']).getDay());
+                    const lessonStart: Date = HelperService.getNextDayOfWeek(tmpStartDate, rawLessonDate.getDay());
                     const lessonEnd: Date = new Date((lessons[lesson]['end']) ? (lessons[lesson]['end'] < this.filterEndDate) ? this.filterEndDate : lessons[lesson]['end'] : this.filterEndDate);
                     // console.log(`add lesson ${lesson} from: ${lessonStart} to ${lessonEnd}`);
                     switch (lessons[lesson]['frequency']) {
@@ -172,7 +187,7 @@ export class CalendarPage implements OnInit {
                                 allLessons.push({
                                     group: lessons[lesson]['group'],
                                     duration: lessons[lesson]['duration'],
-                                    startDate: HelperService.addDays(lessonStart, i * 7)
+                                    startDate: moment(lessonStart).clone().add(i * 7, 'd').toDate()
                                 });
                             }
                             break;
@@ -190,19 +205,16 @@ export class CalendarPage implements OnInit {
                     }
                 }
             }
-
+            console.log(allLessons);
             // push all lessons as events to this.events
             for (let i = 0; i < allLessons.length; i++) {
-                // fixme groupcolor is black
-                // fixme dates will not be shown
-
-                const endDate = moment(new Date(allLessons[i].startDate)).add(allLessons[i].duration, 'h').toDate();
+                const endDate = moment(allLessons[i].startDate).clone().add(allLessons[i].duration, 'h').toDate();
 
                 // console.log(lesson);
                 // find index with same date as lesson
                 let index = -1;
                 for (let j = 0; j < this.events.length; j++) {
-                    if (this.events[j][0].date) {// fixme key did not exist in array find index with the same date or add a new
+                    if (this.events[j][0].dateStart.getDate() === allLessons[i].startDate.getDate()) {
                         index = j;
                         break;
                     }
@@ -218,7 +230,7 @@ export class CalendarPage implements OnInit {
                     date: HelperService.formatDateToTimespanString(allLessons[i].startDate, endDate),
                     dateStart: allLessons[i].startDate,
                     dateEnd: endDate,
-                    groups: [allLessons[i].group],
+                    groups: HelperService.getColorArrayFromGroupArray([allLessons[i].group]),
                     competent: null,
                     public: true,
                     id: null,
@@ -226,7 +238,7 @@ export class CalendarPage implements OnInit {
                 });
             }
         }
-
+        console.log(this.events);
         // todo
         // if (tasks) {
         //     // tslint:disable-next-line:forin

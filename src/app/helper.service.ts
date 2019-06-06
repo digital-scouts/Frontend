@@ -1,4 +1,7 @@
 import {Injectable} from '@angular/core';
+import * as moment from 'moment';
+
+moment.locale('de');
 
 @Injectable({
     providedIn: 'root'
@@ -11,65 +14,17 @@ export class HelperService {
      */
     public static formatDateToTimespanString(startDate: Date, endDate: Date): { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedStartDate: string, formattedEndDate: string, formattedTimeSpan: string, weekDay: string } {
         const date = {
-            isSameDay: (startDate.getDate() === endDate.getDate()),
-            isFullDay: (startDate.getUTCHours() === 0 && endDate.getUTCHours() === 0),
-            startTime: startDate.toLocaleTimeString().split(':')[0] + ':' + startDate.toLocaleTimeString().split(':')[1],
-            endTime: endDate.toLocaleTimeString().split(':')[0] + ':' + endDate.toLocaleTimeString().split(':')[1],
-            formattedStartDate: HelperService.formatDateTime(startDate, true),
-            formattedEndDate: HelperService.formatDateTime(endDate, true),
+            isSameDay: moment(startDate).isSame(endDate, 'day'),
+            isFullDay: (moment(startDate).hour() === 0 && moment(endDate).hour() === 0),
+            startTime: moment(startDate).format('HH:mm'),
+            endTime: moment(endDate).format('HH:mm'),
+            formattedStartDate: null,
+            formattedEndDate: null,
             formattedTimeSpan: null,
-            weekDay: null,
+            weekDay: moment(startDate).format('dd'),
         };
-
-        startDate.setTime(startDate.getTime() + startDate.getTimezoneOffset() * 60 * 1000);
-        endDate.setTime(endDate.getTime() + startDate.getTimezoneOffset() * 60 * 1000);
-
-        switch (startDate.getDay()) {
-            case 1:
-                date.weekDay = 'Mo';
-                break;
-            case 2:
-                date.weekDay = 'Di';
-                break;
-            case 3:
-                date.weekDay = 'Mi';
-                break;
-            case 4:
-                date.weekDay = 'Do';
-                break;
-            case 5:
-                date.weekDay = 'Fr';
-                break;
-            case 6:
-                date.weekDay = 'Sa';
-                break;
-            case 0:
-                date.weekDay = 'So';
-                break;
-        }
-
         date.formattedTimeSpan = date.startTime + ' bis ' + date.endTime;
         return date;
-    }
-
-    /**
-     * format date to string with date and time
-     * @param date
-     * @param withTime
-     */
-    private static formatDateTime(date: Date, withTime: boolean): string {
-        const now: Date = new Date();
-        const dd = (date.getDate() > 9 ? '' : '0') + date.getDate();
-        const mm = ((date.getMonth() + 1) > 9 ? '' : '0') + (date.getMonth() + 1);
-        let formattedDate = `${dd}.${mm}.`;
-
-        if (now.getFullYear() !== date.getFullYear()) {
-            formattedDate += `${date.getFullYear()}`;
-        }
-        if (withTime && date.toLocaleTimeString().split(':')[0] !== '00') {
-            formattedDate += ' ' + date.toLocaleTimeString().split(':')[0] + ':' + date.toLocaleTimeString().split(':')[1];
-        }
-        return formattedDate;
     }
 
     /**
@@ -104,8 +59,8 @@ export class HelperService {
         dateTo = new Date(dateTo);
 
         const weeks = Math.floor((dateTo.getTime() - dateFrom.getTime()) / (7 * 24 * 60 * 60 * 1000));
-        console.log('calculate weeksBetween for: ' + dateFrom + ' -> ' + dateTo + ' : ' + weeks);
-        console.log(weeks);
+        // console.log('calculate weeksBetween for: ' + dateFrom + ' -> ' + dateTo + ' : ' + weeks);
+        // console.log(weeks);
         return weeks;
     }
 
@@ -122,20 +77,8 @@ export class HelperService {
         const months = dateTo.getMonth() - dateFrom.getMonth() +
             (12 * (dateTo.getFullYear() - dateFrom.getFullYear()));
 
-        console.log('calculate monthBetween for: ' + dateFrom + ' -> ' + dateTo + ' : ' + months);
+        // console.log('calculate monthBetween for: ' + dateFrom + ' -> ' + dateTo + ' : ' + months);
         return months;
-    }
-
-    /**
-     * https://stackoverflow.com/questions/563406/add-days-to-javascript-date?page=1&tab=votes#tab-top
-     * @param date
-     * @param days
-     */
-    public static addDays(date, days): Date {
-        const result = new Date(date);
-        result.setDate(result.getDate() + days);
-        // console.log(`add ${days} days to ${date} is ${result}`);
-        return result;
     }
 
     /**
@@ -146,7 +89,7 @@ export class HelperService {
     public static getNextDayOfWeek(date, dayOfWeek) {
         const resultDate = new Date(date.getTime());
         resultDate.setDate(date.getDate() + (7 + dayOfWeek - date.getDay()) % 7);
-        console.log(`adjust date to weekday ${date.getDay()} Date: ${date} Result: ${resultDate}`);
+        // console.log(`adjust date to weekday ${date.getDay()} Date: ${date} Result: ${resultDate}`);
         return resultDate;
     }
 }
