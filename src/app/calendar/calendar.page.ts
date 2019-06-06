@@ -100,12 +100,10 @@ export class CalendarPage implements OnInit {
 
     /**
      * add events, lessons and tasks to this.events array
-     * todo add lessons to events object
      * @param events
-     * @param lessons
      * @param tasks
      */
-    private async drawCalendar(events, lessons, tasks) {
+    private async drawCalendar(events, tasks) {
         this.events = [];
         console.log('events: ');
         console.log(events);
@@ -136,134 +134,6 @@ export class CalendarPage implements OnInit {
                 }
             }
         }
-
-        console.log('lessons: ');
-        console.log(lessons);
-        if (lessons) {
-            const allLessons: Array<{
-                group: string,
-                duration: number,
-                startDate: Date
-            }> = [];
-
-            // create all lessons
-            for (const lesson in lessons) {
-                if (lessons.hasOwnProperty(lesson)) {
-
-                    const rawLessonDate = new Date(lessons[lesson]['startDate']);
-                    rawLessonDate.setTime(rawLessonDate.getTime() + rawLessonDate.getTimezoneOffset() * 60 * 1000);
-                    const rawFilterDate = new Date(this.filterStartDate);
-
-                    // get end and start by groupLesson end/start or filter end/start
-                    const tmpStartDate = ((rawLessonDate < rawFilterDate) ? rawFilterDate : rawLessonDate);
-
-                    // adjust the time (important when filter date is selected)
-                    tmpStartDate.setHours(rawLessonDate.getHours());
-                    tmpStartDate.setMinutes(rawLessonDate.getMinutes());
-
-                    // tmpStartDate.setTime(new Date(lessons[lesson]['startDate']).getTime());
-                    // adjust the weekday with helper (important when filter date is selected)
-                    const lessonStart: Date = HelperService.getNextDayOfWeek(tmpStartDate, rawLessonDate.getDay());
-                    const lessonEnd: Date = new Date((lessons[lesson]['end']) ? (lessons[lesson]['end'] < this.filterEndDate) ? this.filterEndDate : lessons[lesson]['end'] : this.filterEndDate);
-                    // console.log(`add lesson ${lesson} from: ${lessonStart} to ${lessonEnd}`);
-                    switch (lessons[lesson]['frequency']) {
-                        default:
-                        case 0:
-                            allLessons.push({
-                                group: lessons[lesson]['group'],
-                                duration: lessons[lesson]['duration'],
-                                startDate: lessonStart
-                            });
-                            break;
-                        case 7:
-                        case 14:
-                            const weeksBetween = HelperService.weeksBetween(lessonStart, lessonEnd);
-                            for (let i = 0; i < weeksBetween; i++) {
-                                if (i % 2 === 0 && lessons[lesson]['frequency'] === 14) {
-                                    continue;
-                                }
-
-                                // todo skip holidays
-                                allLessons.push({
-                                    group: lessons[lesson]['group'],
-                                    duration: lessons[lesson]['duration'],
-                                    startDate: moment(lessonStart).clone().add(i * 7, 'd').toDate()
-                                });
-                            }
-                            break;
-                        case 30:
-                            // fixme frequency is wrong
-                            for (let i = 0; i < HelperService.monthBetween(lessonStart, lessonEnd); i++) {
-                                lessonStart.setMonth(lessonStart.getDate() + i);
-                                allLessons.push({
-                                    group: lessons[lesson]['group'],
-                                    duration: lessons[lesson]['duration'],
-                                    startDate: lessonStart
-                                });
-                            }
-                            break;
-                    }
-                }
-            }
-            console.log(allLessons);
-            // push all lessons as events to this.events
-            for (let i = 0; i < allLessons.length; i++) {
-                const endDate = moment(allLessons[i].startDate).clone().add(allLessons[i].duration, 'h').toDate();
-
-                // console.log(lesson);
-                // find index with same date as lesson
-                let index = -1;
-                for (let j = 0; j < this.events.length; j++) {
-                    if (this.events[j][0].dateStart.getDate() === allLessons[i].startDate.getDate()) {
-                        index = j;
-                        break;
-                    }
-                }
-                // create new index when date not exist
-                if (index === -1) {
-                    this.events.push([]);
-                    index = this.events.length - 1;
-                }
-                this.events[index].push({
-                    title: 'Gruppenstunde',
-                    description: '',
-                    date: HelperService.formatDateToTimespanString(allLessons[i].startDate, endDate),
-                    dateStart: allLessons[i].startDate,
-                    dateEnd: endDate,
-                    groups: HelperService.getColorArrayFromGroupArray([allLessons[i].group]),
-                    competent: null,
-                    public: true,
-                    id: null,
-                    creator: null
-                });
-            }
-        }
-        console.log(this.events);
-        // todo
-        // if (tasks) {
-        //     // tslint:disable-next-line:forin
-        //     for (const x in Object.keys(lessons)) {
-        //         const key = Object.keys(lessons)[x];
-        //         if (!this.events[key]) {
-        //             this.events.push([]);
-        //         }
-        //         for (let i = 0; i < lessons[key].length; i++) {
-        //             this.events[x].push({
-        //                 title: 'Gruppenstunde',
-        //                 description: '',
-        //                 date: HelperService.formatDateToTimespanString(new Date(), new Date()), // todo
-        //                 dateStart: new Date(), // todo
-        //                 dateEnd: new Date(), // todo
-        //                 groups: lessons[key][i],
-        //                 competent: lessons[key][i].leader,
-        //                 public: true,
-        //                 id: lessons[key][i]._id,
-        //                 creator: lessons[key][i].creator
-        //             });
-        //         }
-        //     }
-        // }
-
     }
 
     /**
@@ -281,15 +151,10 @@ export class CalendarPage implements OnInit {
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
 
-        let lessons = null;
         let events = null;
         const task = null;
 
         const callStack = [];
-        if (this.filterSelectedTypes.lesson) {
-            // todo get lessons with filter
-            callStack.push(this.http.getLessons().then(l => lessons = l));
-        }
         if (this.filterSelectedTypes.event) {
             callStack.push(this.http.getEvents(startDate.toISOString(), endDate.toISOString(), groupIds).then(e => events = e));
         }
@@ -297,7 +162,7 @@ export class CalendarPage implements OnInit {
             // callStack.push(this.http.getTask().then(t => task = t));
         }
         await Promise.all(callStack);
-        this.drawCalendar(events, lessons, task);
+        this.drawCalendar(events, task);
     }
 
     /**
