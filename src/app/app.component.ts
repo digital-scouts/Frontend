@@ -18,10 +18,6 @@ export class AppComponent {
             url: '/home',
             icon: 'home'
         }, {
-            title: 'Infos',
-            url: '/list',
-            icon: 'information-circle-outline'
-        }, {
             title: 'Kalender',
             url: '/calendar',
             icon: 'calendar'
@@ -56,6 +52,13 @@ export class AppComponent {
             url: '/home',
             icon: 'mail'
         }
+    ];
+    public adminPages = [
+        {
+            title: 'Nutzerwelvwaltung',
+            url: '/admin-account',
+            icon: 'contacts'
+        },
     ];
     public accountPages = [
         {
@@ -96,25 +99,25 @@ export class AppComponent {
         this.platform.ready().then(async () => {
             this.statusBar.styleDefault();
 
-            console.log('HEIGHT: ' + this.plt.height());
+            // console.log('HEIGHT: ' + this.plt.height());
             this.storage.set('height', this.plt.height());
 
-            console.log('WIDTH: ' + this.plt.width());
+            // console.log('WIDTH: ' + this.plt.width());
             this.storage.set('width', this.plt.width());
 
-            console.log('PORTRAIT: ' + this.plt.isPortrait());
+            // console.log('PORTRAIT: ' + this.plt.isPortrait());
 
             if (this.plt.is('android')) {
-                console.log('DEVICE: android');
+                // console.log('DEVICE: android');
             } else if (this.plt.is('ios')) {
-                console.log('DEVICE: ios');
+                // console.log('DEVICE: ios');
             }
             if (this.plt.is('desktop')) {
-                console.log('DEVICE: desktop');
+                // console.log('DEVICE: desktop');
                 this.mobile = false;
             }
             if (this.plt.is('cordova')) {
-                console.log('DEVICE: cordova');
+                // console.log('DEVICE: cordova');
                 this.mobile = true;
             }
 
@@ -127,7 +130,7 @@ export class AppComponent {
             }
 
             this.setUserData();
-            this.splashScreen.hide();
+
         });
     }
 
@@ -136,6 +139,7 @@ export class AppComponent {
         const name2 = await this.storage.get('last_name');
         this.userName = name1 + ' ' + name2;
         this.userRole = await this.storage.get('role');
+        this.splashScreen.hide();
     }
 
     /**
