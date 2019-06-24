@@ -6,7 +6,7 @@
 
 <ion-content>
     <ion-list *ngFor="let user of users">
-        <ion-item>
+        <ion-item (click)="seeUserDetailsModalOpen(user.id)">
             {{user.name_first}}
             {{user.name_last}}
         </ion-item>

@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpServiceService} from '../http-service.service';
 import {HelperService} from '../helper.service';
+import {ModalController} from '@ionic/angular';
+import {ModalAdminUserDetailsComponent} from '../modal-admin-user-details/modal-admin-user-details.component';
 
 @Component({
     selector: 'app-admin-account',
@@ -10,6 +12,7 @@ import {HelperService} from '../helper.service';
 export class AdminAccountPage implements OnInit {
 
     public users: Array<{
+        id: string,
         name_first: string,
         name_last: string,
         age: number,
@@ -26,7 +29,7 @@ export class AdminAccountPage implements OnInit {
 
     allGroups = this.helper.getAllGroups();
 
-    constructor(private http: HttpServiceService, private helper: HelperService) {
+    constructor(private http: HttpServiceService, private helper: HelperService, private modal: ModalController) {
     }
 
     ngOnInit() {
@@ -34,6 +37,7 @@ export class AdminAccountPage implements OnInit {
             // tslint:disable-next-line:forin
             for (const x in Object.keys(data)) {
                 this.users.push({
+                    id: data[x]['_id'],
                     name_first: data[x]['name_first'],
                     name_last: data[x]['name_last'],
                     age: data[x]['name_last'],
@@ -49,6 +53,20 @@ export class AdminAccountPage implements OnInit {
                 });
             }
         });
+    }
+
+    async seeUserDetailsModalOpen(id: string) {
+        const user = this.users.find((el) => {
+            return el.id === id;
+        });
+        console.log(user);
+        const myModal = await this.modal.create({
+            component: ModalAdminUserDetailsComponent,
+            componentProps: {'user': user}
+        });
+
+        myModal.present();
+        const {data} = await myModal.onDidDismiss();
     }
 
 }

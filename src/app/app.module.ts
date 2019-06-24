@@ -15,6 +15,7 @@ import {ModalEditEventComponent} from './modal-event-edit/modal-edit-event.compo
 import {ModalEventDetailsComponent} from './modal-event-details/modal-event-details.component';
 import {PopoverEventsFilterComponent} from './popover-events-filter/popover-events-filter.component';
 import {PopoverController} from 'ionic-angular/components/popover/popover-controller';
+import {ModalAdminUserDetailsComponent} from './modal-admin-user-details/modal-admin-user-details.component';
 
 @NgModule({
     declarations: [
@@ -22,12 +23,14 @@ import {PopoverController} from 'ionic-angular/components/popover/popover-contro
         ModalEditGroupComponent,
         ModalEditEventComponent,
         ModalEventDetailsComponent,
+        ModalAdminUserDetailsComponent,
         PopoverEventsFilterComponent
     ],
     entryComponents: [
         ModalEditGroupComponent,
         ModalEditEventComponent,
         ModalEventDetailsComponent,
+        ModalAdminUserDetailsComponent,
         PopoverEventsFilterComponent
     ],
     imports: [
