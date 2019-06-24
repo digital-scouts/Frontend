@@ -13,6 +13,7 @@
         </ion-header>
         <ion-content>
             <div id="menu_default">
+<!--                App Pages-->
                 <ion-list [hidden]="false" class="menu_list">
                     <ion-item [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'" (click)="closeMenu()"
                               class="medium_text" [lines]="'none'" [routerDirection]="'root'" [routerLink]="[p.url]"
@@ -26,7 +27,8 @@
                     </ion-item>
                 </ion-list>
 
-                <ion-list [hidden]="true" class="menu_list border-top">
+<!--                Leader Pages-->
+                <ion-list [hidden]="this.userRole != 'admin' && this.userRole != 'leader'" class="menu_list border-top">
                     <ion-item [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'" (click)="closeMenu()"
                               class="medium_text" [lines]="'none'" [routerDirection]="'root'" [routerLink]="[p.url]"
                               *ngFor="let p of leaderPages">
@@ -40,6 +42,22 @@
                     </ion-item>
                 </ion-list>
 
+<!--                Admin Pages-->
+                <ion-list [hidden]="this.userRole != 'admin'" class="menu_list border-top">
+                    <ion-item [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'" (click)="closeMenu()"
+                              class="medium_text" [lines]="'none'" [routerDirection]="'root'" [routerLink]="[p.url]"
+                              *ngFor="let p of adminPages">
+                        <div class="ion_item_inner">
+                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                            <ion-label>
+                                {{p.title}}
+                            </ion-label>
+                        </div>
+
+                    </ion-item>
+                </ion-list>
+
+<!--                option Pages-->
                 <ion-list [hidden]="false" class="menu_list border-top">
                     <ion-item class="medium_text" [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'"
                               (click)="closeMenu()" *ngFor="let p of optionPages" [lines]="'none'"
@@ -72,6 +90,8 @@
             </div>
         </ion-content>
     </ion-menu>
+
+
     <ion-router-outlet main></ion-router-outlet>
 
 </ion-app>

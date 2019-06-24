@@ -491,4 +491,19 @@ export class HttpServiceService {
     }
 
     // _______________________________________________________________________ GROUP End
+    // _______________________________________________________________________ Admin Account Start
+
+    getAllUser(): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.get(this.backend_url + '/api' + '/admin/accounts/user', { }, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    // _______________________________________________________________________ Admin Account End
 }

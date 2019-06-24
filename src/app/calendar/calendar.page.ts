@@ -25,6 +25,7 @@ export class CalendarPage implements OnInit {
         private router: Router,
         private http: HttpServiceService,
         private modal: ModalController,
+        private helper: HelperService
     ) {
         // set default filter dates
         const today: Date = new Date();
@@ -43,21 +44,6 @@ export class CalendarPage implements OnInit {
         this.storage.get('role').then(role => {
             // check permission
             this.hasPermissionToAddEvents = (role === 'admin' || role === 'leader');
-
-            // preset filter group checkbox
-            this.http.getGroups().then(groups => {
-                // tslint:disable-next-line:forin
-                // @ts-ignore
-                for (let i = 0; i < groups.length; i++) {
-                    this.allGroups.push({
-                        id: groups[i]['_id'],
-                        color: groups[i]['color'],
-                        name: groups[i]['name'],
-                        isChildGroup: groups[i]['childGroup'],
-                        selected: (groups[i]['defaultForRole'] === role || (role === 'admin' || role === 'leader'))
-                    });
-                }
-            });
         });
     }
 
@@ -75,14 +61,7 @@ export class CalendarPage implements OnInit {
         creator: string, // id
     }>> = [];
 
-    // warning when this will be updated, than update also the popover-events-filter.component
-    allGroups: Array<{
-        id: string,
-        color: string,
-        name: string,
-        isChildGroup: boolean,
-        selected: boolean
-    }> = [];
+    allGroups = this.helper.getAllGroups();
 
     filterSelectedTypes = {event: true, lesson: true, task: true};
 
@@ -118,7 +97,6 @@ export class CalendarPage implements OnInit {
                     const rawEndDate = new Date(events[key][i].dateEnd);
                     rawEndDate.setTime(rawEndDate.getTime() + rawEndDate.getTimezoneOffset() * 60 * 1000);
 
-                    // hint push to same index as events array
                     this.events[x].push({
                         title: events[key][i].eventName,
                         description: events[key][i].description,
@@ -144,9 +122,7 @@ export class CalendarPage implements OnInit {
         let endDate: Date = new Date(this.filterEndDate);
         const groupIds: string[] = [];
         for (let i = 0; i < this.allGroups.length; i++) {
-            if (this.allGroups[i].selected) {
-                groupIds.push(this.allGroups[i].id);
-            }
+            groupIds.push(this.allGroups[i].id);
         }
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);

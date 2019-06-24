@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
+import {HttpServiceService} from './http-service.service';
 
 moment.locale('de');
 
@@ -7,6 +8,11 @@ moment.locale('de');
     providedIn: 'root'
 })
 export class HelperService {
+
+    constructor(private http: HttpServiceService) {
+
+    }
+
     /**
      * format a displayDate to short timespan String
      * @param startDate
@@ -48,49 +54,28 @@ export class HelperService {
         return returnString;
     }
 
-    /**
-     * calculate the number of weeks between two dates
-     * https://stackoverflow.com/questions/11343939/how-to-add-weeks-to-date-using-javascript
-     * @param dateFrom
-     * @param dateTo
-     */
-    public static weeksBetween(dateFrom: Date, dateTo: Date) {
-        dateFrom = new Date(dateFrom);
-        dateTo = new Date(dateTo);
 
-        const weeks = Math.floor((dateTo.getTime() - dateFrom.getTime()) / (7 * 24 * 60 * 60 * 1000));
-        // console.log('calculate weeksBetween for: ' + dateFrom + ' -> ' + dateTo + ' : ' + weeks);
-        // console.log(weeks);
-        return weeks;
-    }
+    getAllGroups(): Array<{ id: string, color: string, name: string, isChildGroup: boolean }> {
+        const allGroups: Array<{
+            id: string,
+            color: string,
+            name: string,
+            isChildGroup: boolean,
+        }> = [];
 
-    /**
-     * calculate the number of month between two dates
-     * https://stackoverflow.com/questions/2536379/difference-in-months-between-two-dates-in-javascript
-     * @param dateFrom
-     * @param dateTo
-     */
-    public static monthBetween(dateFrom, dateTo) {
-        dateFrom = new Date(dateFrom);
-        dateTo = new Date(dateTo);
+        this.http.getGroups().then(groups => {
+            // @ts-ignore
+            for (let i = 0; i < groups.length; i++) {
+                allGroups.push({
+                    id: groups[i]['_id'],
+                    color: groups[i]['color'],
+                    name: groups[i]['name'],
+                    isChildGroup: groups[i]['childGroup'],
+                });
+            }
+        });
 
-        const months = dateTo.getMonth() - dateFrom.getMonth() +
-            (12 * (dateTo.getFullYear() - dateFrom.getFullYear()));
-
-        // console.log('calculate monthBetween for: ' + dateFrom + ' -> ' + dateTo + ' : ' + months);
-        return months;
-    }
-
-    /**
-     * https://codereview.stackexchange.com/questions/33527/find-next-occurring-friday-or-any-dayofweek
-     * @param date
-     * @param dayOfWeek
-     */
-    public static getNextDayOfWeek(date, dayOfWeek) {
-        const resultDate = new Date(date.getTime());
-        resultDate.setDate(date.getDate() + (7 + dayOfWeek - date.getDay()) % 7);
-        // console.log(`adjust date to weekday ${date.getDay()} Date: ${date} Result: ${resultDate}`);
-        return resultDate;
+        return allGroups;
     }
 }
 

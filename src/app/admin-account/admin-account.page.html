@@ -1,0 +1,14 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Nutzerverwaltung</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list *ngFor="let user of users">
+        <ion-item>
+            {{user.name_first}}
+            {{user.name_last}}
+        </ion-item>
+    </ion-list>
+</ion-content>
