@@ -33,7 +33,12 @@ export class AdminAccountPage implements OnInit {
     }
 
     ngOnInit() {
+        this.loadAllUser();
+    }
+
+    loadAllUser() {
         this.http.getAllUser().then((data) => {
+            this.users = [];
             // tslint:disable-next-line:forin
             for (const x in Object.keys(data)) {
                 this.users.push({
@@ -41,9 +46,9 @@ export class AdminAccountPage implements OnInit {
                     name_first: data[x]['name_first'],
                     name_last: data[x]['name_last'],
                     age: data[x]['name_last'],
-                    group: data[x]['name_last'],
-                    image_profile: data[x]['name_last'],
-                    role: data[x]['name_last'],
+                    group: data[x]['group'],
+                    image_profile: data[x]['image_profile'],
+                    role: data[x]['role'],
                     accountStatus: {
                         namiLink: data[x]['accountStatus']['namiLink'],
                         activated: data[x]['accountStatus']['activated'],
@@ -67,6 +72,7 @@ export class AdminAccountPage implements OnInit {
 
         myModal.present();
         const {data} = await myModal.onDidDismiss();
+        this.loadAllUser();
     }
 
 }

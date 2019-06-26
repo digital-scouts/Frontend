@@ -495,7 +495,59 @@ export class HttpServiceService {
 
     getAllUser(): Promise<JSON> {
         return new Promise(async resolve => {
-            this.httpClient.get(this.backend_url + '/api' + '/admin/accounts/user', { }, {authorization: this.token})
+            this.httpClient.get(this.backend_url + '/api' + '/admin/accounts/user', {}, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    /**
+     *
+     * @param id
+     */
+    deleteUser(id: string) {
+        return new Promise(async resolve => {
+            this.httpClient.delete(this.backend_url + '/api' + '/admin/accounts/user', {
+                id: id
+            }, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    /**
+     * activate user
+     * @param id
+     * @param namiLink
+     */
+    activateUser(id: string, namiLink: number = null) {
+        return new Promise(async resolve => {
+            this.httpClient.put(this.backend_url + '/api' + '/admin/accounts/notActivated?id=' + id + '&namiLink=' + namiLink,
+                {}, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    /**
+     * enable or disable user
+     * @param id
+     */
+    changeDisableUser(id: string) {
+        return new Promise(async resolve => {
+            this.httpClient.put(this.backend_url + '/api' + '/admin/accounts/disabled?id=' + id, {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
