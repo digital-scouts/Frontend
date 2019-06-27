@@ -386,7 +386,7 @@ export class HttpServiceService {
     deleteEvent(id: string): Promise<JSON> {
 
         return new Promise(async resolve => {
-            this.httpClient.delete(this.backend_url + '/api' + '/calendar/' + id, {}, {authorization: this.token})
+            this.httpClient.delete(this.backend_url + '/api' + '/calendar/?id=' + id, {}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);

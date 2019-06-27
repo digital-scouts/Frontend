@@ -198,7 +198,7 @@ export class CalendarPage implements OnInit {
     async showEvent_click(id: string) {
         event.stopPropagation();
         for (let i = 0; i < this.events.length; i++) {
-            for (let k = 0; k < this.events.length; k++) {
+            for (let k = 0; k < this.events[i].length; k++) {
                 for (let j = 0; j < this.events[i][k].length; j++) {
                     if (this.events[i][k][j].id === id) {
                         const myModal = await this.modal.create({
