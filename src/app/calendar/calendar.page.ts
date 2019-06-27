@@ -129,12 +129,20 @@ export class CalendarPage implements OnInit {
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
 
+        const filterTypes = [];
+        if (this.filterSelectedTypes.event) {
+            filterTypes.push('event');
+        }
+        if (this.filterSelectedTypes.lesson) {
+            filterTypes.push('lesson');
+        }
+
         let events = null;
         const task = null;
 
         const callStack = [];
-        if (this.filterSelectedTypes.event) {
-            callStack.push(this.http.getEvents(startDate.toISOString(), endDate.toISOString(), this.filteredGroups).then(e => events = e));
+        if (this.filterSelectedTypes.event || this.filterSelectedTypes.lesson) {
+            callStack.push(this.http.getEvents(startDate.toISOString(), endDate.toISOString(), this.filteredGroups, filterTypes).then(e => events = e));
         }
         if (this.filterSelectedTypes.task) {
             // callStack.push(this.http.getTask().then(t => task = t));

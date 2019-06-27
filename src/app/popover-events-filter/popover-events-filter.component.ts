@@ -14,9 +14,6 @@ export class PopoverEventsFilterComponent {
     filterDateMax;
     filterStartDate;
     filterEndDate;
-
-    // warning when this will be updated, than update also the calendar.page
-
     filterSelectedTypes: { event: boolean, lesson: boolean, task: boolean };
 
     constructor(private popoverCtrl: PopoverController, public navParams: NavParams, private helper: HelperService) {
