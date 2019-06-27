@@ -18,7 +18,7 @@ export class HelperService {
      * @param startDate
      * @param endDate
      */
-    public static formatDateToTimespanString(startDate: Date, endDate: Date): { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedStartDate: string, formattedEndDate: string, formattedTimeSpan: string, weekDay: string } {
+    public static formatDateToTimespanString(startDate: Date, endDate: Date): { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedStartDate: string, formattedEndDate: string, formattedTimeSpan: string, weekDay: string, month: string } {
         const date = {
             isSameDay: moment(startDate).isSame(endDate, 'day'),
             isFullDay: (moment(startDate).hour() === 0 && moment(endDate).hour() === 0),
@@ -28,6 +28,7 @@ export class HelperService {
             formattedEndDate: null,
             formattedTimeSpan: null,
             weekDay: moment(startDate).format('dd'),
+            month: moment(startDate).format('MMMM')
         };
         date.formattedTimeSpan = date.startTime + ' bis ' + date.endTime;
         return date;

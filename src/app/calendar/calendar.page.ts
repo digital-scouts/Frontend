@@ -52,10 +52,10 @@ export class CalendarPage implements OnInit {
     }
 
     // warning when this will be updated, than update also the modal-event-details.component and modal-event-edit.component
-    public events: Array<Array<{
+    public events: Array<Array<Array<{
         title: string,
         description: string,
-        date: { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedStartDate: string, formattedEndDate: string, formattedTimeSpan: string, weekDay: string },
+        date: { isSameDay: boolean, isFullDay: boolean, startTime: string, endTime: string, formattedStartDate: string, formattedEndDate: string, formattedTimeSpan: string, weekDay: string, month: string },
         dateStart: Date,
         dateEnd: Date,
         groups: string[], // colors
@@ -63,7 +63,7 @@ export class CalendarPage implements OnInit {
         public: boolean,
         id: string, // id
         creator: string, // id
-    }>> = [];
+    }>>> = [];
 
     allGroups = this.helper.getAllGroups();
     filteredGroups: string[];
@@ -89,20 +89,30 @@ export class CalendarPage implements OnInit {
      */
     private async drawCalendar(events, tasks) {
         this.events = [];
-        console.log('events: ');
-        console.log(events);
         if (events) {
+            let month = '0';
+            let monthIdx = -1;
+            let dayInMonthIdx = 0;
             // tslint:disable-next-line:forin
             for (const x in Object.keys(events)) {
                 const key = Object.keys(events)[x];
-                this.events.push([]);
+                console.log('new date: ' + key);
+                if (month === '0' || key.split('-')[1] !== month) {
+                    this.events.push([]);
+                    month = key.split('-')[1];
+                    monthIdx++;
+                    dayInMonthIdx = -1;
+                    console.log('new Month: ' + monthIdx);
+                }
+                dayInMonthIdx++;
+                this.events[monthIdx].push([]);
                 for (let i = 0; i < events[key].length; i++) {
                     const rawStartDate = new Date(events[key][i].dateStart);
                     rawStartDate.setTime(rawStartDate.getTime() + rawStartDate.getTimezoneOffset() * 60 * 1000);
                     const rawEndDate = new Date(events[key][i].dateEnd);
                     rawEndDate.setTime(rawEndDate.getTime() + rawEndDate.getTimezoneOffset() * 60 * 1000);
-
-                    this.events[x].push({
+                    console.log('push event: ' + rawStartDate);
+                    this.events[monthIdx][dayInMonthIdx].push({
                         title: events[key][i].eventName,
                         description: events[key][i].description,
                         date: HelperService.formatDateToTimespanString(rawStartDate, rawEndDate),
@@ -114,6 +124,7 @@ export class CalendarPage implements OnInit {
                         id: events[key][i]._id,
                         creator: events[key][i].creator
                     });
+                    console.log(this.events);
                 }
             }
         }
@@ -158,18 +169,20 @@ export class CalendarPage implements OnInit {
     async openAddEventModal(id: string) {
         if (this.hasPermissionToAddEvents) {
             for (let i = 0; id == null || i < this.events.length; i++) {
-                for (let j = 0; id == null || j < this.events[i].length; j++) {
-                    if (id == null || this.events[i][j].id === id) {
-                        const myModal = await this.modal.create({
-                            component: ModalEditEventComponent,
-                            componentProps: {'event': (id === null) ? null : this.events[i][j]}
-                        });
-                        myModal.present();
+                for (let k = 0; id == null || k < this.events[i].length; k++) {
+                    for (let j = 0; id == null || j < this.events[i][k].length; j++) {
+                        if (id == null || this.events[i][k][j].id === id) {
+                            const myModal = await this.modal.create({
+                                component: ModalEditEventComponent,
+                                componentProps: {'event': (id === null) ? null : this.events[i][k][j]}
+                            });
+                            myModal.present();
 
-                        // wait for modal and load data again
-                        await myModal.onDidDismiss();
-                        this.applyFilter();
-                        return;
+                            // wait for modal and load data again
+                            await myModal.onDidDismiss();
+                            this.applyFilter();
+                            return;
+                        }
                     }
                 }
             }
@@ -185,19 +198,21 @@ export class CalendarPage implements OnInit {
     async showEvent_click(id: string) {
         event.stopPropagation();
         for (let i = 0; i < this.events.length; i++) {
-            for (let j = 0; j < this.events[i].length; j++) {
-                if (this.events[i][j].id === id) {
-                    const myModal = await this.modal.create({
-                        component: ModalEventDetailsComponent,
-                        componentProps: {'event': this.events[i][j]}
-                    });
+            for (let k = 0; k < this.events.length; k++) {
+                for (let j = 0; j < this.events[i][k].length; j++) {
+                    if (this.events[i][k][j].id === id) {
+                        const myModal = await this.modal.create({
+                            component: ModalEventDetailsComponent,
+                            componentProps: {'event': this.events[i][k][j]}
+                        });
 
-                    myModal.present();
-                    const {data} = await myModal.onDidDismiss();
-                    if (data.edit) {
-                        this.openAddEventModal(id);
+                        myModal.present();
+                        const {data} = await myModal.onDidDismiss();
+                        if (data.edit) {
+                            this.openAddEventModal(id);
+                        }
+                        return;
                     }
-                    return;
                 }
             }
         }
