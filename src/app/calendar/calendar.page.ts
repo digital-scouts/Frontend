@@ -44,6 +44,10 @@ export class CalendarPage implements OnInit {
         this.storage.get('role').then(role => {
             // check permission
             this.hasPermissionToAddEvents = (role === 'admin' || role === 'leader');
+
+            this.storage.get('group').then(group => {
+                this.filteredGroups = (role === 'admin' || role === 'leader') ? this.allGroups.map(a => a.id) : [group];
+            });
         });
     }
 
@@ -62,6 +66,7 @@ export class CalendarPage implements OnInit {
     }>> = [];
 
     allGroups = this.helper.getAllGroups();
+    filteredGroups: string[];
 
     filterSelectedTypes = {event: true, lesson: true, task: true};
 
@@ -120,10 +125,7 @@ export class CalendarPage implements OnInit {
     async applyFilter() {
         let startDate: Date = new Date(this.filterStartDate);
         let endDate: Date = new Date(this.filterEndDate);
-        const groupIds: string[] = [];
-        for (let i = 0; i < this.allGroups.length; i++) {
-            groupIds.push(this.allGroups[i].id);
-        }
+
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 31);
 
@@ -132,7 +134,7 @@ export class CalendarPage implements OnInit {
 
         const callStack = [];
         if (this.filterSelectedTypes.event) {
-            callStack.push(this.http.getEvents(startDate.toISOString(), endDate.toISOString(), groupIds).then(e => events = e));
+            callStack.push(this.http.getEvents(startDate.toISOString(), endDate.toISOString(), this.filteredGroups).then(e => events = e));
         }
         if (this.filterSelectedTypes.task) {
             // callStack.push(this.http.getTask().then(t => task = t));
@@ -206,7 +208,7 @@ export class CalendarPage implements OnInit {
                 filterDateMax: this.filterDateMax,
                 filterStartDate: this.filterStartDate,
                 filterEndDate: this.filterEndDate,
-                filterSelectedGroups: this.allGroups,
+                filterSelectedGroups: this.filteredGroups,
                 filterSelectedTypes: this.filterSelectedTypes
             }
         });
@@ -217,7 +219,7 @@ export class CalendarPage implements OnInit {
                     console.log(result['data']);
                     this.filterStartDate = result['data']['filterStartDate'];
                     this.filterEndDate = result['data']['filterEndDate'];
-                    this.allGroups = result['data']['groups'];
+                    this.filteredGroups = result['data']['groups'];
                     this.filterSelectedTypes = result['data']['types'];
                     this.applyFilter();
                 }

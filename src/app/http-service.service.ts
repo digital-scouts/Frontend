@@ -20,12 +20,16 @@ export class HttpServiceService {
      * @param name_first
      * @param name_last
      * @param role
+     * @param group
      */
-    private async setUserData(name_first: string, name_last: string, role: string) {
-        await this.storage.set('first_name', name_first);
-        await this.storage.set('last_name', name_last);
-        await this.storage.set('role', role);
-        console.log('set data: name: ' + name_first + ' ' + name_last + ' and role: ' + role);
+    private async setUserData(name_first: string, name_last: string, role: string, group: string) {
+        const callStack = [];
+        callStack.push(this.storage.set('first_name', name_first));
+        callStack.push(this.storage.set('last_name', name_last));
+        callStack.push(this.storage.set('role', role));
+        callStack.push(this.storage.set('group', group));
+        await Promise.all(callStack);
+        console.log(`set data: name:  ${name_first}  ${name_last}  role:  ${role} group: ${group}`);
     }
 
     /**
@@ -49,11 +53,8 @@ export class HttpServiceService {
                     this.httpClient.post(this.backend_url, {}, {authorization: token})
                         .then(res => {
                             const data: JSON = JSON.parse(res.data);
-
-                            // @ts-ignore
                             if (res.status === 200) {
-                                // @ts-ignore
-                                this.setUserData(data.userNameFirst, data.userNameLast, data.role).then(() => resolve(true));
+                                this.setUserData(data['userNameFirst'], data['userNameLast'], data['role'], data['group']).then(() => resolve(true));
                             }
                         }, err => {
                             // todo handle error
@@ -313,14 +314,16 @@ export class HttpServiceService {
     /**
      * todo
      */
-    postEvent(eventTitle: string, eventIsPublic: boolean, eventStartDate: Date, eventEndDate: Date, eventDescription: string) {
+    postEvent(eventTitle: string, eventIsPublic: boolean, eventStartDate: Date, eventEndDate: Date, eventDescription: string, groups: string[]) {
+        console.log(groups);
         return new Promise(resolve => {
             this.httpClient.post(this.backend_url + '/api' + '/calendar', {
                 public: eventIsPublic,
                 eventName: eventTitle,
                 startDate: eventStartDate,
                 endDate: eventEndDate,
-                description: eventDescription
+                description: eventDescription,
+                groups: JSON.stringify(groups),
             }, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
@@ -331,7 +334,7 @@ export class HttpServiceService {
         });
     }
 
-    putEvent(id: string, eventTitle: string, eventIsPublic: boolean, eventStartDate: Date, eventEndDate: Date, eventDescription: string) {
+    putEvent(id: string, eventTitle: string, eventIsPublic: boolean = false, eventStartDate: Date, eventEndDate: Date, eventDescription: string) {
         return new Promise(resolve => {
             this.httpClient.put(this.backend_url + '/api' + '/calendar', {
                 id: id,
@@ -363,7 +366,7 @@ export class HttpServiceService {
             'dateEnd': (filterDateEnd !== null) ? new Date(filterDateEnd).toISOString() : 'null',
             'complement': 'null',
             'origin': 'null',
-            'group': group,
+            'group': (group !== null) ? group : 'null' ,
             'type': 'null',
         };
         console.log(filter);

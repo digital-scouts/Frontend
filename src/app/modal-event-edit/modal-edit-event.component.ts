@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ModalController, ToastController} from '@ionic/angular';
 import {HttpServiceService} from '../http-service.service';
+import {HelperService} from '../helper.service';
 
 @Component({
     selector: 'app-modal-edit-event',
@@ -27,11 +28,15 @@ export class ModalEditEventComponent implements OnInit {
     eventTitle: string;
     eventDescription: string;
     eventPublic = false;
+    eventGroups: string[];
+
+    allGroups = this.helper.getAllGroups();
 
     constructor(
         private modal: ModalController,
         private http: HttpServiceService,
-        public toastController: ToastController
+        public toastController: ToastController,
+        private helper: HelperService
     ) {
     }
 
@@ -67,7 +72,7 @@ export class ModalEditEventComponent implements OnInit {
 
     addEvent() {
         if (this.event == null) {
-            this.http.postEvent(this.eventTitle, this.eventPublic, new Date(this.eventStartDate), new Date(this.eventEndDate), this.eventDescription)
+            this.http.postEvent(this.eventTitle, this.eventPublic, new Date(this.eventStartDate), new Date(this.eventEndDate), this.eventDescription, this.eventGroups)
                 .then(res => {
                     console.log(res);
                     this.showEventSuccessToast();

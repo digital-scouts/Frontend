@@ -10,10 +10,13 @@
                       [min]="filterDateMin" [max]="filterDateMax"></ion-datetime>
     </ion-item>
 
-    <div id="filter-group">
+    <ion-item>
         <ion-label>Gruppe</ion-label>
-        <ion-checkbox *ngFor="let group of allGroups" [(ngModel)]="group.selected"></ion-checkbox>
-    </div>
+        <ion-select [(ngModel)]="selectedGroups"  multiple="true"  placeholder="Select One">
+            <ion-select-option [selected]="selectedGroups.includes(group.id)" *ngFor="let group of allGroups" value="{{group.id}}">{{group.name}}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
     <div id="filter-event">
         <ion-checkbox [(ngModel)]="filterSelectedTypes['event']"></ion-checkbox>
         <ion-label>Veranstaltungen</ion-label>

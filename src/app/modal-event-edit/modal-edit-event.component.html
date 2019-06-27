@@ -24,14 +24,20 @@
       <ion-textarea [(ngModel)]="eventDescription"></ion-textarea>
     </ion-item>
 
-    <!-- todo checkbox gruppen-->
+    <ion-item>
+      <ion-label>Gruppe</ion-label>
+      <ion-select [(ngModel)]="eventGroups"  multiple="true"  placeholder="Select One">
+        <ion-select-option *ngFor="let group of allGroups" value="{{group.id}}">{{group.name}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
     <!-- todo add later: origin, complement, address, documents, picture-->
 
   </div>
   <div class="modal-footer">
     <ion-button (click)="closeModal()">Close</ion-button>
     <ion-button (click)="addEvent()">Save</ion-button>
-    <ion-button (click)="deleteEvent()" color="danger">Löschen</ion-button>
+    <ion-button [hidden]="event == null" (click)="deleteEvent()" color="danger">Löschen</ion-button>
   </div>
 </div>
 
