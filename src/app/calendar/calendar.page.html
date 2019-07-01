@@ -1,7 +1,20 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Kalender
+        </ion-title>
+        <ion-buttons slot="end">
+            <ion-button clear icon-only (click)="presentPopover($event)">
+                <ion-icon name="options"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
 <ion-content padding>
-
-    <ion-button (click)="presentPopover($event)">Filter</ion-button>
-
     <ion-list *ngFor="let month of events">
         <div class="monthDivider">
             <p>{{month[0][0].date.month}}</p>
@@ -12,7 +25,10 @@
                       class="eventItem {{event.groups}}">
                 <div class="event-text">
                     {{event.title}} <br>
-                    {{event.date.formattedTimeSpan}}
+                    <span [hidden]="event.dateStart.getHours() == 0 && event.dateEnd.getHours() == 0 && event.dateStart.getDate() == event.dateEnd.getDate()">
+                        {{event.date.formattedTimeSpan}}
+                    </span>
+
                 </div>
                 <div class="event-lily">
                 <span *ngFor="let group of event.groups" class="lily {{group}}">
