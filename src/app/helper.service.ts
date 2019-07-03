@@ -35,6 +35,14 @@ export class HelperService {
     }
 
     /**
+     * DD.MM.YYYY date to YYYY-MM-DD
+     * @param date
+     */
+    static gerDateToISO(date: string): string {
+        return moment(`${date.split('.')[2]}-${date.split('.')[1]}-${date.split('.')[0]}`).format('YYYY-MM-DD');
+    }
+
+    /**
      * todo
      * @param {string} pw
      * @return {string}

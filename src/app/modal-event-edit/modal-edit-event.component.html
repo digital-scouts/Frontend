@@ -21,23 +21,18 @@
                 <ion-toggle [(ngModel)]="fullDayEvent"></ion-toggle>
             </ion-item>
 
-            <ion-button clear icon-only (click)="openSelectDatePopover($event)">
-                <ion-icon name="options"></ion-icon>
-            </ion-button>
-<!-- todo datepicker
-
             <ion-item>
-                <ion-datetime [(ngModel)]="eventStartDate" display-format="MMMM DD DDD, YYYY"></ion-datetime>
-                <ion-datetime [hidden]="fullDayEvent" [(ngModel)]="eventStartDate" display-format="HH:mm"
-                              minutevalues="0,10,15,20,30,40,45,50"></ion-datetime>
+                <li-ionic4-datepicker (ngModelChange)="dateChanged('s_'+$event)" [(ngModel)]="eventStartDate" [inputDateConfig]="datePickerStartObj"></li-ionic4-datepicker>
+<!--                <ion-datetime [hidden]="fullDayEvent" [(ngModel)]="eventStartDate" display-format="HH:mm"-->
+<!--                              minutevalues="0,10,15,20,30,40,45,50"></ion-datetime>-->
             </ion-item>
 
             <ion-item>
-                <ion-datetime [(ngModel)]="eventEndDate" display-format="MMMM DD DDD, YYYY"></ion-datetime>
-                <ion-datetime [hidden]="fullDayEvent" [(ngModel)]="eventEndDate" display-format="HH:mm"
-                              minutevalues="0,10,15,20,30,40,45,50"></ion-datetime>
+                <li-ionic4-datepicker (ngModelChange)="dateChanged('e_'+$event)" [(ngModel)]="eventEndDate" [inputDateConfig]="datePickerEndObj"></li-ionic4-datepicker>
+<!--                <ion-datetime [hidden]="fullDayEvent" [(ngModel)]="eventEndDate" display-format="HH:mm"-->
+<!--                              minutevalues="0,10,15,20,30,40,45,50"></ion-datetime>-->
             </ion-item>
-            -->
+
         </ion-item-group>
 
 

@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ModalController, PopoverController, ToastController} from '@ionic/angular';
+import {ModalController, ToastController} from '@ionic/angular';
 import {HttpServiceService} from '../http-service.service';
 import {HelperService} from '../helper.service';
-import {PopoverDatepickerComponent} from '../popover-datepicker/popover-datepicker.component';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-modal-edit-event',
@@ -10,6 +10,14 @@ import {PopoverDatepickerComponent} from '../popover-datepicker/popover-datepick
     styleUrls: ['./modal-edit-event.component.scss']
 })
 export class ModalEditEventComponent implements OnInit {
+
+    constructor(
+        private modal: ModalController,
+        private http: HttpServiceService,
+        public toastController: ToastController,
+        private helper: HelperService,
+    ) {
+    }
 
     @Input() event: {
         title: string,
@@ -25,8 +33,6 @@ export class ModalEditEventComponent implements OnInit {
     };
 
     fullDayEvent: boolean;
-    eventStartDate: string;
-    eventEndDate: string;
     eventTitle: string;
     eventDescription: string;
     eventPublic = false;
@@ -34,18 +40,41 @@ export class ModalEditEventComponent implements OnInit {
 
     allGroups = this.helper.getAllGroups();
 
-    constructor(
-        private modal: ModalController,
-        private http: HttpServiceService,
-        public toastController: ToastController,
-        private helper: HelperService,
-        private popoverCtrl: PopoverController,
-    ) {
-    }
+    eventStartDate: string;
+    eventEndDate: string;
+
+    monthList = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'July', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+    weeksList = ['S', 'M', 'D', 'M', 'D', 'F', 'S'];
+
+    datePickerStartObj = {
+        fromDate: moment().subtract(3, 'm'),
+        closeOnSelect: true, // default false
+        mondayFirst: true, // default false
+        todayLabel: 'Heute', // default 'Today'
+        closeLabel: 'Abbrechen', // default 'Close'
+        titleLabel: 'Anfang auswählen', // default null
+        monthsList: this.monthList,
+        weeksList: this.weeksList,
+        dateFormat: 'DD.MM.YYYY', // default DD MMM YYYY
+        clearButton: false, // default true
+        momentLocale: 'de-DE', // Default 'en-US'
+    };
+
+    datePickerEndObj = {
+        fromDate: this.eventStartDate, // default null
+        showTodayButton: false,
+        closeOnSelect: true, // default false
+        mondayFirst: true, // default false
+        closeLabel: 'Abbrechen', // default 'Close'
+        titleLabel: 'Ende auswählen', // default null
+        monthsList: this.monthList,
+        weeksList: this.weeksList,
+        dateFormat: 'DD.MM.YYYY', // default DD MMM YYYY
+        clearButton: false, // default true
+        momentLocale: 'de-DE', // Default 'en-US'
+    };
 
     ngOnInit(): void {
-
-
         if (this.event != null) {
             this.eventStartDate = this.event.dateStart.toISOString();
             this.eventEndDate = this.event.dateEnd.toISOString();
@@ -54,7 +83,7 @@ export class ModalEditEventComponent implements OnInit {
             this.eventDescription = this.event.description;
             this.eventTitle = this.event.title;
         } else {
-            this.eventStartDate = this.eventEndDate = new Date(Date.now()).toISOString();
+            this.eventStartDate = this.eventEndDate = moment().format('DD.MM.YYYY');
         }
     }
 
@@ -122,20 +151,22 @@ export class ModalEditEventComponent implements OnInit {
         });
     }
 
-    async openSelectDatePopover(event) {
-        const popover = await this.popoverCtrl.create({
-            component: PopoverDatepickerComponent,
-            event: event,
-            componentProps: {}
-        });
+    /**
+     * end can´t be picket earlier than start
+     * change this.datePickerEndObj.fromDate to date
+     * change this.eventEndDate to date when start > end
+     * @param date
+     */
+    dateChanged(date: string) {
+        const selected_day = HelperService.gerDateToISO(date.split('_')[1]);
 
-        popover.onDidDismiss()
-            .then((result) => {
-                if (result['data'] !== undefined) {
-                    console.log(result['data']);
-                }
-            });
+        if (date.split('_')[0] === 's') {// start date changed
+            // end can´t be picket earlier than start
+            this.datePickerEndObj.fromDate = selected_day;
 
-        return await popover.present();
+            if (moment(selected_day).isAfter(HelperService.gerDateToISO(this.eventEndDate), 'day')) {// end is after start
+                this.eventEndDate = moment(selected_day).format('DD.MM.YYYY');
+            }
+        }
     }
 }
