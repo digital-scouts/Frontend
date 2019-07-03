@@ -44,6 +44,7 @@ import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
         IonicModule.forRoot(),
         IonicStorageModule.forRoot(),
         AppRoutingModule,
+        Ionic4DatepickerModule
     ],
     providers: [
         HTTP,
