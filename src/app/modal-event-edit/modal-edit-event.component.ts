@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ModalController, ToastController} from '@ionic/angular';
+import {ModalController, PopoverController, ToastController} from '@ionic/angular';
 import {HttpServiceService} from '../http-service.service';
 import {HelperService} from '../helper.service';
+import {PopoverDatepickerComponent} from '../popover-datepicker/popover-datepicker.component';
 
 @Component({
     selector: 'app-modal-edit-event',
@@ -23,6 +24,7 @@ export class ModalEditEventComponent implements OnInit {
         creator: string, // id
     };
 
+    fullDayEvent: boolean;
     eventStartDate: string;
     eventEndDate: string;
     eventTitle: string;
@@ -36,17 +38,23 @@ export class ModalEditEventComponent implements OnInit {
         private modal: ModalController,
         private http: HttpServiceService,
         public toastController: ToastController,
-        private helper: HelperService
+        private helper: HelperService,
+        private popoverCtrl: PopoverController,
     ) {
     }
 
     ngOnInit(): void {
+
+
         if (this.event != null) {
             this.eventStartDate = this.event.dateStart.toISOString();
             this.eventEndDate = this.event.dateEnd.toISOString();
+
             this.eventPublic = this.event.public;
             this.eventDescription = this.event.description;
             this.eventTitle = this.event.title;
+        } else {
+            this.eventStartDate = this.eventEndDate = new Date(Date.now()).toISOString();
         }
     }
 
@@ -71,8 +79,16 @@ export class ModalEditEventComponent implements OnInit {
     }
 
     addEvent() {
+        const startDate = new Date(this.eventStartDate);
+        const endDate = new Date(this.eventEndDate);
+        if (this.fullDayEvent) {
+            startDate.setHours(0);
+            startDate.setMinutes(0);
+            endDate.setHours(0);
+            endDate.setMinutes(0);
+        }
         if (this.event == null) {
-            this.http.postEvent(this.eventTitle, this.eventPublic, new Date(this.eventStartDate), new Date(this.eventEndDate), this.eventDescription, this.eventGroups)
+            this.http.postEvent(this.eventTitle, this.eventPublic, startDate, endDate, this.eventDescription, this.eventGroups)
                 .then(res => {
                     console.log(res);
                     this.showEventSuccessToast();
@@ -82,7 +98,7 @@ export class ModalEditEventComponent implements OnInit {
                     this.showEventErrorToast();
                 });
         } else {
-            this.http.putEvent(this.event.id, this.eventTitle, this.eventPublic, new Date(this.eventStartDate), new Date(this.eventEndDate), this.eventDescription)
+            this.http.putEvent(this.event.id, this.eventTitle, this.eventPublic, startDate, endDate, this.eventDescription)
                 .then(res => {
                     console.log(res);
                     this.showEventSuccessToast();
@@ -104,5 +120,22 @@ export class ModalEditEventComponent implements OnInit {
             console.log(err);
             this.showEventErrorToast();
         });
+    }
+
+    async openSelectDatePopover(event) {
+        const popover = await this.popoverCtrl.create({
+            component: PopoverDatepickerComponent,
+            event: event,
+            componentProps: {}
+        });
+
+        popover.onDidDismiss()
+            .then((result) => {
+                if (result['data'] !== undefined) {
+                    console.log(result['data']);
+                }
+            });
+
+        return await popover.present();
     }
 }

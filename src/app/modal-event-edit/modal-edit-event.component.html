@@ -1,44 +1,70 @@
 <div class="modal-content" style="width: 100vw; height: 100vh; background-color: white; padding: 10px;">
-  <div class="modal-header">
-    <h4 class="modal-title">Title</h4>
-  </div>
-  <div class="modal-body">
-    <ion-item>
-      <ion-label position="floating">Titel</ion-label>
-      <ion-input [(ngModel)]="eventTitle"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label >Öffentliche Veranstaltung</ion-label>
-      <ion-checkbox [(ngModel)]="eventPublic"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label>Start</ion-label>
-      <ion-datetime [(ngModel)]="eventStartDate"  display-format="MMMM DD DDD, YYYY HH:mm" minuteValues="0,10,15,20,30,40,45,50"></ion-datetime>
-    </ion-item>
-    <ion-item>
-      <ion-label>Ende</ion-label>
-      <ion-datetime [(ngModel)]="eventEndDate" display-format="MMMM DD DDD, YYYY HH:mm" minuteValues="0,10,15,20,30,40,45,50"></ion-datetime>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Description</ion-label>
-      <ion-textarea [(ngModel)]="eventDescription"></ion-textarea>
-    </ion-item>
+    <div class="modal-header">
+        <h4 class="modal-title">Title</h4>
+    </div>
+    <div class="modal-body">
+        <ion-item>
+            <ion-label position="floating">Titel</ion-label>
+            <ion-input [(ngModel)]="eventTitle"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Öffentliche Veranstaltung</ion-label>
+            <ion-checkbox [(ngModel)]="eventPublic"></ion-checkbox>
+        </ion-item>
 
-    <ion-item>
-      <ion-label>Gruppe</ion-label>
-      <ion-select [(ngModel)]="eventGroups"  multiple="true"  placeholder="Select One">
-        <ion-select-option *ngFor="let group of allGroups" value="{{group.id}}">{{group.name}}</ion-select-option>
-      </ion-select>
-    </ion-item>
+        <ion-item-group>
+            <ion-item>
+                <ion-label>
+                    <ion-icon name="time"></ion-icon>
+                    Ganztägig
+                </ion-label>
+                <ion-toggle [(ngModel)]="fullDayEvent"></ion-toggle>
+            </ion-item>
 
-    <!-- todo add later: origin, complement, address, documents, picture-->
+            <ion-button clear icon-only (click)="openSelectDatePopover($event)">
+                <ion-icon name="options"></ion-icon>
+            </ion-button>
+<!-- todo datepicker
 
-  </div>
-  <div class="modal-footer">
-    <ion-button (click)="closeModal()">Close</ion-button>
-    <ion-button (click)="addEvent()">Save</ion-button>
-    <ion-button [hidden]="event == null" (click)="deleteEvent()" color="danger">Löschen</ion-button>
-  </div>
+            <ion-item>
+                <ion-datetime [(ngModel)]="eventStartDate" display-format="MMMM DD DDD, YYYY"></ion-datetime>
+                <ion-datetime [hidden]="fullDayEvent" [(ngModel)]="eventStartDate" display-format="HH:mm"
+                              minutevalues="0,10,15,20,30,40,45,50"></ion-datetime>
+            </ion-item>
+
+            <ion-item>
+                <ion-datetime [(ngModel)]="eventEndDate" display-format="MMMM DD DDD, YYYY"></ion-datetime>
+                <ion-datetime [hidden]="fullDayEvent" [(ngModel)]="eventEndDate" display-format="HH:mm"
+                              minutevalues="0,10,15,20,30,40,45,50"></ion-datetime>
+            </ion-item>
+            -->
+        </ion-item-group>
+
+
+        <ion-item>
+            <ion-label position="floating">
+                <ion-icon name="list"></ion-icon>
+                Description
+            </ion-label>
+            <ion-textarea [(ngModel)]="eventDescription"></ion-textarea>
+        </ion-item>
+
+        <ion-item>
+            <ion-label>Gruppe</ion-label>
+            <ion-select [(ngModel)]="eventGroups" multiple="true" placeholder="Select One">
+                <ion-select-option *ngFor="let group of allGroups"
+                                   value="{{group.id}}">{{group.name}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <!-- todo add later: origin, complement, address, documents, picture-->
+
+    </div>
+    <div class="modal-footer">
+        <ion-button (click)="closeModal()">Close</ion-button>
+        <ion-button (click)="addEvent()">Save</ion-button>
+        <ion-button [hidden]="event == null" (click)="deleteEvent()" color="danger">Löschen</ion-button>
+    </div>
 </div>
 
 
