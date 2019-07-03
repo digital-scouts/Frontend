@@ -96,13 +96,11 @@ export class CalendarPage implements OnInit {
             // tslint:disable-next-line:forin
             for (const x in Object.keys(events)) {
                 const key = Object.keys(events)[x];
-                console.log('new date: ' + key);
                 if (month === '0' || key.split('-')[1] !== month) {
                     this.events.push([]);
                     month = key.split('-')[1];
                     monthIdx++;
                     dayInMonthIdx = -1;
-                    console.log('new Month: ' + monthIdx);
                 }
                 dayInMonthIdx++;
                 this.events[monthIdx].push([]);
@@ -111,7 +109,6 @@ export class CalendarPage implements OnInit {
                     rawStartDate.setTime(rawStartDate.getTime() + rawStartDate.getTimezoneOffset() * 60 * 1000);
                     const rawEndDate = new Date(events[key][i].dateEnd);
                     rawEndDate.setTime(rawEndDate.getTime() + rawEndDate.getTimezoneOffset() * 60 * 1000);
-                    console.log('push event: ' + rawStartDate);
                     this.events[monthIdx][dayInMonthIdx].push({
                         title: events[key][i].eventName,
                         description: events[key][i].description,
@@ -124,9 +121,9 @@ export class CalendarPage implements OnInit {
                         id: events[key][i]._id,
                         creator: events[key][i].creator
                     });
-                    console.log(this.events);
                 }
             }
+            console.log(this.events);
         }
     }
 

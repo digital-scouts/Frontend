@@ -43,6 +43,9 @@ export class ModalEditEventComponent implements OnInit {
     eventStartDate: string;
     eventEndDate: string;
 
+    eventStartTime: string;
+    eventEndTime: string;
+
     monthList = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'July', 'August', 'September', 'Oktober', 'November', 'Dezember'];
     weeksList = ['S', 'M', 'D', 'M', 'D', 'F', 'S'];
 
@@ -76,14 +79,15 @@ export class ModalEditEventComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.event != null) {
-            this.eventStartDate = this.event.dateStart.toISOString();
-            this.eventEndDate = this.event.dateEnd.toISOString();
+            this.eventStartDate = this.eventStartTime = this.event.dateStart.toISOString();
+            this.eventEndDate = this.eventEndTime = this.event.dateEnd.toISOString();
 
             this.eventPublic = this.event.public;
             this.eventDescription = this.event.description;
             this.eventTitle = this.event.title;
         } else {
             this.eventStartDate = this.eventEndDate = moment().format('DD.MM.YYYY');
+            this.eventStartTime = this.eventEndTime = moment().add(1, 'h').minutes(0).format('HH:mm');
         }
     }
 
@@ -155,17 +159,43 @@ export class ModalEditEventComponent implements OnInit {
      * end can´t be picket earlier than start
      * change this.datePickerEndObj.fromDate to date
      * change this.eventEndDate to date when start > end
+     * @param isStart
      * @param date
      */
-    dateChanged(date: string) {
-        const selected_day = HelperService.gerDateToISO(date.split('_')[1]);
+    dateChanged(isStart: boolean, date: string) {
+        const selected_day = HelperService.gerDateToISO(date);
 
-        if (date.split('_')[0] === 's') {// start date changed
+        if (isStart) {
             // end can´t be picket earlier than start
             this.datePickerEndObj.fromDate = selected_day;
 
             if (moment(selected_day).isAfter(HelperService.gerDateToISO(this.eventEndDate), 'day')) {// end is after start
                 this.eventEndDate = moment(selected_day).format('DD.MM.YYYY');
+            }
+        }
+    }
+
+    /**
+     * end can´t be picket earlier than start
+     * @param isStart
+     * @param time
+     */
+    timeChanged(isStart: boolean, time: string) {
+        let timeObj = moment(HelperService.gerDateToISO(isStart ? this.eventStartDate : this.eventEndDate));
+        timeObj = timeObj.hour(parseInt(time.split(':')[0], 10))
+            .minute(parseInt(time.split(':')[1], 10));
+
+        const secondTime = !isStart ? this.eventStartTime : this.eventEndTime;
+        let secondTimeObj = moment(HelperService.gerDateToISO(!isStart ? this.eventStartDate : this.eventEndDate));
+        secondTimeObj = secondTimeObj.hour(parseInt(secondTime.split(':')[0], 10))
+            .minute(parseInt(secondTime.split(':')[1], 10));
+
+        // set start or ent event when end will be earlier than start
+        if (this.eventStartDate === this.eventEndDate) {
+            if (isStart && moment(timeObj).isAfter(secondTimeObj, 'minute')) {
+                this.eventEndTime = timeObj.format('HH:mm');
+            } else if (moment(secondTimeObj).isAfter(timeObj, 'minute')) {
+                this.eventStartTime = timeObj.format('HH:mm');
             }
         }
     }

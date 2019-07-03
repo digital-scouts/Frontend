@@ -2,54 +2,69 @@
     <div class="modal-header">
         <h4 class="modal-title">Title</h4>
     </div>
+
     <div class="modal-body">
         <ion-item>
             <ion-label position="floating">Titel</ion-label>
             <ion-input [(ngModel)]="eventTitle"></ion-input>
         </ion-item>
-        <ion-item>
-            <ion-label>Öffentliche Veranstaltung</ion-label>
-            <ion-checkbox [(ngModel)]="eventPublic"></ion-checkbox>
+
+        <hr>
+
+        <ion-item lines="none">
+            <ion-label>
+                <ion-icon name="time"></ion-icon>
+                Ganztägig
+            </ion-label>
+            <ion-toggle [(ngModel)]="fullDayEvent"></ion-toggle>
         </ion-item>
+        <table>
+            <tr>
+                <td>
+                    <li-ionic4-datepicker (ngModelChange)="dateChanged(true, $event)"
+                                          [(ngModel)]="eventStartDate" [inputDateConfig]="datePickerStartObj">
+                    </li-ionic4-datepicker>
+                </td>
+                <td>
+                    <ion-datetime lines="none" (ngModelChange)="timeChanged(true, $event)" [hidden]="fullDayEvent"
+                                  [(ngModel)]="eventStartTime" displayFormat="HH:mm" minuteValues="0,15,30,45">
+                    </ion-datetime>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                        <li-ionic4-datepicker (ngModelChange)="dateChanged(false, $event)"
+                                              [(ngModel)]="eventEndDate" [inputDateConfig]="datePickerEndObj">
+                        </li-ionic4-datepicker>
+                </td>
+                <td>
+                        <ion-datetime lines="none" (ngModelChange)="timeChanged(false, $event)" [hidden]="fullDayEvent"
+                                      [(ngModel)]="eventEndTime" displayFormat="HH:mm" minuteValues="0,15,30,45">
+                        </ion-datetime>
+                </td>
+            </tr>
+        </table>
 
-        <ion-item-group>
-            <ion-item>
-                <ion-label>
-                    <ion-icon name="time"></ion-icon>
-                    Ganztägig
-                </ion-label>
-                <ion-toggle [(ngModel)]="fullDayEvent"></ion-toggle>
-            </ion-item>
 
-            <ion-item>
-                <li-ionic4-datepicker (ngModelChange)="dateChanged('s_'+$event)" [(ngModel)]="eventStartDate" [inputDateConfig]="datePickerStartObj"></li-ionic4-datepicker>
-<!--                <ion-datetime [hidden]="fullDayEvent" [(ngModel)]="eventStartDate" display-format="HH:mm"-->
-<!--                              minutevalues="0,10,15,20,30,40,45,50"></ion-datetime>-->
-            </ion-item>
-
-            <ion-item>
-                <li-ionic4-datepicker (ngModelChange)="dateChanged('e_'+$event)" [(ngModel)]="eventEndDate" [inputDateConfig]="datePickerEndObj"></li-ionic4-datepicker>
-<!--                <ion-datetime [hidden]="fullDayEvent" [(ngModel)]="eventEndDate" display-format="HH:mm"-->
-<!--                              minutevalues="0,10,15,20,30,40,45,50"></ion-datetime>-->
-            </ion-item>
-
-        </ion-item-group>
-
-
-        <ion-item>
+        <ion-item lines="none">
             <ion-label position="floating">
                 <ion-icon name="list"></ion-icon>
-                Description
+                Beschreibung
             </ion-label>
             <ion-textarea [(ngModel)]="eventDescription"></ion-textarea>
         </ion-item>
 
-        <ion-item>
+        <ion-item lines="none">
             <ion-label>Gruppe</ion-label>
             <ion-select [(ngModel)]="eventGroups" multiple="true" placeholder="Select One">
                 <ion-select-option *ngFor="let group of allGroups"
                                    value="{{group.id}}">{{group.name}}</ion-select-option>
             </ion-select>
+        </ion-item>
+
+        <ion-item lines="none">
+            <ion-label>Öffentliche Veranstaltung</ion-label>
+            <ion-checkbox [(ngModel)]="eventPublic"></ion-checkbox>
         </ion-item>
 
         <!-- todo add later: origin, complement, address, documents, picture-->
