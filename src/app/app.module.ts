@@ -17,6 +17,8 @@ import {PopoverEventsFilterComponent} from './popover-events-filter/popover-even
 import {PopoverController} from 'ionic-angular/components/popover/popover-controller';
 import {ModalAdminUserDetailsComponent} from './modal-admin-user-details/modal-admin-user-details.component';
 import {PopoverDatepickerComponent} from './popover-datepicker/popover-datepicker.component';
+import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
+
 
 @NgModule({
     declarations: [
