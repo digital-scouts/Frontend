@@ -12,7 +12,7 @@ import {HTTP} from '@ionic-native/http/ngx';
 import {FormsModule} from '@angular/forms';
 import {ModalEditGroupComponent} from './modal-group-edit/modal-edit-group.component';
 import {ModalEditEventComponent} from './modal-event-edit/modal-edit-event.component';
-import {ModalEventDetailsComponent} from './modal-event-details/modal-event-details.component';
+import {PopoverEventDetailsComponent} from './popover-event-details/popover-event-details.component';
 import {PopoverEventsFilterComponent} from './popover-events-filter/popover-events-filter.component';
 import {PopoverController} from 'ionic-angular/components/popover/popover-controller';
 import {ModalAdminUserDetailsComponent} from './modal-admin-user-details/modal-admin-user-details.component';
@@ -24,14 +24,14 @@ import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
         AppComponent,
         ModalEditGroupComponent,
         ModalEditEventComponent,
-        ModalEventDetailsComponent,
+        PopoverEventDetailsComponent,
         ModalAdminUserDetailsComponent,
         PopoverEventsFilterComponent,
     ],
     entryComponents: [
         ModalEditGroupComponent,
         ModalEditEventComponent,
-        ModalEventDetailsComponent,
+        PopoverEventDetailsComponent,
         ModalAdminUserDetailsComponent,
         PopoverEventsFilterComponent,
     ],

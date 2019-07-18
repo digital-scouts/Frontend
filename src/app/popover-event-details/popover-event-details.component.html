@@ -1,0 +1,12 @@
+<div style="height: fit-content; background-color: white; padding: 10px;">
+        <h4 class="modal-title">{{event.title}}</h4>
+
+        <!-- Start Date Time (- End Time) or ...-->
+        {{formattedStart}} {{event.date.isSameDay? ' - '+event.dateEnd.getHours() +':'+event.dateEnd.getMinutes(): ''}}<br>
+        <!-- End Date Time -->
+        {{event.date.isSameDay? '': formattedEnd}}
+
+        <ion-button (click)="dismiss(true)">Edit</ion-button>
+</div>
+
+

@@ -5,7 +5,7 @@ import {HttpServiceService} from '../http-service.service';
 import {ModalController} from '@ionic/angular';
 import {HelperService} from '../helper.service';
 import {ModalEditEventComponent} from '../modal-event-edit/modal-edit-event.component';
-import {ModalEventDetailsComponent} from '../modal-event-details/modal-event-details.component';
+import {PopoverEventDetailsComponent} from '../popover-event-details/popover-event-details.component';
 import {PopoverEventsFilterComponent} from '../popover-events-filter/popover-events-filter.component';
 import {PopoverController} from '@ionic/angular';
 import * as moment from 'moment';
@@ -51,7 +51,7 @@ export class CalendarPage implements OnInit {
         });
     }
 
-    // warning when this will be updated, than update also the modal-event-details.component and modal-event-edit.component
+    // warning when this will be updated, than update also the popover-event-details.component and modal-event-edit.component
     public events: Array<Array<Array<{
         title: string,
         description: string,
@@ -123,7 +123,6 @@ export class CalendarPage implements OnInit {
                     });
                 }
             }
-            console.log(this.events);
         }
     }
 
@@ -198,17 +197,7 @@ export class CalendarPage implements OnInit {
             for (let k = 0; k < this.events[i].length; k++) {
                 for (let j = 0; j < this.events[i][k].length; j++) {
                     if (this.events[i][k][j].id === id) {
-                        const myModal = await this.modal.create({
-                            component: ModalEventDetailsComponent,
-                            componentProps: {'event': this.events[i][k][j]}
-                        });
-
-                        myModal.present();
-                        const {data} = await myModal.onDidDismiss();
-                        if (data.edit) {
-                            this.openAddEventModal(id);
-                        }
-                        return;
+                        this.presentEventDetailsPopover(event, this.events[i][k][j]);
                     }
                 }
             }
@@ -217,12 +206,12 @@ export class CalendarPage implements OnInit {
 
     /**
      * present the popover filter and filter the events on dismiss
-     * @param event
+     * @param e
      */
-    async presentPopover(event) {
+    async presentPopover(e) {
         const popover = await this.popoverCtrl.create({
             component: PopoverEventsFilterComponent,
-            event: event,
+            event: e,
             componentProps: {
                 filterDateMin: this.filterDateMin,
                 filterDateMax: this.filterDateMax,
@@ -242,6 +231,31 @@ export class CalendarPage implements OnInit {
                     this.filteredGroups = result['data']['groups'];
                     this.filterSelectedTypes = result['data']['types'];
                     this.applyFilter();
+                }
+            });
+
+        return await popover.present();
+    }
+
+    /**
+     *
+     * @param e
+     * @param event
+     */
+    async presentEventDetailsPopover(e, event) {
+        const popover = await this.popoverCtrl.create({
+            component: PopoverEventDetailsComponent,
+            event: e,
+            componentProps: {
+                event: event
+            }
+        });
+
+        popover.onDidDismiss()
+            .then((result) => {
+                if (result['data'] !== undefined && result['data']['edit']) {
+                    console.log(result['data']);
+                    this.openAddEventModal(event['id']);
                 }
             });
 

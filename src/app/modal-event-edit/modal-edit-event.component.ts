@@ -49,33 +49,28 @@ export class ModalEditEventComponent implements OnInit {
     monthList = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'July', 'August', 'September', 'Oktober', 'November', 'Dezember'];
     weeksList = ['S', 'M', 'D', 'M', 'D', 'F', 'S'];
 
-    datePickerStartObj = {
-        fromDate: moment().subtract(3, 'm'),
+    private datePickerObj = {
         closeOnSelect: true, // default false
         mondayFirst: true, // default false
         todayLabel: 'Heute', // default 'Today'
         closeLabel: 'Abbrechen', // default 'Close'
-        titleLabel: 'Anfang auswählen', // default null
+        clearButton: false, // default true
+        momentLocale: 'de-DE', // Default 'en-US'
         monthsList: this.monthList,
         weeksList: this.weeksList,
         dateFormat: 'DD.MM.YYYY', // default DD MMM YYYY
-        clearButton: false, // default true
-        momentLocale: 'de-DE', // Default 'en-US'
     };
 
-    datePickerEndObj = {
+    datePickerStartObj = Object.assign({
+        fromDate: moment().subtract(3, 'm'),
+        titleLabel: 'Anfang auswählen', // default null
+    }, this.datePickerObj);
+
+    datePickerEndObj =  Object.assign({
         fromDate: this.eventStartDate, // default null
         showTodayButton: false,
-        closeOnSelect: true, // default false
-        mondayFirst: true, // default false
-        closeLabel: 'Abbrechen', // default 'Close'
         titleLabel: 'Ende auswählen', // default null
-        monthsList: this.monthList,
-        weeksList: this.weeksList,
-        dateFormat: 'DD.MM.YYYY', // default DD MMM YYYY
-        clearButton: false, // default true
-        momentLocale: 'de-DE', // Default 'en-US'
-    };
+    }, this.datePickerObj);
 
     ngOnInit(): void {
         if (this.event != null) {
@@ -141,7 +136,6 @@ export class ModalEditEventComponent implements OnInit {
                     this.showEventErrorToast();
                 });
         }
-
     }
 
     deleteEvent() {
