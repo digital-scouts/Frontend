@@ -5,7 +5,6 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
-import {EditorModule} from '@tinymce/tinymce-angular';
 
 @NgModule({
     imports: [
@@ -17,8 +16,7 @@ import {EditorModule} from '@tinymce/tinymce-angular';
                 path: '',
                 component: HomePage
             }
-        ]),
-        EditorModule
+        ])
     ],
   declarations: [HomePage]
 })

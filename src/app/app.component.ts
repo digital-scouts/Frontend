@@ -49,7 +49,7 @@ export class AppComponent {
             icon: 'list'
         }, {
             title: 'Nachrichten',
-            url: '/home',
+            url: '/mail',
             icon: 'mail'
         }
     ];

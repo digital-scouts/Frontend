@@ -1,0 +1,46 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>mail</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form (ngSubmit)="sendMail()">
+        <ion-item>
+            <ion-label>Gruppe</ion-label>
+            <ion-select name="groups" [(ngModel)]="mail.groups" multiple="true" placeholder="Select One">
+                <ion-select-option [selected]="mail.groups.includes(group.id)" *ngFor="let group of allGroups"
+                                   value="{{group.id}}">{{group.name}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="floating">Betreff</ion-label>
+            <ion-input [(ngModel)]="mail.subject" name="subject" autocapitalize autocomplete autocorrect required
+                       inputmode="text"></ion-input>
+        </ion-item>
+
+        <!--menubar: File ...-->
+        <!--statusbar: powered by tiny ...-->
+        <div style="border: 1px solid black">
+            <ion-label position="stacked">Inhalt</ion-label>
+            <editor name="text"
+                    plugins="link lists"
+                    toolbar="undo redo | bold italic underline superscript | bullist numlist"
+                    apiKey="kioinb9xmr90jg0jlqmm1yusputf5sl3z2ahacrq65iy61lv"
+                    [(ngModel)]="mail.text"
+                    [inline]="true"
+                    [init]="{
+                menubar:false,
+                statusbar: false,
+                forced_root_block : false,
+                fontsize_formats: '11px 12px 14px 16px 18px 24px 36px',
+                font_formats: 'Andale Mono=andale mono,times; Arial=arial,helvetica,sans-serif; Arial Black=arial black,avant garde; Book Antiqua=book antiqua,palatino; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats',
+                language_url: '../assets/lib/tiny-mce_de.js'
+            }"
+            ></editor>
+        </div>
+        <ion-button type="submit">Send Mail</ion-button>
+    </form>
+
+</ion-content>

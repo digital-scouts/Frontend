@@ -9,6 +9,7 @@ const routes: Routes = [
     {path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule'},
     {path: 'help', loadChildren: './help/help.module#HelpPageModule'},
     {path: 'chat', loadChildren: './chat/chat.module#ChatPageModule'},  { path: 'admin-account', loadChildren: './admin-account/admin-account.module#AdminAccountPageModule' },
+  { path: 'mail', loadChildren: './mail/mail.module#MailPageModule' },
 
 
 

@@ -495,6 +495,27 @@ export class HttpServiceService {
     }
 
     // _______________________________________________________________________ GROUP End
+    // _______________________________________________________________________ MAIL Start
+
+    sendMail(text: string, subject: string, groups: string[]): Promise<JSON> {
+        console.log(groups);
+        const body = {
+            'groups': groups,
+            'subject': subject,
+            'text': text
+        };
+        return new Promise(async resolve => {
+            this.httpClient.post(this.backend_url + '/api' + '/mail', body, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    // _______________________________________________________________________ MAIL End
     // _______________________________________________________________________ Admin Account Start
 
     getAllUser(): Promise<JSON> {
