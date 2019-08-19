@@ -8,7 +8,7 @@
     <form (ngSubmit)="sendMail()">
         <ion-item>
             <ion-label>Gruppe</ion-label>
-            <ion-select name="groups" [(ngModel)]="mail.groups" multiple="true" placeholder="Select One">
+            <ion-select required name="groups" [(ngModel)]="mail.groups" multiple="true" placeholder="Absender auswählen">
                 <ion-select-option [selected]="mail.groups.includes(group.id)" *ngFor="let group of allGroups"
                                    value="{{group.id}}">{{group.name}}</ion-select-option>
             </ion-select>

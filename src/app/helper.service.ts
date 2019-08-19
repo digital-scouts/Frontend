@@ -82,7 +82,35 @@ export class HelperService {
                     isChildGroup: groups[i]['childGroup'],
                 });
             }
+
+            allGroups.sort((a, b) => {
+                // console.log(`Compare ${a.name}=${getPower(a.name)} with ${b.name}=${getPower(b.name)} => ${getPower(a.name) - getPower(b.name)}`);
+
+                function getPower(groupName) {
+                    switch (groupName) {
+                        case 'Bieber':
+                            return 0;
+                        case 'Wölflinge':
+                            return 1;
+                        case 'Jungpfadfinder':
+                            return 2;
+                        case 'Pfadfinder':
+                            return 3;
+                        case 'Rover':
+                            return 4;
+                        default:
+                            // console.log(`Group '${groupName}' not found.`);
+                            return 10;
+                    }
+                }
+
+                return getPower(a.name) - getPower(b.name);
+            });
+
+            console.log(allGroups);
         });
+
+        console.log(allGroups);
 
         return allGroups;
     }
