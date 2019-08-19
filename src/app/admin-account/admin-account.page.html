@@ -5,10 +5,26 @@
 </ion-header>
 
 <ion-content>
-    <ion-list *ngFor="let user of users">
-        <ion-item (click)="seeUserDetailsModalOpen(user.id)">
-            {{user.name_first}}
-            {{user.name_last}}
-        </ion-item>
-    </ion-list>
+    <ion-slides style="border: 1px black solid" pager="true" [options]="slideOpts">
+        <ion-slide style="background-color: #0bb8cc">
+            <h2>DB-User</h2>
+            <ion-list *ngFor="let user of users">
+                <ion-item (click)="seeUserDetailsModalOpen(user.id)">
+                    {{user.name_first}}
+                    {{user.name_last}}
+                </ion-item>
+            </ion-list>
+        </ion-slide>
+        <ion-slide style="background-color: #0ec254">
+            321
+            <br>
+            <br>
+            <br>
+            <br>
+            end
+        </ion-slide>
+    </ion-slides>
+
+
+
 </ion-content>

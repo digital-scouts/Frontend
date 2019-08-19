@@ -16,7 +16,11 @@ export class AdminAccountPage implements OnInit {
         name_first: string,
         name_last: string,
         age: number,
-        group: number,
+        group: {
+            leader: string[],
+            name: string,
+            color: string
+        },
         role: string,
         image_profile: string,
         accountStatus: {
@@ -28,6 +32,11 @@ export class AdminAccountPage implements OnInit {
     }> = [];
 
     allGroups = this.helper.getAllGroups();
+    slideOpts = {
+        initialSlide: 1,
+        speed: 400,
+        height: 300
+    };
 
     constructor(private http: HttpServiceService, private helper: HelperService, private modal: ModalController) {
     }
@@ -41,12 +50,22 @@ export class AdminAccountPage implements OnInit {
             this.users = [];
             // tslint:disable-next-line:forin
             for (const x in Object.keys(data)) {
+                let group = null;
+
+                if (data[x]['group']) {
+                    group = {
+                        leader: data[x]['group']['leader'],
+                        name: data[x]['group']['name'],
+                        color: data[x]['group']['color']
+                    };
+                }
+
                 this.users.push({
                     id: data[x]['_id'],
                     name_first: data[x]['name_first'],
                     name_last: data[x]['name_last'],
                     age: data[x]['name_last'],
-                    group: data[x]['group'],
+                    group: group,
                     image_profile: data[x]['image_profile'],
                     role: data[x]['role'],
                     accountStatus: {
