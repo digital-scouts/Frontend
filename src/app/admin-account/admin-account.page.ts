@@ -11,7 +11,7 @@ import {ModalAdminUserDetailsComponent} from '../modal-admin-user-details/modal-
 })
 export class AdminAccountPage implements OnInit {
 
-    public users: Array<{
+    public users: Array<Array<{
         id: string,
         name_first: string,
         name_last: string,
@@ -29,7 +29,7 @@ export class AdminAccountPage implements OnInit {
             disabled: boolean,
             inactive: boolean
         },
-    }> = [];
+    }>> = [];
 
     allGroups = this.helper.getAllGroups();
     slideOpts = {
@@ -47,20 +47,35 @@ export class AdminAccountPage implements OnInit {
 
     loadAllUser() {
         this.http.getAllUser().then((data) => {
-            this.users = [];
+            this.users = [[], [], [], [], []];
             // tslint:disable-next-line:forin
             for (const x in Object.keys(data)) {
                 let group = null;
 
+                let groupIndex = 0;
                 if (data[x]['group']) {
                     group = {
                         leader: data[x]['group']['leader'],
                         name: data[x]['group']['name'],
                         color: data[x]['group']['color']
                     };
+                    switch (data[x]['group']['name']) {
+                        case 'Wölflinge':
+                            groupIndex = 1;
+                            break;
+                        case 'Jungpfadfinder':
+                            groupIndex = 2;
+                            break;
+                        case 'Pfadfinder':
+                            groupIndex = 3;
+                            break;
+                        case 'Rover':
+                            groupIndex = 4;
+                            break;
+                    }
                 }
 
-                this.users.push({
+                this.users[groupIndex].push({
                     id: data[x]['_id'],
                     name_first: data[x]['name_first'],
                     name_last: data[x]['name_last'],
@@ -79,10 +94,7 @@ export class AdminAccountPage implements OnInit {
         });
     }
 
-    async seeUserDetailsModalOpen(id: string) {
-        const user = this.users.find((el) => {
-            return el.id === id;
-        });
+    async seeUserDetailsModalOpen(user) {
         console.log(user);
         const myModal = await this.modal.create({
             component: ModalAdminUserDetailsComponent,

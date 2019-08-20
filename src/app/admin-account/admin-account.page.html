@@ -1,30 +1,25 @@
 <ion-header>
     <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
         <ion-title>Nutzerverwaltung</ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-slides style="border: 1px black solid" pager="true" [options]="slideOpts">
-        <ion-slide style="background-color: #0bb8cc">
-            <h2>DB-User</h2>
-            <ion-list *ngFor="let user of users">
-                <ion-item (click)="seeUserDetailsModalOpen(user.id)">
-                    {{user.name_first}}
-                    {{user.name_last}}
-                </ion-item>
-            </ion-list>
-        </ion-slide>
-        <ion-slide style="background-color: #0ec254">
-            321
-            <br>
-            <br>
-            <br>
-            <br>
-            end
-        </ion-slide>
-    </ion-slides>
-
+    <ion-list *ngFor="let group of users">
+        <ion-item-divider *ngIf="group.length > 0 && group[0].group != null">
+            <ion-label>
+                {{group[0].group.name}}
+            </ion-label>
+        </ion-item-divider>
+        <ion-item *ngFor="let user of group" (click)="seeUserDetailsModalOpen(user)">
+            {{user.name_first}}
+            {{user.name_last}}
+            <ion-icon color="danger" *ngIf="user.accountStatus.disabled || !user.accountStatus.activated" slot="end" name="close-circle-outline"></ion-icon>
+        </ion-item>
+    </ion-list>
 
 
 </ion-content>
