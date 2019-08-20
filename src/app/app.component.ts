@@ -22,6 +22,10 @@ export class AppComponent {
             url: '/calendar',
             icon: 'calendar'
         }, {
+            title: 'Aufgaben',
+            url: '/tasks',
+            icon: 'checkmark-circle'
+        }, {
             title: 'Chat',
             url: '/chat',
             icon: 'chatbubbles'
@@ -41,11 +45,11 @@ export class AppComponent {
     public leaderPages = [
         {
             title: 'Planung',
-            url: '/home',
+            url: '/group-planning',
             icon: 'bookmarks'
         }, {
             title: 'Gruppenliste',
-            url: '/home',
+            url: '/group-management',
             icon: 'list'
         }, {
             title: 'Nachrichten',
@@ -63,11 +67,11 @@ export class AppComponent {
     public accountPages = [
         {
             title: 'Konto vewalten',
-            url: '/home',
+            url: '/own-account',
             icon: 'person'
         }, {
             title: 'Abmelden',
-            url: '/home',
+            url: '/logout',
             icon: 'log-out'
         }
     ];

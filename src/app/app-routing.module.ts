@@ -10,6 +10,10 @@ const routes: Routes = [
     {path: 'help', loadChildren: './help/help.module#HelpPageModule'},
     {path: 'chat', loadChildren: './chat/chat.module#ChatPageModule'},  { path: 'admin-account', loadChildren: './admin-account/admin-account.module#AdminAccountPageModule' },
   { path: 'mail', loadChildren: './mail/mail.module#MailPageModule' },
+  { path: 'logout', loadChildren: './logout/logout.module#LogoutPageModule' },
+  { path: 'own-account', loadChildren: './own-account/own-account.module#OwnAccountPageModule' },
+  { path: 'group-management', loadChildren: './group-management/group-management.module#GroupManagementPageModule' },
+  { path: 'group-planning', loadChildren: './group-planning/group-planning.module#GroupPlanningPageModule' },
 
 
 
