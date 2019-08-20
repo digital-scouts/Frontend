@@ -64,7 +64,7 @@ export class AppComponent {
             icon: 'contacts'
         },
     ];
-
+    pages: Array<{ page: Array<{ title: string, url: string, icon: string }>, hidden: boolean }>;
     // true, when the accountPage is dropped right now
     public isDropped = false;
     public userName: string;
@@ -122,8 +122,21 @@ export class AppComponent {
                 this.goToLogin();
             }
 
-            this.setUserData();
+            await this.setUserData();
 
+            this.pages = [{
+                page: this.appPages,
+                hidden: false
+            }, {
+                page: this.leaderPages,
+                hidden: this.userRole !== 'admin' && this.userRole !== 'leader'
+            }, {
+                page: this.adminPages,
+                hidden: this.userRole !== 'admin'
+            }, {
+                page: this.optionPages,
+                hidden: false
+            }];
         });
     }
 

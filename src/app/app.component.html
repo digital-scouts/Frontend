@@ -14,11 +14,10 @@
 
         <ion-content>
             <div id="menu_default">
-<!--                App Pages-->
-                <ion-list [hidden]="false" class="menu_list">
+                <ion-list [hidden]="page.hidden" class="menu_list border-top" *ngFor="let page of pages">
                     <ion-item [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'" (click)="closeMenu()"
                               class="medium_text" [lines]="'none'" [routerDirection]="'root'" [routerLink]="[p.url]"
-                              *ngFor="let p of appPages">
+                              *ngFor="let p of page.page">
                         <div class="ion_item_inner">
                             <ion-icon slot="start" [name]="p.icon"></ion-icon>
                             <ion-label>
@@ -27,56 +26,11 @@
                         </div>
                     </ion-item>
                 </ion-list>
-
-<!--                Leader Pages-->
-                <ion-list [hidden]="this.userRole != 'admin' && this.userRole != 'leader'" class="menu_list border-top">
-                    <ion-item [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'" (click)="closeMenu()"
-                              class="medium_text" [lines]="'none'" [routerDirection]="'root'" [routerLink]="[p.url]"
-                              *ngFor="let p of leaderPages">
-                        <div class="ion_item_inner">
-                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
-                            <ion-label>
-                                {{p.title}}
-                            </ion-label>
-                        </div>
-
-                    </ion-item>
-                </ion-list>
-
-<!--                Admin Pages-->
-                <ion-list [hidden]="this.userRole != 'admin'" class="menu_list border-top">
-                    <ion-item [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'" (click)="closeMenu()"
-                              class="medium_text" [lines]="'none'" [routerDirection]="'root'" [routerLink]="[p.url]"
-                              *ngFor="let p of adminPages">
-                        <div class="ion_item_inner">
-                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
-                            <ion-label>
-                                {{p.title}}
-                            </ion-label>
-                        </div>
-
-                    </ion-item>
-                </ion-list>
-
-<!--                option Pages-->
-                <ion-list [hidden]="false" class="menu_list border-top">
-                    <ion-item class="medium_text" [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'"
-                              (click)="closeMenu()" *ngFor="let p of optionPages" [lines]="'none'"
-                              [routerDirection]="'root'" [routerLink]="[p.url]">
-                        <div class="ion_item_inner">
-                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
-                            <ion-label>
-                                {{p.title}}
-                            </ion-label>
-                        </div>
-                    </ion-item>
-                </ion-list>
-
             </div>
 
             <div class="displayNone" id="menu_account">
                 <ion-list class="menu_list">
-                    <ion-item class="medium_text" [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'"
+                    <ion-item class="medium_text" [id]="getActiveUrl() == '/own-account' ? 'isActive' : 'notActive'"
                               (click)="closeMenu()"
                               [lines]="'none'"
                               [routerDirection]="'root'"
@@ -89,9 +43,7 @@
                         </div>
                     </ion-item>
 
-                    <ion-item class="medium_text notActive"
-                              (click)="logout();"
-                              [lines]="'none'">
+                    <ion-item class="medium_text" (click)="logout();" [lines]="'none'">
                         <div class="ion_item_inner">
                             <ion-icon slot="start" name="log-out"></ion-icon>
                             <ion-label>
