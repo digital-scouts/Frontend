@@ -23,7 +23,7 @@ export class AppComponent {
             icon: 'calendar'
         }, {
             title: 'Aufgaben',
-            url: '/tasks',
+            url: '/task',
             icon: 'checkmark-circle'
         }, {
             title: 'Chat',

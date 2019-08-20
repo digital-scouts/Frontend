@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'own-account', loadChildren: './own-account/own-account.module#OwnAccountPageModule' },
   { path: 'group-management', loadChildren: './group-management/group-management.module#GroupManagementPageModule' },
   { path: 'group-planning', loadChildren: './group-planning/group-planning.module#GroupPlanningPageModule' },
+  { path: 'task', loadChildren: './task/task.module#TaskPageModule' },
 
 
 
