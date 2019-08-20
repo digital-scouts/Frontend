@@ -56,9 +56,4 @@ export class SettingsPage implements OnInit {
         this.editGroup_click(null);
     }
 
-    fPw_click() {
-        this.storage.clear();
-        this.router.navigate(['home']);
-    }
-
 }

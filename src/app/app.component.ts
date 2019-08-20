@@ -64,17 +64,6 @@ export class AppComponent {
             icon: 'contacts'
         },
     ];
-    public accountPages = [
-        {
-            title: 'Konto vewalten',
-            url: '/own-account',
-            icon: 'person'
-        }, {
-            title: 'Abmelden',
-            url: '/logout',
-            icon: 'log-out'
-        }
-    ];
 
     // true, when the accountPage is dropped right now
     public isDropped = false;
@@ -209,5 +198,13 @@ export class AppComponent {
      */
     private goToLogin() {
         this.router.navigate(['/registration']);
+    }
+
+    private logout() {
+        this.storage.clear().then(() => {
+            this.router.navigate(['/registration']).then(() => {
+                this.closeMenu();
+            });
+        });
     }
 }

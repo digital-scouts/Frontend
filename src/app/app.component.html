@@ -2,7 +2,7 @@
     <ion-menu (ionWillClose)="ionCloseMenu()">
         <ion-header class="menu_header">
             <ion-avatar>
-                <img [src]="'/assets/imgs/logo.png'">
+                <img [src]="'/assets/imgs/logo.png'" alt="avatar">
             </ion-avatar>
             <div (click)="toggleAccountMenu()" id="profile_user">
                 <span class="bold_text">{{userName}}</span>
@@ -11,6 +11,7 @@
                           [name]="isDropped ? 'arrow-dropup' :'arrow-dropdown'"></ion-icon>
             </div>
         </ion-header>
+
         <ion-content>
             <div id="menu_default">
 <!--                App Pages-->
@@ -72,22 +73,37 @@
                 </ion-list>
 
             </div>
+
             <div class="displayNone" id="menu_account">
                 <ion-list class="menu_list">
                     <ion-item class="medium_text" [id]="getActiveUrl() == p.url ? 'isActive' : 'notActive'"
                               (click)="closeMenu()"
                               [lines]="'none'"
                               [routerDirection]="'root'"
-                              [routerLink]="[p.url]" *ngFor="let p of accountPages">
+                              [routerLink]="['/own-account']" >
                         <div class="ion_item_inner">
-                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                            <ion-icon slot="start" name="person"></ion-icon>
                             <ion-label>
-                                {{p.title}}
+                                Konto verwalten
                             </ion-label>
                         </div>
                     </ion-item>
+
+                    <ion-item class="medium_text notActive"
+                              (click)="logout();"
+                              [lines]="'none'">
+                        <div class="ion_item_inner">
+                            <ion-icon slot="start" name="log-out"></ion-icon>
+                            <ion-label>
+                                Logout
+                            </ion-label>
+                        </div>
+                    </ion-item>
+
                 </ion-list>
             </div>
+
+
         </ion-content>
     </ion-menu>
 
