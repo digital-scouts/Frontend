@@ -12,59 +12,10 @@ import {HttpServiceService} from './http-service.service';
     templateUrl: 'app.component.html'
 })
 export class AppComponent {
-    public appPages = [
-        {
-            title: 'Home',
-            url: '/home',
-            icon: 'home'
-        }, {
-            title: 'Kalender',
-            url: '/calendar',
-            icon: 'calendar'
-        }, {
-            title: 'Aufgaben',
-            url: '/task',
-            icon: 'checkmark-circle'
-        }, {
-            title: 'Chat',
-            url: '/chat',
-            icon: 'chatbubbles'
-        }
-    ];
-    public optionPages = [
-        {
-            title: 'Einstellungen',
-            url: '/settings',
-            icon: 'settings'
-        }, {
-            title: 'Hilfe und Feedback',
-            url: '/help',
-            icon: 'help-circle-outline'
-        }
-    ];
-    public leaderPages = [
-        {
-            title: 'Planung',
-            url: '/group-planning',
-            icon: 'bookmarks'
-        }, {
-            title: 'Gruppenliste',
-            url: '/group-management',
-            icon: 'list'
-        }, {
-            title: 'Nachrichten',
-            url: '/mail',
-            icon: 'mail'
-        }
-    ];
-    public adminPages = [
-        {
-            title: 'Nutzerverwaltung',
-            url: '/admin-account',
-            icon: 'contacts'
-        },
-    ];
+
+    // nav Pages in sideMenu
     pages: Array<{ page: Array<{ title: string, url: string, icon: string }>, hidden: boolean }>;
+
     // true, when the accountPage is dropped right now
     public isDropped = false;
     public userName: string;
@@ -124,17 +75,65 @@ export class AppComponent {
 
             await this.setUserData();
 
-            this.pages = [{
-                page: this.appPages,
+            this.pages = [{// app
+                page: [
+                    {
+                        title: 'Home',
+                        url: '/home',
+                        icon: 'home'
+                    }, {
+                        title: 'Kalender',
+                        url: '/calendar',
+                        icon: 'calendar'
+                    }, {
+                        title: 'Aufgaben',
+                        url: '/task',
+                        icon: 'checkmark-circle'
+                    }, {
+                        title: 'Chat',
+                        url: '/chat',
+                        icon: 'chatbubbles'
+                    }
+                ],
                 hidden: false
-            }, {
-                page: this.leaderPages,
+            }, {// leader
+                page: [
+                    {
+                        title: 'Planung',
+                        url: '/group-planning',
+                        icon: 'bookmarks'
+                    }, {
+                        title: 'Gruppenliste',
+                        url: '/group-management',
+                        icon: 'list'
+                    }, {
+                        title: 'Nachrichten',
+                        url: '/mail',
+                        icon: 'mail'
+                    }
+                ],
                 hidden: this.userRole !== 'admin' && this.userRole !== 'leader'
-            }, {
-                page: this.adminPages,
+            }, {// admin
+                page: [
+                    {
+                        title: 'Nutzerverwaltung',
+                        url: '/admin-account',
+                        icon: 'contacts'
+                    },
+                ],
                 hidden: this.userRole !== 'admin'
-            }, {
-                page: this.optionPages,
+            }, {// option
+                page: [
+                    {
+                        title: 'Einstellungen',
+                        url: '/settings',
+                        icon: 'settings'
+                    }, {
+                        title: 'Hilfe und Feedback',
+                        url: '/help',
+                        icon: 'help-circle-outline'
+                    }
+                ],
                 hidden: false
             }];
         });
