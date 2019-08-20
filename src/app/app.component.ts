@@ -55,7 +55,7 @@ export class AppComponent {
     ];
     public adminPages = [
         {
-            title: 'Nutzerwelvwaltung',
+            title: 'Nutzerverwaltung',
             url: '/admin-account',
             icon: 'contacts'
         },
