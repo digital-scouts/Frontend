@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import * as CONFIG from '../config_app.json';
 import {Storage} from '@ionic/storage';
 import {HTTP} from '@ionic-native/http/ngx';
+import {Pro} from '@ionic/pro';
 
 @Injectable({providedIn: 'root'})
 export class HttpServiceService {
@@ -12,7 +13,10 @@ export class HttpServiceService {
         private storage: Storage,
         private httpClient: HTTP,
     ) {
-        this.backend_url = CONFIG.default.url;
+        this.storage.get('backend_url').then(url => {
+            this.backend_url = url ? url : CONFIG.default.url;
+            console.log(`http service startet with url: ${this.backend_url}`);
+        });
     }
 
     /**
@@ -40,6 +44,18 @@ export class HttpServiceService {
     private async setToken(token: string) {
         this.token = token;
         await this.storage.set('token', token);
+    }
+
+    public testConnection(url: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.httpClient.get(url, {}, {})
+                .then(res => {
+                    resolve(true);
+                }, err => {
+                    resolve(false);
+                });
+        });
+
     }
 
     /**

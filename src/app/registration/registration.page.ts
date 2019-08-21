@@ -5,6 +5,7 @@ import {HttpServiceService} from '../http-service.service';
 import {HelperService} from '../helper.service';
 import {ToastController} from '@ionic/angular';
 
+
 @Component({
     selector: 'app-registration',
     templateUrl: './registration.page.html',
@@ -16,9 +17,12 @@ export class RegistrationPage implements OnInit {
         private router: Router,
         private storage: Storage,
         private http: HttpServiceService,
-        public toastController: ToastController
+        public toastController: ToastController,
     ) {
     }
+
+    changedUrl = '';
+    backendConnectionStatusColor = 'warning';
 
     password1_reg = '';
     password2_reg = '';
@@ -208,5 +212,18 @@ export class RegistrationPage implements OnInit {
             duration: 2000
         });
         toast.present();
+    }
+
+    updateServerConnection() {
+        this.storage.set('backend_url', this.changedUrl);
+        this.backendConnectionStatusColor = 'warning';
+        this.testConnectionToBackend(this.changedUrl);
+    }
+
+    testConnectionToBackend(url: string) {
+        this.http.testConnection(url).then((status) => {
+            console.log('connection test: ' + status);
+            this.backendConnectionStatusColor = status ? 'success' : 'danger';
+        });
     }
 }

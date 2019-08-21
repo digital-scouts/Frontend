@@ -55,4 +55,7 @@
         <ion-button expand="full" (click)="goTo_Help()">Hilfe</ion-button>
     </div>
 
+    <ion-icon [color]="backendConnectionStatusColor" name="wifi"></ion-icon>
+    <ion-input [(ngModel)]="changedUrl" type="text"></ion-input>
+    <ion-button (click)="updateServerConnection()">update url</ion-button>
 </ion-content>
