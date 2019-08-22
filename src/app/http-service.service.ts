@@ -47,11 +47,30 @@ export class HttpServiceService {
     }
 
     public testConnection(url: string): Promise<boolean> {
+        console.log('Test connection to: ' + url);
         return new Promise<boolean>((resolve, reject) => {
             this.httpClient.get(url, {}, {})
                 .then(res => {
-                    resolve(true);
+                    console.log(res);
+                    if (res['status'] && res['key'] && res['key'] === 147261234) {
+                        // key is to check if the api is a digital-scouts api
+                        // todo define a api version or a more advanced check with the key
+                        // hint key is a random number
+                        switch (res['status']) {
+                            case 200:
+                                console.log('connection success');
+                                resolve(true);
+                                break;
+                            case 300:
+                            // todo hier ist platz für Umleitungsinformationen oder wartungsarbeiten
+                        }
+                    } else {
+                        console.log('connection fail: source is not a digital-scouts server');
+                        resolve(false);
+                    }
                 }, err => {
+                    console.log('connection fail');
+                    console.log(err);
                     resolve(false);
                 });
         });
@@ -63,16 +82,19 @@ export class HttpServiceService {
      */
     getAndSetUserData() {
         return new Promise(resolve => {
+            console.log('getAndSetUserData');
             this.storage.get('token').then(token => {
                 if (token) {
                     this.token = token;
                     this.httpClient.post(this.backend_url, {}, {authorization: token})
                         .then(res => {
+                            console.log('getAndSetUserData success');
                             const data: JSON = JSON.parse(res.data);
                             if (res.status === 200) {
                                 this.setUserData(data['userNameFirst'], data['userNameLast'], data['role'], data['group']).then(() => resolve(true));
                             }
                         }, err => {
+                            console.log('getAndSetUserData fail');
                             // todo handle error
                             console.log(err);
                             resolve(false);

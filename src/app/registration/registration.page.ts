@@ -215,13 +215,13 @@ export class RegistrationPage implements OnInit {
     }
 
     updateServerConnection() {
-        this.storage.set('backend_url', this.changedUrl);
-        this.backendConnectionStatusColor = 'warning';
         this.testConnectionToBackend(this.changedUrl);
     }
 
     testConnectionToBackend(url: string) {
+        this.backendConnectionStatusColor = 'warning';
         this.http.testConnection(url).then((status) => {
+            this.storage.set('backend_url', this.changedUrl);
             console.log('connection test: ' + status);
             this.backendConnectionStatusColor = status ? 'success' : 'danger';
         });
