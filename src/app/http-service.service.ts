@@ -13,6 +13,7 @@ export class HttpServiceService {
         private storage: Storage,
         private httpClient: HTTP,
     ) {
+
         this.storage.get('backend_url').then(url => {
             this.backend_url = url ? url : CONFIG.default.url;
             console.log(`http service startet with url: ${this.backend_url}`);
@@ -49,30 +50,37 @@ export class HttpServiceService {
     public testConnection(url: string): Promise<boolean> {
         console.log('Test connection to: ' + url);
         return new Promise<boolean>((resolve, reject) => {
-            this.httpClient.get(url, {}, {})
-                .then(res => {
-                    console.log(res);
-                    if (res['status'] && res['key'] && res['key'] === 147261234) {
-                        // key is to check if the api is a digital-scouts api
-                        // todo define a api version or a more advanced check with the key
-                        // hint key is a random number
-                        switch (res['status']) {
-                            case 200:
-                                console.log('connection success');
-                                resolve(true);
-                                break;
-                            case 300:
-                            // todo hier ist platz für Umleitungsinformationen oder wartungsarbeiten
+            try {
+                this.httpClient.get(url, {}, {})
+                    .then(res => {
+                        res.data = JSON.parse(res.data);
+                        console.log(res);
+                        if (res['status'] && res.data['key'] && res.data['key'] === 147261234) {
+                            // key is to check if the api is a digital-scouts api
+                            // todo define a api version or a more advanced check with the key
+                            // hint key is a random number
+                            switch (res['status']) {
+                                case 200:
+                                    console.log('connection success');
+                                    resolve(true);
+                                    break;
+                                case 300:
+                                // todo hier ist platz für Umleitungsinformationen oder wartungsarbeiten
+                            }
+                        } else {
+                            console.log('connection fail: source is not a digital-scouts server');
+                            resolve(false);
                         }
-                    } else {
-                        console.log('connection fail: source is not a digital-scouts server');
+                    }, err => {
+                        console.log('connection fail');
+                        console.log(err);
                         resolve(false);
-                    }
-                }, err => {
-                    console.log('connection fail');
-                    console.log(err);
-                    resolve(false);
-                });
+                    });
+            } catch (e) {
+                console.log('error in testConnection');
+                console.log(e);
+                resolve(false);
+            }
         });
 
     }
@@ -82,27 +90,33 @@ export class HttpServiceService {
      */
     getAndSetUserData() {
         return new Promise(resolve => {
-            console.log('getAndSetUserData');
-            this.storage.get('token').then(token => {
-                if (token) {
-                    this.token = token;
-                    this.httpClient.post(this.backend_url, {}, {authorization: token})
-                        .then(res => {
-                            console.log('getAndSetUserData success');
-                            const data: JSON = JSON.parse(res.data);
-                            if (res.status === 200) {
-                                this.setUserData(data['userNameFirst'], data['userNameLast'], data['role'], data['group']).then(() => resolve(true));
-                            }
-                        }, err => {
-                            console.log('getAndSetUserData fail');
-                            // todo handle error
-                            console.log(err);
-                            resolve(false);
-                        });
-                } else {
-                    resolve(false);
-                }
-            });
+            try {
+                console.log('getAndSetUserData');
+                this.storage.get('token').then(token => {
+                    if (token) {
+                        this.token = token;
+                        this.httpClient.post(this.backend_url, {}, {authorization: token})
+                            .then(res => {
+                                console.log('getAndSetUserData success');
+                                const data: JSON = JSON.parse(res.data);
+                                if (res.status === 200) {
+                                    this.setUserData(data['userNameFirst'], data['userNameLast'], data['role'], data['group']).then(() => resolve(true));
+                                }
+                            }, err => {
+                                console.log('getAndSetUserData fail');
+                                // todo handle error
+                                console.log(err);
+                                resolve(false);
+                            });
+                    } else {
+                        resolve(false);
+                    }
+                });
+            } catch (e) {
+                console.log('error in getAndSetUserData');
+                console.log(e);
+                this.storage.set('backend_url', null);
+            }
         });
     }
 

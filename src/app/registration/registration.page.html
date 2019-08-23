@@ -55,7 +55,12 @@
         <ion-button expand="full" (click)="goTo_Help()">Hilfe</ion-button>
     </div>
 
-    <ion-icon [color]="backendConnectionStatusColor" name="wifi"></ion-icon>
-    <ion-input [(ngModel)]="changedUrl" type="text"></ion-input>
-    <ion-button (click)="updateServerConnection()">update url</ion-button>
+    <ion-item>
+        <ion-label floating>Server IP:</ion-label>
+        <ion-input type="text"  [(ngModel)]="changedUrl"></ion-input>
+        <ion-button size="default" color="light" slot="end" (click)="updateServerConnection()">
+            <ion-icon slot="icon-only" [color]="backendConnectionStatusColor" name="wifi"></ion-icon>
+        </ion-button>
+    </ion-item>
+
 </ion-content>

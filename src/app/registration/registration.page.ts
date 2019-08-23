@@ -22,7 +22,7 @@ export class RegistrationPage implements OnInit {
     }
 
     changedUrl = '';
-    backendConnectionStatusColor = 'warning';
+    backendConnectionStatusColor = 'primary';
 
     password1_reg = '';
     password2_reg = '';
