@@ -568,6 +568,85 @@ export class HttpServiceService {
     }
 
     // _______________________________________________________________________ MAIL End
+    // _______________________________________________________________________ TASK Start
+
+    getAllTask(): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.get(this.backend_url + '/api' + '/task', {}, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    createNewTask(title: string, description: string, dueDate: Date, competent: string[]): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.post(this.backend_url + '/api' + '/task', {
+                title: title, description: description, dueDate: dueDate, competent: competent
+            }, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    editExistingTask(id: string, title: string, description: string, dueDate: Date, competent: string, report: string[], done: boolean): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.put(this.backend_url + '/api' + '/task?id=' + id, {
+                title: title, description: description, dueDate: dueDate, competent: competent, report: report, done: done
+            }, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    checkTask(id: string): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.put(this.backend_url + '/api' + '/task/done?id=' + id, {}, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    addReportToTask(id: string, report: string): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.put(this.backend_url + '/api' + '/task/report?id=' + id, {report: report}, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    deleteTask(id: string): Promise<JSON> {
+        return new Promise(async resolve => {
+            this.httpClient.delete(this.backend_url + '/api' + '/task?id=' + id, {}, {authorization: this.token})
+                .then(res => {
+                    const data: JSON = JSON.parse(res.data);
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    // _______________________________________________________________________ TASK End
     // _______________________________________________________________________ Admin Account Start
 
     getAllUser(): Promise<JSON> {
