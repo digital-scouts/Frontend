@@ -17,6 +17,7 @@ import {PopoverEventsFilterComponent} from './popover-events-filter/popover-even
 import {PopoverController} from 'ionic-angular/components/popover/popover-controller';
 import {ModalAdminUserDetailsComponent} from './modal-admin-user-details/modal-admin-user-details.component';
 import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
+import {PopoverCreateTaskComponent} from './popover-create-task/popover-create-task.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
         PopoverEventDetailsComponent,
         ModalAdminUserDetailsComponent,
         PopoverEventsFilterComponent,
+        PopoverCreateTaskComponent
     ],
     entryComponents: [
         ModalEditGroupComponent,
@@ -34,6 +36,7 @@ import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
         PopoverEventDetailsComponent,
         ModalAdminUserDetailsComponent,
         PopoverEventsFilterComponent,
+        PopoverCreateTaskComponent
     ],
     imports: [
         BrowserModule,

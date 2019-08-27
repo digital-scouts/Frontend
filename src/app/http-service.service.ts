@@ -582,12 +582,14 @@ export class HttpServiceService {
         });
     }
 
-    createNewTask(title: string, description: string, dueDate: Date, competent: string[]): Promise<JSON> {
+    createNewTask(title: string, description: string, dueDate: Date, priority: number): Promise<JSON> {
+        console.log("create new")
         return new Promise(async resolve => {
-            this.httpClient.post(this.backend_url + '/api' + '/task', {
-                title: title, description: description, dueDate: dueDate, competent: competent
+            this.httpClient.post(this.backend_url + '/api/task', {
+                title: title, description: description, dueDate: dueDate, priority:priority
             }, {authorization: this.token})
                 .then(res => {
+                    console.log(res);
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
                 }, err => {
