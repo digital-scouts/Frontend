@@ -21,6 +21,9 @@ npm-debug.log*
 coverage/
 www/
 node_modules/
+dist/
+e2e/
+out-tsc
 tmp/
 temp/
 platforms/

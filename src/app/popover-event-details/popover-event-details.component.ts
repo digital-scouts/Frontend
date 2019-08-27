@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ModalController, NavParams, PopoverController} from '@ionic/angular';
+import {NavParams, PopoverController} from '@ionic/angular';
 
 import * as moment from 'moment';
 moment.locale('de');
@@ -28,7 +28,6 @@ export class PopoverEventDetailsComponent {
     formattedEnd;
 
     constructor(
-        private modal: ModalController,
         private popoverCtrl: PopoverController,
         public navParams: NavParams
     ) {

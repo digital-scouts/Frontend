@@ -8,6 +8,20 @@ moment.locale('de');
     providedIn: 'root'
 })
 export class HelperService {
+    monthList = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'July', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+    weeksList = ['S', 'M', 'D', 'M', 'D', 'F', 'S'];
+
+    public datePickerObj = {
+        closeOnSelect: true, // default false
+        mondayFirst: true, // default false
+        todayLabel: 'Heute', // default 'Today'
+        closeLabel: 'Abbrechen', // default 'Close'
+        clearButton: false, // default true
+        momentLocale: 'de-DE', // Default 'en-US'
+        monthsList: this.monthList,
+        weeksList: this.weeksList,
+        dateFormat: 'DD.MM.YYYY', // default DD MMM YYYY
+    };
 
     constructor(private http: HttpServiceService) {
 
@@ -38,7 +52,7 @@ export class HelperService {
      * DD.MM.YYYY date to YYYY-MM-DD
      * @param date
      */
-    static gerDateToISO(date: string): string {
+    static getDateToISO(date: string): string {
         return moment(`${date.split('.')[2]}-${date.split('.')[1]}-${date.split('.')[0]}`).format('YYYY-MM-DD');
     }
 

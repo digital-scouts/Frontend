@@ -46,31 +46,16 @@ export class ModalEditEventComponent implements OnInit {
     eventStartTime: string;
     eventEndTime: string;
 
-    monthList = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'July', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-    weeksList = ['S', 'M', 'D', 'M', 'D', 'F', 'S'];
-
-    private datePickerObj = {
-        closeOnSelect: true, // default false
-        mondayFirst: true, // default false
-        todayLabel: 'Heute', // default 'Today'
-        closeLabel: 'Abbrechen', // default 'Close'
-        clearButton: false, // default true
-        momentLocale: 'de-DE', // Default 'en-US'
-        monthsList: this.monthList,
-        weeksList: this.weeksList,
-        dateFormat: 'DD.MM.YYYY', // default DD MMM YYYY
-    };
-
     datePickerStartObj = Object.assign({
         fromDate: moment().subtract(3, 'm'),
         titleLabel: 'Anfang auswählen', // default null
-    }, this.datePickerObj);
+    }, this.helper.datePickerObj);
 
     datePickerEndObj =  Object.assign({
         fromDate: this.eventStartDate, // default null
         showTodayButton: false,
         titleLabel: 'Ende auswählen', // default null
-    }, this.datePickerObj);
+    }, this.helper.datePickerObj);
 
     ngOnInit(): void {
         if (this.event != null) {
@@ -157,13 +142,13 @@ export class ModalEditEventComponent implements OnInit {
      * @param date
      */
     dateChanged(isStart: boolean, date: string) {
-        const selected_day = HelperService.gerDateToISO(date);
+        const selected_day = HelperService.getDateToISO(date);
 
         if (isStart) {
             // end can´t be picket earlier than start
             this.datePickerEndObj.fromDate = selected_day;
 
-            if (moment(selected_day).isAfter(HelperService.gerDateToISO(this.eventEndDate), 'day')) {// end is after start
+            if (moment(selected_day).isAfter(HelperService.getDateToISO(this.eventEndDate), 'day')) {// end is after start
                 this.eventEndDate = moment(selected_day).format('DD.MM.YYYY');
             }
         }
@@ -175,12 +160,12 @@ export class ModalEditEventComponent implements OnInit {
      * @param time
      */
     timeChanged(isStart: boolean, time: string) {
-        let timeObj = moment(HelperService.gerDateToISO(isStart ? this.eventStartDate : this.eventEndDate));
+        let timeObj = moment(HelperService.getDateToISO(isStart ? this.eventStartDate : this.eventEndDate));
         timeObj = timeObj.hour(parseInt(time.split(':')[0], 10))
             .minute(parseInt(time.split(':')[1], 10));
 
         const secondTime = !isStart ? this.eventStartTime : this.eventEndTime;
-        let secondTimeObj = moment(HelperService.gerDateToISO(!isStart ? this.eventStartDate : this.eventEndDate));
+        let secondTimeObj = moment(HelperService.getDateToISO(!isStart ? this.eventStartDate : this.eventEndDate));
         secondTimeObj = secondTimeObj.hour(parseInt(secondTime.split(':')[0], 10))
             .minute(parseInt(secondTime.split(':')[1], 10));
 
