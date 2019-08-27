@@ -583,10 +583,10 @@ export class HttpServiceService {
     }
 
     createNewTask(title: string, description: string, dueDate: Date, priority: number): Promise<JSON> {
-        console.log("create new")
+        console.log('create new');
         return new Promise(async resolve => {
             this.httpClient.post(this.backend_url + '/api/task', {
-                title: title, description: description, dueDate: dueDate, priority:priority
+                title: title, description: description, dueDate: dueDate, priority: priority
             }, {authorization: this.token})
                 .then(res => {
                     console.log(res);
@@ -612,9 +612,9 @@ export class HttpServiceService {
         });
     }
 
-    checkTask(id: string): Promise<JSON> {
+    checkTask(id: string, check: boolean): Promise<JSON> {
         return new Promise(async resolve => {
-            this.httpClient.put(this.backend_url + '/api' + '/task/done?id=' + id, {}, {authorization: this.token})
+            this.httpClient.put(this.backend_url + '/api' + '/task/done?id=' + id, {check:check}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);

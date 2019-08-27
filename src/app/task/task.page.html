@@ -1,24 +1,47 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>task</ion-title>
-    <ion-buttons slot="end">
-      <ion-button clear icon-only (click)="presentNewTaskPopover($event)" slot="end">
-        <ion-icon name="add"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>task</ion-title>
+        <ion-buttons slot="end">
+            <ion-button clear icon-only (click)="presentNewTaskPopover($event)" slot="end">
+                <ion-icon name="add"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
+    <ion-list *ngFor="let tasks of [scheduledTasks, unscheduledTasks]">
+        <ion-item *ngFor="let task of tasks">
+            <ion-checkbox slot="start" [(ngModel)]="task.done" (ngModelChange)="checkTask(true,task)"></ion-checkbox>
+            <div>
+                {{task.title}}<br>
+                <span *ngIf="task.dueDate"><ion-icon name="calendar"></ion-icon>
+                    {{formatDateForView(task.dueDate)}}</span>
+            </div>
+            <ion-icon *ngIf="task.priority < 3" color="{{task.priority == 1?'danger':'warning'}}" slot="end"
+                      name="alert"></ion-icon>
+        </ion-item>
+    </ion-list>
 
-  <ion-list>
-    <ion-item *ngFor="let task of tasks">
-      <ion-label>{{task.title}}</ion-label>
-      <ion-checkbox slot="end" [(ngModel)]="task.done"></ion-checkbox>
-    </ion-item>
-  </ion-list>
+    <ion-button color="medium" expand="block" fill="outline" (click)="showDone = !showDone">
+        {{doneTasks ? doneTasks.length : ''}} abgeschlossene Aufgaben
+        <ion-icon slot="end" [name]="showDone?'arrow-dropdown-circle' : 'arrow-dropright-circle'"></ion-icon>
+    </ion-button>
+
+    <ion-list *ngIf="showDone">
+        <ion-item *ngFor="let task of doneTasks">
+            <ion-checkbox slot="start" [(ngModel)]="task.done" (ngModelChange)="checkTask(false, task)"></ion-checkbox>
+            <div>
+                {{task.title}}<br>
+                <span *ngIf="task.dueDate"><ion-icon name="calendar"></ion-icon>
+                    {{formatDateForView(task.dueDate)}}</span>
+            </div>
+            <ion-icon *ngIf="task.priority < 3" color="{{task.priority == 1?'danger':'warning'}}" slot="end"
+                      name="alert"></ion-icon>
+        </ion-item>
+    </ion-list>
 
 </ion-content>
