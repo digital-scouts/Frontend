@@ -3,9 +3,9 @@
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>task</ion-title>
+        <ion-title>Aufgaben</ion-title>
         <ion-buttons slot="end">
-            <ion-button clear icon-only (click)="presentNewTaskPopover($event)" slot="end">
+            <ion-button icon-only (click)="presentNewTaskPopover($event)" slot="end">
                 <ion-icon name="add"></ion-icon>
             </ion-button>
         </ion-buttons>
@@ -14,12 +14,49 @@
 
 <ion-content>
     <ion-list *ngFor="let tasks of [scheduledTasks, unscheduledTasks]">
-        <ion-item *ngFor="let task of tasks">
-            <ion-checkbox slot="start" [(ngModel)]="task.done" (ngModelChange)="checkTask(true,task)"></ion-checkbox>
-            <div>
-                {{task.title}}<br>
-                <span *ngIf="task.dueDate"><ion-icon name="calendar"></ion-icon>
-                    {{formatDateForView(task.dueDate)}}</span>
+        <ion-item [id]="task._id" *ngFor="let task of tasks">
+            <label class="container">
+                <!-- dont use io-checkbox here, because i need to can click on the label. ion-checkbox for click on checkbox everytime-->
+                <input type="checkbox" [checked]="task.done" (click)="task.done = !task.done; checkTask(true, task)">
+                <span class="checkmark"></span>
+            </label>
+            <div style="width: 100%" (click)="expandViewId?expandViewId=null:expandViewId=task._id">
+                <h5>{{task.title}}</h5>
+                <!--Datum-->
+                <ion-chip outline="true" *ngIf="task.dueDate"
+                          style="display:flex;width: fit-content;pointer-events: none;">
+                    <!--red when today or in past, yellow when in the next 3 days, otherwise green-->
+                    <ion-icon
+                            color="{{getDateDiffToNow(task.dueDate) < 1?'danger': getDateDiffToNow(task.dueDate) < 4?'warning':'success'}}"
+                            name="calendar"></ion-icon>
+                    <ion-label>{{formatDateForView(task.dueDate)}}</ion-label>
+                </ion-chip>
+
+                <!--further information-->
+                <div style="margin-left: 20px" *ngIf="expandViewId == task._id">
+                    {{task.description}}
+                    <!--competent-->
+                    <span *ngIf="task.competent.length > 1">
+                        <ion-avatar *ngFor="let comp of task.competent">
+                            <img [src]="comp.image_profile" [alt]="'avatar from ' + comp.name_first">
+                        </ion-avatar>
+                    </span>
+                    <!--reports-->
+                    <div>
+                        <h6>Berichte</h6>
+                        <ion-card *ngFor="let rep of task.report">
+                            <ion-card-content>
+                                <strong>{{formatDateForView(rep.date)}}: </strong>
+                                <ion-text>{{rep.text}}</ion-text>
+                            </ion-card-content>
+                        </ion-card>
+                        <ion-button (click)="$event.stopPropagation(); presentNewTaskReportPopover($event, task)"
+                                    size="small" fill="outline">
+                            Bericht hinzufügen
+                        </ion-button>
+                    </div>
+
+                </div>
             </div>
             <ion-icon *ngIf="task.priority < 3" color="{{task.priority == 1?'danger':'warning'}}" slot="end"
                       name="alert"></ion-icon>
@@ -31,13 +68,45 @@
         <ion-icon slot="end" [name]="showDone?'arrow-dropdown-circle' : 'arrow-dropright-circle'"></ion-icon>
     </ion-button>
 
+    <!-- hint this list is a copy from above -->
     <ion-list *ngIf="showDone">
         <ion-item *ngFor="let task of doneTasks">
-            <ion-checkbox slot="start" [(ngModel)]="task.done" (ngModelChange)="checkTask(false, task)"></ion-checkbox>
-            <div>
-                {{task.title}}<br>
-                <span *ngIf="task.dueDate"><ion-icon name="calendar"></ion-icon>
-                    {{formatDateForView(task.dueDate)}}</span>
+            <label class="container">
+                <!-- dont use io-checkbox here, because i need to can click on the label. ion-checkbox for click on checkbox everytime-->
+                <input type="checkbox" [checked]="task.done" (click)="task.done = !task.done; checkTask(false, task)">
+                <span class="checkmark"></span>
+            </label>
+            <div style="width: 100%" (click)="expandViewId?expandViewId=null:expandViewId=task._id">
+                <h5>{{task.title}}</h5>
+                <!--Datum-->
+                <ion-chip outline="true" *ngIf="task.dueDate"
+                          style="display:flex;width: fit-content;pointer-events: none;">
+                    <!--red when today or in past, yellow when in the next 3 days, otherwise green-->
+                    <ion-icon name="calendar"></ion-icon>
+                    <ion-label>{{formatDateForView(task.dueDate)}}</ion-label>
+                </ion-chip>
+
+                <!--further information-->
+                <div style="margin-left: 20px" *ngIf="expandViewId == task._id">
+                    {{task.description}}
+                    <!--competent-->
+                    <span *ngIf="task.competent.length > 1">
+                        <ion-avatar *ngFor="let comp of task.competent">
+                            <img [src]="comp.image_profile" [alt]="'avatar from ' + comp.name_first">
+                        </ion-avatar>
+                    </span>
+                    <!--reports-->
+                    <div>
+                        <h6>Berichte</h6>
+                        <ion-card *ngFor="let rep of task.report">
+                            <ion-card-content>
+                                <strong>{{formatDateForView(rep.date)}}: </strong>
+                                <ion-text>{{rep.text}}</ion-text>
+                            </ion-card-content>
+                        </ion-card>
+                    </div>
+
+                </div>
             </div>
             <ion-icon *ngIf="task.priority < 3" color="{{task.priority == 1?'danger':'warning'}}" slot="end"
                       name="alert"></ion-icon>
