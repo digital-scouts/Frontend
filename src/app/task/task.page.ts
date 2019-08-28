@@ -3,6 +3,7 @@ import {HttpServiceService} from '../http-service.service';
 import {PopoverController, ToastController} from '@ionic/angular';
 import {PopoverCreateTaskComponent} from '../popover-create-task/popover-create-task.component';
 import * as moment from 'moment';
+import {PopoverTaskReportComponent} from '../popover-task-report/popover-task-report.component';
 
 moment.locale('de');
 
@@ -14,7 +15,7 @@ moment.locale('de');
 export class TaskPage implements OnInit {
 
     scheduledTasks: Array<{
-        report: Array<string>,
+        report: Array<{text:string,date:Date}>,
         done: boolean,
         competent: Array<{
             image_profile: string,
@@ -31,7 +32,7 @@ export class TaskPage implements OnInit {
         priority: number
     }>;
     unscheduledTasks: Array<{
-        report: Array<string>,
+        report: Array<{text:string,date:Date}>,
         done: boolean,
         competent: Array<{
             image_profile: string,
@@ -48,7 +49,7 @@ export class TaskPage implements OnInit {
         priority: number
     }>;
     doneTasks: Array<{
-        report: Array<string>,
+        report: Array<{text:string,date:Date}>,
         done: boolean,
         competent: Array<{
             image_profile: string,
@@ -105,6 +106,21 @@ export class TaskPage implements OnInit {
         return await popover.present();
     }
 
+    async presentNewTaskReportPopover(e, task: { report: Array<{text:string,date:Date}>; done: boolean; competent: Array<{ image_profile: string; _id: string; name_first: string; name_last: string; email: string; role: string }>; _id: string; title: string; description: string; dueDate: Date; priority: number }) {
+        const popover = await this.popoverCtrl.create({
+            component: PopoverTaskReportComponent,
+            event: e,
+            componentProps: {id:task._id}
+        });
+
+        popover.onDidDismiss()
+            .then(() => {
+                this.loadTasks();
+            });
+
+        return await popover.present();
+    }
+
     /**
      * format the tasks for the ion-chip
      * @param dueDate
@@ -128,7 +144,7 @@ export class TaskPage implements OnInit {
      * @param check
      * @param task
      */
-    checkTask(check: boolean, task: { report: Array<string>; done: boolean; competent: Array<{ image_profile: string; _id: string; name_first: string; name_last: string; email: string; role: string }>; _id: string; title: string; description: string; dueDate: Date; priority: number }) {
+    checkTask(check: boolean, task: { report: Array<{text:string,date:Date}>; done: boolean; competent: Array<{ image_profile: string; _id: string; name_first: string; name_last: string; email: string; role: string }>; _id: string; title: string; description: string; dueDate: Date; priority: number }) {
         let timeout = 2000;
         if(document.getElementById(task._id)){
             document.getElementById(task._id).classList.toggle('removeTaskFromList');

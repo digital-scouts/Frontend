@@ -6,6 +6,7 @@
   "scripts": {
     "ng": "ng",
     "browser": "ionic cordova run browser",
+    "cordovaServe": "ionic serve --cordova --platform browser",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
