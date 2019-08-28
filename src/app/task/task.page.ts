@@ -64,9 +64,13 @@ export class TaskPage implements OnInit {
         dueDate: Date,
         priority: number
     }>;
+
+    //todo
+    expandViewId: string;
     showDone = false;
 
-    constructor(private http: HttpServiceService, public toastController: ToastController,
+    constructor(private http: HttpServiceService,
+                public toastController: ToastController,
                 private popoverCtrl: PopoverController) {
     }
 
@@ -74,7 +78,10 @@ export class TaskPage implements OnInit {
         this.loadTasks();
     }
 
-
+    /**
+     * todo offline function: store tasks in storage and load from storage
+     * reload all tasks from server
+     */
     loadTasks() {
         this.http.getAllTask().then((data) => {
             this.scheduledTasks = data['scheduled'];
@@ -98,15 +105,38 @@ export class TaskPage implements OnInit {
         return await popover.present();
     }
 
+    /**
+     * format the tasks for the ion-chip
+     * @param dueDate
+     */
     formatDateForView(dueDate: Date) {
         return moment(dueDate).format('DD. MMMM');
     }
 
+    /**
+     * calc the difference between now and the given date
+     * @param date
+     */
+    getDateDiffToNow(date: Date) {
+        return Math.round(moment.duration(moment(date).diff(moment())).asDays());
+    }
+
+    /**
+     * todo offline function store check tasks in storage and update later
+     * for uncheck tasks: toggle fadeout animation and remove the element after 2s when not uncheck again
+     * for checked tasks: uncheck directly
+     * @param check
+     * @param task
+     */
     checkTask(check: boolean, task: { report: Array<string>; done: boolean; competent: Array<{ image_profile: string; _id: string; name_first: string; name_last: string; email: string; role: string }>; _id: string; title: string; description: string; dueDate: Date; priority: number }) {
-        console.log('start timer');
+        let timeout = 2000;
+        if(document.getElementById(task._id)){
+            document.getElementById(task._id).classList.toggle('removeTaskFromList');
+        }else{
+            timeout=0;
+        }
         setTimeout(() => {
             if (task.done == check) {
-                console.log('submit');
                 this.http.checkTask(task._id, check).then((data) => {
                     console.log(data);
                     this.loadTasks();
@@ -119,6 +149,6 @@ export class TaskPage implements OnInit {
                     });
                 });
             }
-        }, 5000);
+        }, timeout);
     }
 }
