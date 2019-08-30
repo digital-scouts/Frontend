@@ -5,7 +5,16 @@ import {PopoverCreateTaskComponent} from '../popover-create-task/popover-create-
 import * as moment from 'moment';
 import {PopoverTaskReportComponent} from '../popover-task-report/popover-task-report.component';
 
-moment.locale('de');
+moment.locale('de', {
+    calendar : {
+        lastDay : '[Gestern]',
+        sameDay : '[Heute]',
+        nextDay : '[Morgen]',
+        lastWeek : '[letzten] dddd',
+        nextWeek : '[nächsten] dddd',
+        sameElse : 'L'
+    }
+});
 
 @Component({
     selector: 'app-task',
@@ -66,7 +75,6 @@ export class TaskPage implements OnInit {
         priority: number
     }>;
 
-    //todo
     expandViewId: string;
     showDone = false;
 
@@ -88,6 +96,8 @@ export class TaskPage implements OnInit {
             this.scheduledTasks = data['scheduled'];
             this.unscheduledTasks = data['unscheduled'];
             this.doneTasks = data['done'];
+            console.log('tis.scheduledTasks')
+            console.log(this.scheduledTasks)
         });
     }
 
@@ -126,7 +136,8 @@ export class TaskPage implements OnInit {
      * @param dueDate
      */
     formatDateForView(dueDate: Date) {
-        return moment(dueDate).format('DD. MMMM');
+        return moment(dueDate).calendar();
+        // return moment(dueDate).format('DD. MMMM');
     }
 
     /**
