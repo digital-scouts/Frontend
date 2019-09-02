@@ -15,7 +15,7 @@ moment.locale('de');
 export class TaskPage implements OnInit {
 
     scheduledTasks: Array<{
-        report: Array<{text:string,date:Date}>,
+        report: Array<{ text: string, date: Date }>,
         done: boolean,
         competent: Array<{
             image_profile: string,
@@ -32,7 +32,7 @@ export class TaskPage implements OnInit {
         priority: number
     }>;
     unscheduledTasks: Array<{
-        report: Array<{text:string,date:Date}>,
+        report: Array<{ text: string, date: Date }>,
         done: boolean,
         competent: Array<{
             image_profile: string,
@@ -49,7 +49,7 @@ export class TaskPage implements OnInit {
         priority: number
     }>;
     doneTasks: Array<{
-        report: Array<{text:string,date:Date}>,
+        report: Array<{ text: string, date: Date }>,
         done: boolean,
         competent: Array<{
             image_profile: string,
@@ -66,7 +66,7 @@ export class TaskPage implements OnInit {
         priority: number
     }>;
 
-    //todo
+    // todo
     expandViewId: string;
     showDone = false;
 
@@ -106,11 +106,11 @@ export class TaskPage implements OnInit {
         return await popover.present();
     }
 
-    async presentNewTaskReportPopover(e, task: { report: Array<{text:string,date:Date}>; done: boolean; competent: Array<{ image_profile: string; _id: string; name_first: string; name_last: string; email: string; role: string }>; _id: string; title: string; description: string; dueDate: Date; priority: number }) {
+    async presentNewTaskReportPopover(e, task: { report: Array<{ text: string, date: Date }>; done: boolean; competent: Array<{ image_profile: string; _id: string; name_first: string; name_last: string; email: string; role: string }>; _id: string; title: string; description: string; dueDate: Date; priority: number }) {
         const popover = await this.popoverCtrl.create({
             component: PopoverTaskReportComponent,
             event: e,
-            componentProps: {id:task._id}
+            componentProps: {id: task._id}
         });
 
         popover.onDidDismiss()
@@ -144,15 +144,15 @@ export class TaskPage implements OnInit {
      * @param check
      * @param task
      */
-    checkTask(check: boolean, task: { report: Array<{text:string,date:Date}>; done: boolean; competent: Array<{ image_profile: string; _id: string; name_first: string; name_last: string; email: string; role: string }>; _id: string; title: string; description: string; dueDate: Date; priority: number }) {
+    checkTask(check: boolean, task: { report: Array<{ text: string, date: Date }>; done: boolean; competent: Array<{ image_profile: string; _id: string; name_first: string; name_last: string; email: string; role: string }>; _id: string; title: string; description: string; dueDate: Date; priority: number }) {
         let timeout = 2000;
-        if(document.getElementById(task._id)){
+        if (document.getElementById(task._id)) {
             document.getElementById(task._id).classList.toggle('removeTaskFromList');
-        }else{
-            timeout=0;
+        } else {
+            timeout = 0;
         }
         setTimeout(() => {
-            if (task.done == check) {
+            if (task.done === check) {
                 this.http.checkTask(task._id, check).then((data) => {
                     console.log(data);
                     this.loadTasks();

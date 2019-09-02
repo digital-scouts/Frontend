@@ -8,7 +8,7 @@
     "browser": "ionic cordova run browser",
     "cordovaServe": "ionic serve --cordova --platform browser",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ionic cordova build android",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

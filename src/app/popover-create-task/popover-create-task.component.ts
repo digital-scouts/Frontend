@@ -23,12 +23,14 @@ export class PopoverCreateTaskComponent implements OnInit {
         private helper: HelperService
     ) {
         this.datePickerObj.clearButton = true;
+        this.datePickerObj['fromDate'] = moment();
     }
 
     ngOnInit() {
     }
 
     save() {
+        console.log(this.datePickerDate)
         this.http.createNewTask(this.taskTitle, this.taskDescription, this.datePickerDate ? moment(HelperService.getDateToISO(this.datePickerDate)).toDate() : null, this.taskPriority).then((data) => {
             if (data && data['_id']) {
                 this.toastController.create({

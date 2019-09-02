@@ -20,7 +20,7 @@
                 <input type="checkbox" [checked]="task.done" (click)="task.done = !task.done; checkTask(true, task)">
                 <span class="checkmark"></span>
             </label>
-            <div style="width: 100%" (click)="expandViewId?expandViewId=null:expandViewId=task._id">
+            <div style="width: 100%" (click)="expandViewId==task._id?expandViewId=null:expandViewId=task._id">
                 <h5>{{task.title}}</h5>
                 <!--Datum-->
                 <ion-chip outline="true" *ngIf="task.dueDate"
