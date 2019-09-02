@@ -28,7 +28,7 @@ export class PopoverTaskReportComponent implements OnInit {
     }
 
     submitReport() {
-        this.http.addReportToTask(this.id, this.reportText).then(data => {
+        this.http.addReportToTask(this.id, this.reportText).then(() => {
             this.dismiss()
         });
     }

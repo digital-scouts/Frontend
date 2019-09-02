@@ -365,7 +365,13 @@ export class HttpServiceService {
     // _______________________________________________________________________ CALENDAR START
 
     /**
-     * todo
+     *
+     * @param eventTitle
+     * @param eventIsPublic
+     * @param eventStartDate
+     * @param eventEndDate
+     * @param eventDescription
+     * @param groups
      */
     postEvent(eventTitle: string, eventIsPublic: boolean, eventStartDate: string, eventEndDate: string, eventDescription: string, groups: string[]) {
         console.log('eventStartDate: ' + eventStartDate);
@@ -470,7 +476,7 @@ export class HttpServiceService {
     }
 
     /**
-     * todo
+     *
      * @param id
      */
     getGroup(id): Promise<JSON> {

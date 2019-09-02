@@ -57,7 +57,7 @@ export class HelperService {
     }
 
     /**
-     * todo
+     * todo Passwort verschlüsseln
      * @param {string} pw
      * @return {string}
      */

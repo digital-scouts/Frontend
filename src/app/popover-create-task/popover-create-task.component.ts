@@ -12,7 +12,7 @@ import {HttpServiceService} from '../http-service.service';
 export class PopoverCreateTaskComponent implements OnInit {
 
     datePickerObj = this.helper.datePickerObj;
-    datePickerDate = '';
+    datePickerDate = moment().add(1,'w').format('DD.MM.YYYY');
     taskTitle;
     taskDescription;
     taskPriority = 3;

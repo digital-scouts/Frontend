@@ -14,7 +14,10 @@
 
 <ion-content>
     <ion-list *ngFor="let tasks of [scheduledTasks, unscheduledTasks]">
-        <ion-item [id]="task._id" *ngFor="let task of tasks">
+        <ion-item
+                class="{{task.priority == 1?'itemDangerBackgroundHint':task.priority==2?'itemWarningBackgroundHint':''}}"
+                [id]="task._id"
+                *ngFor="let task of tasks">
             <label class="container">
                 <!-- dont use io-checkbox here, because i need to can click on the label. ion-checkbox for click on checkbox everytime-->
                 <input type="checkbox" [checked]="task.done" (click)="task.done = !task.done; checkTask(true, task)">
@@ -23,24 +26,34 @@
             <div style="width: 100%" (click)="expandViewId==task._id?expandViewId=null:expandViewId=task._id">
                 <h5>{{task.title}}</h5>
                 <!--Datum-->
-                <ion-chip outline="true" *ngIf="task.dueDate"
-                          style="display:flex;width: fit-content;pointer-events: none;">
-                    <!--red when today or in past, yellow when in the next 3 days, otherwise green-->
-                    <ion-icon
-                            color="{{getDateDiffToNow(task.dueDate) < 1?'danger': getDateDiffToNow(task.dueDate) < 4?'warning':'success'}}"
-                            name="calendar"></ion-icon>
-                    <ion-label>{{formatDateForView(task.dueDate)}}</ion-label>
-                </ion-chip>
+                <span style="display:flex; font-size: medium">
+                    <span style="display: contents" *ngIf="task.dueDate">
+                    <!--red when today/tomorrow or in past, yellow when in the next 3 days, otherwise green-->
+                        <ion-icon
+                                color="{{getDateDiffToNow(task.dueDate) < 1?'danger': getDateDiffToNow(task.dueDate) < 4?'warning':'success'}}"
+                                name="calendar"></ion-icon>
+                        <ion-label style="font-size: small">&nbsp;{{formatDateForView(task.dueDate)}}</ion-label>
+                    </span>
+                    <span style="display: contents" *ngIf="task.competent.length>1 && expandViewId != task._id">
+                        &nbsp;&nbsp;&nbsp;
+                        <!--                        <ion-icon name="contacts"></ion-icon>-->
+                        <!--                        <ion-label style="font-size: small">&nbsp;{{task.competent.length}}</ion-label>-->
+                        <ion-avatar *ngFor="let comp of task.competent" class="smallAvatar">
+                            <img [src]="'/assets/imgs/logo.png'" alt="avatar-{{comp.name_first}}">
+                        </ion-avatar>
+                    </span>
+                </span>
+
 
                 <!--further information-->
                 <div style="margin-left: 20px" *ngIf="expandViewId == task._id">
                     {{task.description}}
-                    <!--competent-->
-                    <span *ngIf="task.competent.length > 1">
-                        <ion-avatar *ngFor="let comp of task.competent">
-                            <img [src]="comp.image_profile" [alt]="'avatar from ' + comp.name_first">
-                        </ion-avatar>
-                    </span>
+                    <!--todo competent-->
+                    <!--                    <span *ngIf="task.competent.length > 1">-->
+                    <!--                        <ion-avatar *ngFor="let comp of task.competent">-->
+                    <!--                            <img [src]="comp.image_profile" [alt]="'avatar from ' + comp.name_first">-->
+                    <!--                        </ion-avatar>-->
+                    <!--                    </span>-->
                     <!--reports-->
                     <div>
                         <h6>Berichte</h6>
@@ -58,8 +71,6 @@
 
                 </div>
             </div>
-            <ion-icon *ngIf="task.priority < 3" color="{{task.priority == 1?'danger':'warning'}}" slot="end"
-                      name="alert"></ion-icon>
         </ion-item>
     </ion-list>
 
@@ -70,7 +81,9 @@
 
     <!-- hint this list is a copy from above -->
     <ion-list *ngIf="showDone">
-        <ion-item *ngFor="let task of doneTasks">
+        <ion-item
+                class="{{task.priority == 1?'itemDangerBackgroundHint':task.priority==2?'itemWarningBackgroundHint':''}}"
+                *ngFor="let task of doneTasks">
             <label class="container">
                 <!-- dont use io-checkbox here, because i need to can click on the label. ion-checkbox for click on checkbox everytime-->
                 <input type="checkbox" [checked]="task.done" (click)="task.done = !task.done; checkTask(false, task)">
@@ -78,25 +91,34 @@
             </label>
             <div style="width: 100%" (click)="expandViewId?expandViewId=null:expandViewId=task._id">
                 <h5>{{task.title}}</h5>
-                <!--Datum-->
-                <ion-chip outline="true" *ngIf="task.dueDate"
-                          style="display:flex;width: fit-content;pointer-events: none;">
-                    <!--red when today or in past, yellow when in the next 3 days, otherwise green-->
-                    <ion-icon name="calendar"></ion-icon>
-                    <ion-label>{{formatDateForView(task.dueDate)}}</ion-label>
-                </ion-chip>
+
+                <span style="display:flex; font-size: medium">
+                    <span style="display: contents" *ngIf="task.dueDate">
+                    <!--red when today/tomorrow or in past, yellow when in the next 3 days, otherwise green-->
+                        <ion-icon
+                                color="{{getDateDiffToNow(task.dueDate) < 1?'danger': getDateDiffToNow(task.dueDate) < 4?'warning':'success'}}"
+                                name="calendar"></ion-icon>
+                        <ion-label style="font-size: small">&nbsp;{{formatDateForView(task.dueDate)}}</ion-label>
+                    </span>
+                    <span style="display: contents" *ngIf="task.competent.length>1 && expandViewId != task._id">
+                        &nbsp;&nbsp;&nbsp;
+                        <ion-avatar *ngFor="let comp of task.competent" class="smallAvatar">
+                            <img [src]="'/assets/imgs/logo.png'" alt="avatar-{{comp.name_first}}">
+                        </ion-avatar>
+                    </span>
+                </span>
 
                 <!--further information-->
                 <div style="margin-left: 20px" *ngIf="expandViewId == task._id">
                     {{task.description}}
-                    <!--competent-->
-                    <span *ngIf="task.competent.length > 1">
-                        <ion-avatar *ngFor="let comp of task.competent">
-                            <img [src]="comp.image_profile" [alt]="'avatar from ' + comp.name_first">
-                        </ion-avatar>
-                    </span>
+                    <!--todo competent-->
+                    <!--                    <span *ngIf="task.competent.length > 1">-->
+                    <!--                        <ion-avatar *ngFor="let comp of task.competent">-->
+                    <!--                            <img [src]="comp.image_profile" [alt]="'avatar from ' + comp.name_first">-->
+                    <!--                        </ion-avatar>-->
+                    <!--                    </span>-->
                     <!--reports-->
-                    <div>
+                    <div *ngIf="task.report.length>0">
                         <h6>Berichte</h6>
                         <ion-card *ngFor="let rep of task.report">
                             <ion-card-content>
@@ -108,8 +130,6 @@
 
                 </div>
             </div>
-            <ion-icon *ngIf="task.priority < 3" color="{{task.priority == 1?'danger':'warning'}}" slot="end"
-                      name="alert"></ion-icon>
         </ion-item>
     </ion-list>
 
