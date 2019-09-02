@@ -85,9 +85,9 @@ export class CalendarPage implements OnInit {
     /**
      * add events, lessons and tasks to this.events array
      * @param events
-     * @param tasks
      */
-    private async drawCalendar(events, tasks) {
+    private async drawCalendar(events) {
+        // console.log('_______________________-- drawCalendar --_______________________');
         this.events = [];
         if (events) {
             let month = '0';
@@ -95,6 +95,7 @@ export class CalendarPage implements OnInit {
             let dayInMonthIdx = 0;
             // tslint:disable-next-line:forin
             for (const x in Object.keys(events)) {
+                // console.log('next key: ' + x);
                 const key = Object.keys(events)[x];
                 if (month === '0' || key.split('-')[1] !== month) {
                     this.events.push([]);
@@ -104,11 +105,13 @@ export class CalendarPage implements OnInit {
                 }
                 dayInMonthIdx++;
                 this.events[monthIdx].push([]);
+                // console.log('new month: ' + monthIdx);
                 for (let i = 0; i < events[key].length; i++) {
                     const rawStartDate = new Date(events[key][i].dateStart);
                     rawStartDate.setTime(rawStartDate.getTime() + rawStartDate.getTimezoneOffset() * 60 * 1000);
                     const rawEndDate = new Date(events[key][i].dateEnd);
                     rawEndDate.setTime(rawEndDate.getTime() + rawEndDate.getTimezoneOffset() * 60 * 1000);
+                    // console.log('push event: ' + events[key][i].eventName);
                     this.events[monthIdx][dayInMonthIdx].push({
                         title: events[key][i].eventName,
                         description: events[key][i].description,
@@ -124,6 +127,7 @@ export class CalendarPage implements OnInit {
                 }
             }
         }
+        // console.log('_______________________-- drawCalendar end --_______________________');
     }
 
     /**
@@ -144,18 +148,12 @@ export class CalendarPage implements OnInit {
             filterTypes.push('lesson');
         }
 
-        let events = null;
-        const task = null;
-
-        const callStack = [];
         if (this.filterSelectedTypes.event || this.filterSelectedTypes.lesson) {
-            callStack.push(this.http.getEvents(startDate.toISOString(), endDate.toISOString(), this.filteredGroups, filterTypes).then(e => events = e));
+            this.http.getEvents(startDate.toISOString(), endDate.toISOString(), this.filteredGroups, filterTypes).then(e => {
+                console.log(e);
+                this.drawCalendar(e);
+            });
         }
-        if (this.filterSelectedTypes.task) {
-            // callStack.push(this.http.getTask().then(t => task = t));
-        }
-        await Promise.all(callStack);
-        this.drawCalendar(events, task);
     }
 
     /**

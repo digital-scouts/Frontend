@@ -51,7 +51,7 @@ export class ModalEditEventComponent implements OnInit {
         titleLabel: 'Anfang auswählen', // default null
     }, this.helper.datePickerObj);
 
-    datePickerEndObj =  Object.assign({
+    datePickerEndObj = Object.assign({
         fromDate: this.eventStartDate, // default null
         showTodayButton: false,
         titleLabel: 'Ende auswählen', // default null
@@ -92,16 +92,23 @@ export class ModalEditEventComponent implements OnInit {
     }
 
     addEvent() {
-        const startDate = new Date(this.eventStartDate);
-        const endDate = new Date(this.eventEndDate);
+
+        const startDate = moment(this.eventStartDate, 'DD.MM.YYYY');
+        const endDate = moment(this.eventEndDate, 'DD.MM.YYYY');
         if (this.fullDayEvent) {
-            startDate.setHours(0);
-            startDate.setMinutes(0);
-            endDate.setHours(0);
-            endDate.setMinutes(0);
+            startDate.hours(0).minutes(0);
+            endDate.hours(0).minutes(0);
+        } else {
+            startDate.hour(Number(this.eventStartTime.split(':')[0])).minute(Number(this.eventStartTime.split(':')[1]));
+            endDate.hour(Number(this.eventEndTime.split(':')[0])).minute(Number(this.eventEndTime.split(':')[1]));
         }
+
+        // fix timezone
+        startDate.add(startDate.utcOffset(), 'm');
+        endDate.add(endDate.utcOffset(), 'm');
+
         if (this.event == null) {
-            this.http.postEvent(this.eventTitle, this.eventPublic, startDate, endDate, this.eventDescription, this.eventGroups)
+            this.http.postEvent(this.eventTitle, this.eventPublic, startDate.format(), endDate.format(), this.eventDescription, this.eventGroups)
                 .then(res => {
                     console.log(res);
                     this.showEventSuccessToast();
@@ -111,7 +118,7 @@ export class ModalEditEventComponent implements OnInit {
                     this.showEventErrorToast();
                 });
         } else {
-            this.http.putEvent(this.event.id, this.eventTitle, this.eventPublic, startDate, endDate, this.eventDescription)
+            this.http.putEvent(this.event.id, this.eventTitle, this.eventPublic, startDate.toDate(), endDate.toDate(), this.eventDescription)
                 .then(res => {
                     console.log(res);
                     this.showEventSuccessToast();

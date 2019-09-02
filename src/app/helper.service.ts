@@ -121,10 +121,10 @@ export class HelperService {
                 return getPower(a.name) - getPower(b.name);
             });
 
-            console.log(allGroups);
+            // console.log(allGroups);
         });
 
-        console.log(allGroups);
+        // console.log(allGroups);
 
         return allGroups;
     }

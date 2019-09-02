@@ -3,6 +3,7 @@ import * as CONFIG from '../config_app.json';
 import {Storage} from '@ionic/storage';
 import {HTTP} from '@ionic-native/http/ngx';
 import {Pro} from '@ionic/pro';
+import * as moment from 'moment';
 
 @Injectable({providedIn: 'root'})
 export class HttpServiceService {
@@ -366,8 +367,9 @@ export class HttpServiceService {
     /**
      * todo
      */
-    postEvent(eventTitle: string, eventIsPublic: boolean, eventStartDate: Date, eventEndDate: Date, eventDescription: string, groups: string[]) {
-        console.log(groups);
+    postEvent(eventTitle: string, eventIsPublic: boolean, eventStartDate: string, eventEndDate: string, eventDescription: string, groups: string[]) {
+        console.log('eventStartDate: ' + eventStartDate);
+        console.log('eventEndDate: ' + eventEndDate);
         return new Promise(resolve => {
             this.httpClient.post(this.backend_url + '/api' + '/calendar', {
                 public: eventIsPublic,
@@ -422,7 +424,7 @@ export class HttpServiceService {
             'group': (group !== null) ? group : 'null',
             'type': (type !== null) ? type : 'null',
         };
-        console.log(filter);
+        // console.log(filter);
         return new Promise(async resolve => {
             this.httpClient.get(this.backend_url + '/api' + '/calendar', filter, {authorization: this.token})
                 .then(res => {
@@ -614,7 +616,7 @@ export class HttpServiceService {
 
     checkTask(id: string, check: boolean): Promise<JSON> {
         return new Promise(async resolve => {
-            this.httpClient.put(this.backend_url + '/api' + '/task/done?id=' + id, {check:check}, {authorization: this.token})
+            this.httpClient.put(this.backend_url + '/api' + '/task/done?id=' + id, {check: check}, {authorization: this.token})
                 .then(res => {
                     const data: JSON = JSON.parse(res.data);
                     resolve(data);
