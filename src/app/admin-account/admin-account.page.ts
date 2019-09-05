@@ -46,7 +46,7 @@ export class AdminAccountPage implements OnInit {
     }
 
     loadAllUser() {
-        this.http.getAllUser().then((data) => {
+        this.http.adminGetAllUser().then((data) => {
             this.users = [[], [], [], [], []];
             // tslint:disable-next-line:forin
             for (const x in Object.keys(data)) {

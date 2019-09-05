@@ -257,6 +257,19 @@ export class HttpServiceService {
         });
     }
 
+    getAllUser(groupId: string = null) {
+        return new Promise(resolve => {
+            let query = groupId?'?group='+groupId:'';
+                this.httpClient.get(this.backend_url + '/api' + '/users' + query, {}, {authorization: this.token})
+                    .then(res => {
+                        console.log(res)
+                        resolve(JSON.parse(res.data));
+                    }, err => {
+                        console.log(err);
+                    });
+        });
+    }
+
     // _______________________________________________________________________ USER End
     // _______________________________________________________________________ CHAT Start
 
@@ -659,7 +672,7 @@ export class HttpServiceService {
     // _______________________________________________________________________ TASK End
     // _______________________________________________________________________ Admin Account Start
 
-    getAllUser(): Promise<JSON> {
+    adminGetAllUser(): Promise<JSON> {
         return new Promise(async resolve => {
             this.httpClient.get(this.backend_url + '/api' + '/admin/accounts/user', {}, {authorization: this.token})
                 .then(res => {
