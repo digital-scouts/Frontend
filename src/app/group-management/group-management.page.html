@@ -10,10 +10,10 @@
 <ion-content>
 
     <ion-list *ngFor="let user of users">
-        <ion-item>
-            <ion-avatar slot="start">
-                <img [src]="user['image_profile']"
-                     alt="{{(user['dbData'] ? user['dbData']['name_first'] : user['namiData']['vorname'])+' profile picture' }}">
+        <ion-item (click)="seeUserDetailsModalOpen(user)">
+            <ion-avatar *ngIf="user['dbData'] != null" slot="start">
+                <img [src]="user['dbData']['image_profile']"
+                     alt="{{user['dbData']['name_first'] +' profile picture'}}">
             </ion-avatar>
             {{user['dbData'] ? user['dbData']['name_first'] + ' ' + user['dbData']['name_last'] : user['namiData']['vorname'] + ' ' + user['namiData']['nachname']}}
             <ion-icon *ngIf="user['dbData'] != null" name="today" slot="end"></ion-icon>

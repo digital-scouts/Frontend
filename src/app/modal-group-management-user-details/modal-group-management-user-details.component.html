@@ -1,0 +1,57 @@
+<div style="overflow-y: scroll;">
+    <!--DB-->
+    <ion-avatar *ngIf="user['dbData']!=null" slot="start">
+        <img [src]="user['dbData']['image_profile']" alt="{{user['dbData']['name_first']+' profile picture' }}">
+    </ion-avatar>
+
+    <!-- Telefon -->
+    <ion-item-group *ngIf="user['namiData']!=null">
+        <ion-item-divider>
+            <ion-label>Telefon</ion-label>
+            <ion-icon name="call" slot="start"></ion-icon>
+        </ion-item-divider>
+        <ion-item (click)="call(tel)" *ngFor="let tel of getAllTelefonForUser(user)">
+            <ion-label>{{tel}}</ion-label>
+        </ion-item>
+    </ion-item-group>
+
+    <!--Mail-->
+    <ion-item-group>
+        <ion-item-divider>
+            <ion-label>Mail</ion-label>
+            <ion-icon name="mail" slot="start"></ion-icon>
+            <ion-button slot="end">Schreiben</ion-button>
+
+        </ion-item-divider>
+        <ion-item
+                *ngFor="let mail of getAllEmailsForUser(user)">
+            <ion-label>{{mail}}</ion-label>
+        </ion-item>
+    </ion-item-group>
+
+    <!--Address-->
+    <ion-item-group *ngIf="user['namiData']!=null">
+        <ion-item-divider>
+        </ion-item-divider>
+        <ion-item
+                (click)="openBrowser(user['namiData']['strasse'] + ', ' + user['namiData']['plz'] + ' ' + user['namiData']['ort'])">
+            <ion-icon name="map" slot="start"></ion-icon>
+            <ion-label>{{user['namiData']['strasse'] + ', ' + user['namiData']['plz'] + ' ' + user['namiData']['ort']}} </ion-label>
+        </ion-item>
+    </ion-item-group>
+
+    <!-- Other -->
+    <ion-item-group *ngIf="user['namiData']!=null">
+        <ion-item>
+            <ion-icon name="calendar" slot="start"></ion-icon><!--birthday-->
+            <ion-label>{{user['namiData']['geburtsDatum']}} </ion-label>
+        </ion-item>
+        <ion-item>
+            <ion-icon name="log-in" slot="start"></ion-icon><!--accession date-->
+            <ion-label>{{user['namiData']['eintrittsdatum']}} </ion-label>
+        </ion-item>
+    </ion-item-group>
+
+    <ion-button (click)="closeModal()">Close</ion-button>
+
+</div>

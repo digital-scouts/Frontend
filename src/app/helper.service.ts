@@ -128,6 +128,76 @@ export class HelperService {
 
         return allGroups;
     }
+
+    /**
+     * return email when string includes a email address
+     * @param text
+     */
+    public static matchEmailRegex(text: string) {
+
+        let emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])/g;
+        // console.log("matchEmailRegex: " + text);
+        let emails = text.match(emailRegex);
+        // console.log(emails);
+        if (emails == null) {
+            return [];
+        }
+        return emails;
+    }
+
+    /**
+     * return array of emails for user
+     * @param user
+     */
+    public static getEmailsFromUser(user) {
+        let allMails = [];
+
+        if (user['dbData'] != null) {
+            allMails.push(`${user['dbData']['name_first']} ${user['dbData']['name_last']} <${user['dbData']['email']}>`);
+        }
+        if (user['namiData'] != null) {
+            if (user['namiData']['email']) {
+                allMails.push(`${user['namiData']['vorname']} ${user['namiData']['nachname']} <${user['namiData']['email']}>`);
+            }
+            if (user['namiData']['emailVertretungsberechtigter']) {
+                allMails.push(`Fam. ${user['namiData']['nachname']} <${user['namiData']['emailVertretungsberechtigter']}>`);
+            }
+            //hint it is possible to save text/email in telefax or telefon
+            if (HelperService.matchEmailRegex(user['namiData']['telefax']).length) {
+                allMails.push(user['namiData']['telefax']);
+            }
+            if (HelperService.matchEmailRegex(user['namiData']['telefon3']).length) {
+                allMails.push(user['namiData']['telefon3']);
+            }
+            if (HelperService.matchEmailRegex(user['namiData']['telefon2']).length) {
+                allMails.push(user['namiData']['telefon2']);
+            }
+            if (HelperService.matchEmailRegex(user['namiData']['telefon1']).length) {
+                allMails.push(user['namiData']['telefon1']);
+            }
+        }
+        return allMails;
+    }
+
+    /**
+     * return array of telefon numbers for user
+     * @param user
+     */
+    public static getTelefonFromUser(user) {
+        let allTelefon = [];
+        if (user['namiData']) {
+            if (user['namiData']['telefon1'] && !HelperService.matchEmailRegex(user['namiData']['telefon1']).length) {
+                allTelefon.push(user['namiData']['telefon1']);
+            }
+            if (user['namiData']['telefon2'] && !HelperService.matchEmailRegex(user['namiData']['telefon2']).length) {
+                allTelefon.push(user['namiData']['telefon2']);
+            }
+            if (user['namiData']['telefon3'] && !HelperService.matchEmailRegex(user['namiData']['telefon3']).length) {
+                allTelefon.push(user['namiData']['telefon3']);
+            }
+        }
+        return allTelefon;
+    }
 }
 
 

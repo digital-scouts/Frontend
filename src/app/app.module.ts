@@ -17,8 +17,11 @@ import {PopoverEventsFilterComponent} from './popover-events-filter/popover-even
 import {PopoverController} from 'ionic-angular/components/popover/popover-controller';
 import {ModalAdminUserDetailsComponent} from './modal-admin-user-details/modal-admin-user-details.component';
 import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
+import {CallNumber} from '@ionic-native/call-number/ngx';
 import {PopoverCreateTaskComponent} from './popover-create-task/popover-create-task.component';
 import {PopoverTaskReportComponent} from './popover-task-report/popover-task-report.component';
+import {ModalGroupManagementUserDetailsComponent} from './modal-group-management-user-details/modal-group-management-user-details.component';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 
 @NgModule({
@@ -28,6 +31,7 @@ import {PopoverTaskReportComponent} from './popover-task-report/popover-task-rep
         ModalEditEventComponent,
         PopoverEventDetailsComponent,
         ModalAdminUserDetailsComponent,
+        ModalGroupManagementUserDetailsComponent,
         PopoverEventsFilterComponent,
         PopoverCreateTaskComponent,
         PopoverTaskReportComponent
@@ -37,6 +41,7 @@ import {PopoverTaskReportComponent} from './popover-task-report/popover-task-rep
         ModalEditEventComponent,
         PopoverEventDetailsComponent,
         ModalAdminUserDetailsComponent,
+        ModalGroupManagementUserDetailsComponent,
         PopoverEventsFilterComponent,
         PopoverCreateTaskComponent,
         PopoverTaskReportComponent
@@ -54,6 +59,8 @@ import {PopoverTaskReportComponent} from './popover-task-report/popover-task-rep
         StatusBar,
         SplashScreen,
         PopoverController,
+        CallNumber,
+        InAppBrowser,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent]
