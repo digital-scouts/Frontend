@@ -56,4 +56,8 @@ export class SettingsPage implements OnInit {
         this.editGroup_click(null);
     }
 
+    public clearStorage() {
+        this.storage.clear();
+    }
+
 }
