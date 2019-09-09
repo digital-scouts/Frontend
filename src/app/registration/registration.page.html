@@ -50,7 +50,7 @@
         </div>
     </div>
     <ion-icon (click)="prev_click()" id="storage" class="hidden" name="mail-open"></ion-icon>
-    <div class="buttons">
+    <div [hidden]="keyboard.isVisible" class="buttons">
         <ion-button expand="full" (click)="goTo_log_reg()">{{(!isLogin) ? 'Anmelden' : 'Registrieren'}}</ion-button>
         <ion-button expand="full" (click)="goTo_Help()">Hilfe</ion-button>
     </div>

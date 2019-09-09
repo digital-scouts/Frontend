@@ -22,7 +22,7 @@
   width: calc(90% - 20px);
   max-width: 280px;
   left: 50%;
-  top: calc(50% - 70px);
+  top: calc(30% - 70px);
   transform: translate(-50%, -50%);
 }
 
@@ -61,7 +61,7 @@
 
   width: 90%;
   max-width: 300px;
-  top: 50%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -111,7 +111,7 @@
 
 #storage {
   position: absolute;
-  top: 50%;
+  top: 30%;
   left: 50%;
   font-size: 2em;
   transform: translate(-50%, calc(-50% + 150px));
@@ -195,6 +195,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
+
 
   bottom: 10%;
 }

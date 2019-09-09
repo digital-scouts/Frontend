@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import * as CONFIG from '../config_app.json';
 import {Storage} from '@ionic/storage';
 import {HTTP} from '@ionic-native/http/ngx';
-import {Pro} from '@ionic/pro';
-import * as moment from 'moment';
 
 @Injectable({providedIn: 'root'})
 export class HttpServiceService {
@@ -48,7 +46,16 @@ export class HttpServiceService {
         await this.storage.set('token', token);
     }
 
-    public testConnection(url: string): Promise<boolean> {
+    public setUrl(url: string) {
+        this.backend_url = url;
+    }
+
+    /**
+     * resolve true when url is a digital-scout server
+     * @param {string} url
+     * @return {Promise<boolean>}
+     */
+    public testConnection(url: string = this.backend_url): Promise<boolean> {
         console.log('Test connection to: ' + url);
         return new Promise<boolean>((resolve, reject) => {
             try {
@@ -74,7 +81,7 @@ export class HttpServiceService {
                         }
                     }, err => {
                         console.log('connection fail');
-                        console.log(err);
+                        // console.log(err);
                         resolve(false);
                     });
             } catch (e) {
@@ -90,7 +97,7 @@ export class HttpServiceService {
      * can be used to test a token and to update user data
      */
     getAndSetUserData() {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             try {
                 console.log('getAndSetUserData');
                 this.storage.get('token').then(token => {
@@ -107,9 +114,10 @@ export class HttpServiceService {
                                 console.log('getAndSetUserData fail');
                                 // todo handle error
                                 console.log(err);
-                                resolve(false);
+                                reject();
                             });
                     } else {
+                        console.log('getAndSetUserData kein token');
                         resolve(false);
                     }
                 });
@@ -259,14 +267,14 @@ export class HttpServiceService {
 
     getAllUser(groupId: string = null) {
         return new Promise(resolve => {
-            let query = groupId?'?group='+groupId:'';
-                this.httpClient.get(this.backend_url + '/api' + '/users' + query, {}, {authorization: this.token})
-                    .then(res => {
-                        console.log(res)
-                        resolve(JSON.parse(res.data));
-                    }, err => {
-                        console.log(err);
-                    });
+            const query = groupId ? '?group=' + groupId : '';
+            this.httpClient.get(this.backend_url + '/api' + '/users' + query, {}, {authorization: this.token})
+                .then(res => {
+                    console.log(res);
+                    resolve(JSON.parse(res.data));
+                }, err => {
+                    console.log(err);
+                });
         });
     }
 

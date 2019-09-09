@@ -3,7 +3,8 @@ import {Router} from '@angular/router';
 import {Storage} from '@ionic/storage';
 import {HttpServiceService} from '../http-service.service';
 import {HelperService} from '../helper.service';
-import {ToastController} from '@ionic/angular';
+import {LoadingController} from '@ionic/angular';
+import {Keyboard} from '@ionic-native/keyboard/ngx';
 
 
 @Component({
@@ -17,7 +18,9 @@ export class RegistrationPage implements OnInit {
         private router: Router,
         private storage: Storage,
         private http: HttpServiceService,
-        public toastController: ToastController,
+        public loadingController: LoadingController,
+        private helper: HelperService,
+        private keyboard: Keyboard
     ) {
     }
 
@@ -32,25 +35,45 @@ export class RegistrationPage implements OnInit {
     nameFirst_reg = '';
 
     // todo load from backend
-    groups = ['Wölfling', 'Jungpfadfinder', 'Pfadfinder', 'Rover', 'leader', 'Mutter/Vater'];
+    groups = ['Wölfling', 'Jungpfadfinder', 'Pfadfinder', 'Rover', 'keine Gruppe'];
     private outFillIdx = 0;
     private isLogin = false;
 
-    ngOnInit() {
+    async ngOnInit() {
+        // test connection to backend
+        setTimeout(async () => {
+            if (!await this.http.testConnection()) {
+                console.error('Keine Verbindung möglich');
+                await this.helper.showToast('Keine Verbindung zum Server möglich.');
+            } else {
+                await this.helper.showToast('Verbindung zum Server hergestellt.');
+            }
+        }, 500);
     }
 
     /**
      * handle register
-     * todo show react on btn click (loading)
      * todo handle wrong login
      */
-    register() {
+    async register() {
+        await this.presentLoadingWithOptions();
         this.http.newUser(this.nameFirst_reg, this.nameLast_reg, this.email_reg, HelperService.encodePW(this.password1_reg), this.group_reg).then(data => {
             alert('erfolgreich angemeldet, deine anmeldung muss nun von einem admin bestätigt werden');
             if (data) {
                 this.router.navigate(['/home']);
+                this.loadingController.dismiss();
             }
         });
+    }
+
+    async presentLoadingWithOptions() {
+        const loading = await this.loadingController.create({
+            spinner: 'circles',
+            message: 'Bitte warten...',
+            translucent: true,
+            backdropDismiss: false
+        });
+        return await loading.present();
     }
 
     /**
@@ -62,6 +85,8 @@ export class RegistrationPage implements OnInit {
         this.http.auth(this.email_reg, HelperService.encodePW(this.password2_reg), true).then(res => {
             if (res) {
                 this.router.navigate(['/home']);
+            } else {
+                this.helper.showToast('Account nicht vorhanden oder falsches Passwort', 'top');
             }
         });
     }
@@ -69,11 +94,7 @@ export class RegistrationPage implements OnInit {
     async notValid(id: string, msg: string) {
         document.getElementById(id).classList.add('notValid');
 
-        const toast = await this.toastController.create({
-            message: msg,
-            duration: 2000
-        });
-        toast.present();
+        await this.helper.showToast(msg, 'top');
         setTimeout(() => {
             document.getElementById(id).classList.remove('notValid');
         }, 5000);
@@ -121,7 +142,8 @@ export class RegistrationPage implements OnInit {
                 new_el = document.getElementById('password1');
                 break;
             case 'password1':
-                if (!this.password1_reg.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._-])[A-Za-z\d@$!%*?&._-]{8,}$/)) {
+                if (!this.password1_reg.match(/[A-Za-z\d@$!%*?äÄöÖüÜ&._-]{8,}$/)) {
+                    // if (!this.password1_reg.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._-])[A-Za-z\d@$!%*?&._-]{8,}$/)) {
                     this.notValid('password1', 'Das Password ist nicht sicher genug.');
                     break;
                 }
@@ -207,11 +229,7 @@ export class RegistrationPage implements OnInit {
     }
 
     async goTo_Help() {
-        const toast = await this.toastController.create({
-            message: 'Hilfe ist noch nicht verfügbar',
-            duration: 2000
-        });
-        toast.present();
+        await this.helper.showToast('Hilfe ist noch nicht verfügbar');
     }
 
     updateServerConnection() {
@@ -221,7 +239,11 @@ export class RegistrationPage implements OnInit {
     testConnectionToBackend(url: string) {
         this.backendConnectionStatusColor = 'warning';
         this.http.testConnection(url).then((status) => {
-            this.storage.set('backend_url', this.changedUrl);
+            if (status) {
+                this.storage.set('backend_url', this.changedUrl).then(() => {
+                    this.ngOnInit();
+                });
+            }
             console.log('connection test: ' + status);
             this.backendConnectionStatusColor = status ? 'success' : 'danger';
         });

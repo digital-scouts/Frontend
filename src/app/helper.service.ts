@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {HttpServiceService} from './http-service.service';
+import {ToastController} from '@ionic/angular';
 
 moment.locale('de');
 
@@ -8,6 +9,11 @@ moment.locale('de');
     providedIn: 'root'
 })
 export class HelperService {
+
+    constructor(private http: HttpServiceService,  public toastController: ToastController,) {
+
+    }
+
     monthList = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'July', 'August', 'September', 'Oktober', 'November', 'Dezember'];
     weeksList = ['S', 'M', 'D', 'M', 'D', 'F', 'S'];
 
@@ -22,10 +28,6 @@ export class HelperService {
         weeksList: this.weeksList,
         dateFormat: 'DD.MM.YYYY', // default DD MMM YYYY
     };
-
-    constructor(private http: HttpServiceService) {
-
-    }
 
     /**
      * format a displayDate to short timespan String
@@ -75,6 +77,93 @@ export class HelperService {
             returnString.push(group['color']);
         });
         return returnString;
+    }
+
+    /**
+     * return email when string includes a email address
+     * @param text
+     */
+    public static matchEmailRegex(text: string) {
+
+        const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])/g;
+        // console.log("matchEmailRegex: " + text);
+        const emails = text.match(emailRegex);
+        // console.log(emails);
+        if (emails == null) {
+            return [];
+        }
+        return emails;
+    }
+
+    /**
+     * return array of emails for user
+     * @param user
+     */
+    public static getEmailsFromUser(user) {
+        const allMails = [];
+
+        if (user['dbData'] != null) {
+            allMails.push(`${user['dbData']['name_first']} ${user['dbData']['name_last']} <${user['dbData']['email']}>`);
+        }
+        if (user['namiData'] != null) {
+            if (user['namiData']['email']) {
+                allMails.push(`${user['namiData']['vorname']} ${user['namiData']['nachname']} <${user['namiData']['email']}>`);
+            }
+            if (user['namiData']['emailVertretungsberechtigter']) {
+                allMails.push(`Fam. ${user['namiData']['nachname']} <${user['namiData']['emailVertretungsberechtigter']}>`);
+            }
+            // hint it is possible to save text/email in telefax or telefon
+            if (HelperService.matchEmailRegex(user['namiData']['telefax']).length) {
+                allMails.push(user['namiData']['telefax']);
+            }
+            if (HelperService.matchEmailRegex(user['namiData']['telefon3']).length) {
+                allMails.push(user['namiData']['telefon3']);
+            }
+            if (HelperService.matchEmailRegex(user['namiData']['telefon2']).length) {
+                allMails.push(user['namiData']['telefon2']);
+            }
+            if (HelperService.matchEmailRegex(user['namiData']['telefon1']).length) {
+                allMails.push(user['namiData']['telefon1']);
+            }
+        }
+        return allMails;
+    }
+
+    /**
+     * return array of telefon numbers for user
+     * @param user
+     */
+    public static getTelefonFromUser(user) {
+        const allTelefon = [];
+        if (user['namiData']) {
+            if (user['namiData']['telefon1'] && !HelperService.matchEmailRegex(user['namiData']['telefon1']).length) {
+                allTelefon.push(user['namiData']['telefon1']);
+            }
+            if (user['namiData']['telefon2'] && !HelperService.matchEmailRegex(user['namiData']['telefon2']).length) {
+                allTelefon.push(user['namiData']['telefon2']);
+            }
+            if (user['namiData']['telefon3'] && !HelperService.matchEmailRegex(user['namiData']['telefon3']).length) {
+                allTelefon.push(user['namiData']['telefon3']);
+            }
+        }
+        return allTelefon;
+    }
+
+    /**
+     *
+     * @param msg
+     * @param {string} position default bottom
+     * @param {number} duration default 2000
+     * @return {Promise<any>}
+     */
+    async showToast(msg, position: 'top' | 'bottom' | 'middle' = 'bottom', duration = 2000) {
+        const toast = await this.toastController.create({
+            position: position,
+            message: msg,
+            duration: duration
+        });
+        await toast.present();
+        return toast;
     }
 
 
@@ -127,76 +216,6 @@ export class HelperService {
         // console.log(allGroups);
 
         return allGroups;
-    }
-
-    /**
-     * return email when string includes a email address
-     * @param text
-     */
-    public static matchEmailRegex(text: string) {
-
-        let emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])/g;
-        // console.log("matchEmailRegex: " + text);
-        let emails = text.match(emailRegex);
-        // console.log(emails);
-        if (emails == null) {
-            return [];
-        }
-        return emails;
-    }
-
-    /**
-     * return array of emails for user
-     * @param user
-     */
-    public static getEmailsFromUser(user) {
-        let allMails = [];
-
-        if (user['dbData'] != null) {
-            allMails.push(`${user['dbData']['name_first']} ${user['dbData']['name_last']} <${user['dbData']['email']}>`);
-        }
-        if (user['namiData'] != null) {
-            if (user['namiData']['email']) {
-                allMails.push(`${user['namiData']['vorname']} ${user['namiData']['nachname']} <${user['namiData']['email']}>`);
-            }
-            if (user['namiData']['emailVertretungsberechtigter']) {
-                allMails.push(`Fam. ${user['namiData']['nachname']} <${user['namiData']['emailVertretungsberechtigter']}>`);
-            }
-            //hint it is possible to save text/email in telefax or telefon
-            if (HelperService.matchEmailRegex(user['namiData']['telefax']).length) {
-                allMails.push(user['namiData']['telefax']);
-            }
-            if (HelperService.matchEmailRegex(user['namiData']['telefon3']).length) {
-                allMails.push(user['namiData']['telefon3']);
-            }
-            if (HelperService.matchEmailRegex(user['namiData']['telefon2']).length) {
-                allMails.push(user['namiData']['telefon2']);
-            }
-            if (HelperService.matchEmailRegex(user['namiData']['telefon1']).length) {
-                allMails.push(user['namiData']['telefon1']);
-            }
-        }
-        return allMails;
-    }
-
-    /**
-     * return array of telefon numbers for user
-     * @param user
-     */
-    public static getTelefonFromUser(user) {
-        let allTelefon = [];
-        if (user['namiData']) {
-            if (user['namiData']['telefon1'] && !HelperService.matchEmailRegex(user['namiData']['telefon1']).length) {
-                allTelefon.push(user['namiData']['telefon1']);
-            }
-            if (user['namiData']['telefon2'] && !HelperService.matchEmailRegex(user['namiData']['telefon2']).length) {
-                allTelefon.push(user['namiData']['telefon2']);
-            }
-            if (user['namiData']['telefon3'] && !HelperService.matchEmailRegex(user['namiData']['telefon3']).length) {
-                allTelefon.push(user['namiData']['telefon3']);
-            }
-        }
-        return allTelefon;
     }
 }
 

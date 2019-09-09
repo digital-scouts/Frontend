@@ -21,7 +21,8 @@ import {CallNumber} from '@ionic-native/call-number/ngx';
 import {PopoverCreateTaskComponent} from './popover-create-task/popover-create-task.component';
 import {PopoverTaskReportComponent} from './popover-task-report/popover-task-report.component';
 import {ModalGroupManagementUserDetailsComponent} from './modal-group-management-user-details/modal-group-management-user-details.component';
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
+import {Keyboard} from '@ionic-native/keyboard/ngx';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
         StatusBar,
         SplashScreen,
         PopoverController,
+        Keyboard,
         CallNumber,
         InAppBrowser,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
