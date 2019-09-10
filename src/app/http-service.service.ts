@@ -12,11 +12,9 @@ export class HttpServiceService {
         private storage: Storage,
         private httpClient: HTTP,
     ) {
-
-        this.storage.get('backend_url').then(url => {
-            this.backend_url = url ? url : CONFIG.default.url;
-            console.log(`http service startet with url: ${this.backend_url}`);
-        });
+        console.log('HttpServiceService constructor called');
+        this.updateUrl()
+        ;
     }
 
     /**
@@ -46,8 +44,10 @@ export class HttpServiceService {
         await this.storage.set('token', token);
     }
 
-    public setUrl(url: string) {
-        this.backend_url = url;
+    public async updateUrl() {
+        let url = await this.storage.get('backend_url');
+        this.backend_url = url ? url : CONFIG.default.url;
+        console.log(`http service runs with url: ${this.backend_url}`);
     }
 
     /**
@@ -138,6 +138,7 @@ export class HttpServiceService {
      * @param savePw
      */
     async auth(email: string, password: string, savePw: boolean) {
+        console.log('ath with url: ' + this.backend_url);
         return new Promise(resolve => {
             this.httpClient.post(this.backend_url + '/api' + '/auth', {'email': email, 'password': password}, {})
                 .then(res => {

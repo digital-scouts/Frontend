@@ -241,7 +241,9 @@ export class RegistrationPage implements OnInit {
         this.http.testConnection(url).then((status) => {
             if (status) {
                 this.storage.set('backend_url', this.changedUrl).then(() => {
-                    this.ngOnInit();
+                    this.http.updateUrl().then(()=>{
+                        this.ngOnInit();
+                    });
                 });
             }
             console.log('connection test: ' + status);
