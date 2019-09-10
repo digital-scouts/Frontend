@@ -11,7 +11,8 @@
     <form (ngSubmit)="sendMail()">
         <ion-item>
             <ion-label>Gruppe</ion-label>
-            <ion-select required name="groups" [(ngModel)]="mail.groups" multiple="true" placeholder="Absender auswählen">
+            <ion-select required name="groups" [(ngModel)]="mail.groups" multiple="true"
+                        placeholder="Absender auswählen">
                 <ion-select-option [selected]="mail.groups.includes(group.id)" *ngFor="let group of allGroups"
                                    value="{{group.id}}">{{group.name}}</ion-select-option>
             </ion-select>
@@ -22,12 +23,12 @@
             <ion-input [(ngModel)]="mail.subject" name="subject" autocapitalize autocomplete autocorrect required
                        inputmode="text"></ion-input>
         </ion-item>
-
+<br>
         <!--menubar: File ...-->
         <!--statusbar: powered by tiny ...-->
         <div style="border: 1px solid black">
             <ion-label position="stacked">Inhalt</ion-label>
-            <editor name="text"
+            <editor class="tinymce" name="text"
                     plugins="link lists"
                     toolbar="undo redo | bold italic underline superscript | bullist numlist"
                     apiKey="kioinb9xmr90jg0jlqmm1yusputf5sl3z2ahacrq65iy61lv"
