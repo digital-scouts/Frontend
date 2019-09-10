@@ -1,14 +1,27 @@
 <div style="overflow-y: scroll;">
     <!--DB-->
-    <ion-avatar *ngIf="user['dbData']!=null" slot="start">
-        <img [src]="user['dbData']['image_profile']" alt="{{user['dbData']['name_first']+' profile picture' }}">
-    </ion-avatar>
+
+    <div id="userCard-header" style="display: flex;">
+        <ion-avatar style="height: 100px;width: 100px;margin: 10px;" id="userCard-header-picture"
+                    *ngIf="user['dbData']!=null"
+                    slot="start">
+            <!--            <img [src]="user['dbData']['image_profile']" alt="{{user['dbData']['name_first']+' profile picture' }}">-->
+            <img src="assets/imgs/user.png" alt="{{user['dbData']['name_first']+' profile picture' }}">
+        </ion-avatar>
+        <div style="margin: 10px">
+            <h2>{{user['dbData'] != null ? user['dbData']['name_first'] + ' ' + user['dbData']['name_last'] : user['namiData']['vorname'] + ' ' + user['namiData']['nachname']}}</h2>
+        </div>
+        <ion-icon size="large" style="top: 0;right: 0;position: absolute;margin: 10px;" name="close"
+                  (click)="closeModal()"></ion-icon>
+    </div>
 
     <!-- Telefon -->
-    <ion-item-group *ngIf="user['namiData']!=null">
+    <ion-item-group *ngIf="user['namiData']!=null && getAllTelefonForUser(user).length">
         <ion-item-divider>
             <ion-label>Telefon</ion-label>
             <ion-icon name="call" slot="start"></ion-icon>
+            <ion-button slot="end" fill="outline" color="medium" (click)="call(getAllTelefonForUser(user)[0])">Anrufen
+            </ion-button>
         </ion-item-divider>
         <ion-item (click)="call(tel)" *ngFor="let tel of getAllTelefonForUser(user)">
             <ion-label>{{tel}}</ion-label>
@@ -16,11 +29,11 @@
     </ion-item-group>
 
     <!--Mail-->
-    <ion-item-group>
+    <ion-item-group *ngIf="getAllEmailsForUser(user).length">
         <ion-item-divider>
             <ion-label>Mail</ion-label>
             <ion-icon name="mail" slot="start"></ion-icon>
-            <ion-button slot="end">Schreiben</ion-button>
+            <ion-button slot="end" fill="outline" color="medium">Schreiben</ion-button>
 
         </ion-item-divider>
         <ion-item
@@ -30,7 +43,7 @@
     </ion-item-group>
 
     <!--Address-->
-    <ion-item-group *ngIf="user['namiData']!=null">
+    <ion-item-group *ngIf="user['namiData']!=null && user['namiData']['strasse']!='' ">
         <ion-item-divider>
         </ion-item-divider>
         <ion-item
@@ -46,12 +59,14 @@
             <ion-icon name="calendar" slot="start"></ion-icon><!--birthday-->
             <ion-label>{{user['namiData']['geburtsDatum']}} </ion-label>
         </ion-item>
-        <ion-item>
+        <ion-item *ngIf="user['namiData']['eintrittsdatum']!= ''">
             <ion-icon name="log-in" slot="start"></ion-icon><!--accession date-->
             <ion-label>{{user['namiData']['eintrittsdatum']}} </ion-label>
         </ion-item>
     </ion-item-group>
 
-    <ion-button (click)="closeModal()">Close</ion-button>
+    <div style=" margin-top: 30px; width: 100%;display: flex;justify-content: center">
+        <ion-button  *ngIf="user['namiData']==null" color="medium">Nami Verbinden</ion-button>
 
+    </div>
 </div>

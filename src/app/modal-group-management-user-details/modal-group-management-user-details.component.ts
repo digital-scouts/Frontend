@@ -12,20 +12,12 @@ import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
 })
 export class ModalGroupManagementUserDetailsComponent implements OnInit {
 
-    constructor(private modal: ModalController, private http: HttpServiceService, private toastController: ToastController, private callNumber: CallNumber, private iab: InAppBrowser) {
+    constructor(private modal: ModalController, private http: HttpServiceService, private toastController: ToastController, private callNumber: CallNumber, private iab: InAppBrowser, private helper: HelperService) {
     }
 
     @Input() user;
 
     ngOnInit() {
-    }
-
-    async showToast(text: string) {
-        const toast = await this.toastController.create({
-            message: text,
-            duration: 2000
-        });
-        toast.present();
     }
 
     closeModal() {
@@ -40,20 +32,16 @@ export class ModalGroupManagementUserDetailsComponent implements OnInit {
         return HelperService.getTelefonFromUser(user);
     }
 
-    public openMapsApp(location: any) {
-
-    }
-
     openBrowser(address) {
         this.iab.create('https://maps.google.com/?q=' + address);
     }
 
     call(number) {
+        console.log('try call: ' + number);
         this.callNumber.callNumber(number, true)
             .then(res => console.log('Launched dialer!', res))
             .catch(err => {
-                // console.log('Error launching dialer', err);
-                this.showToast(err);
+                this.helper.showToast(err, 'bottom');
             });
     }
 }

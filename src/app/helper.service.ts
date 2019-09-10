@@ -156,7 +156,7 @@ export class HelperService {
      * @param {number} duration default 2000
      * @return {Promise<any>}
      */
-    async showToast(msg, position: 'top' | 'bottom' | 'middle' = 'bottom', duration = 2000) {
+    public async showToast(msg, position: 'top' | 'bottom' | 'middle' = 'bottom', duration = 2000) {
         const toast = await this.toastController.create({
             position: position,
             message: msg,
@@ -166,8 +166,7 @@ export class HelperService {
         return toast;
     }
 
-
-    getAllGroups(): Array<{ id: string, color: string, name: string, isChildGroup: boolean }> {
+    public getAllGroups(): Array<{ id: string, color: string, name: string, isChildGroup: boolean }> {
         const allGroups: Array<{
             id: string,
             color: string,
@@ -217,6 +216,7 @@ export class HelperService {
 
         return allGroups;
     }
+
 }
 
 
