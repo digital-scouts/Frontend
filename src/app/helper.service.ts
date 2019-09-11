@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {HttpServiceService} from './http-service.service';
 import {ToastController} from '@ionic/angular';
+import {Md5} from 'ts-md5';
 
 moment.locale('de');
 
@@ -10,7 +11,7 @@ moment.locale('de');
 })
 export class HelperService {
 
-    constructor(private http: HttpServiceService,  public toastController: ToastController,) {
+    constructor(private http: HttpServiceService,  public toastController: ToastController) {
 
     }
 
@@ -63,7 +64,10 @@ export class HelperService {
      * @param {string} pw
      * @return {string}
      */
-    static encodePW(pw: string): string {
+    static decodePW(pw: string): string {
+        const md5 = new Md5();
+        // console.log(md5.appendStr('hello').end());
+        // return <string>md5.appendStr('hello').end();
         return pw;
     }
 
